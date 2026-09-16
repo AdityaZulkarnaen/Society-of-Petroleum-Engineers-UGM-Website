@@ -1,26 +1,368 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ==========================================================================
+   SPE UGM Student Chapter — landing hero
+
+   The composition is driven by the reference design's width: one frame pixel
+   (--k) is 1px of the 1440px-wide reference, so type, spacing, mascots and
+   the curtain all keep the reference's proportions. The curtain panels hang
+   from fixed positions measured from the top of the page, which is why a
+   shorter viewport shows only the tip of the centre panel and a taller one
+   shows a deeper band — exactly as the two reference frames do.
+   ========================================================================== */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-jakarta);
+  --font-display: var(--font-sora);
+
+  --color-ink: #252c3a;        /* display type */
+  --color-ink-soft: #4b5565;   /* body copy */
+  --color-ink-nav: #3e4757;    /* nav links */
+  --color-ink-deep: #1c2433;   /* solid controls */
+  --color-iris: #6d5ae0;       /* focus / selection */
+  --color-curtain: #4e4eff;    /* the curtain itself */
 }
 
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    color-scheme: light;
+
+    /* One reference-frame pixel. Width drives the design; the height term
+       only keeps the whole composition inside short viewports. */
+    --k: min(0.069444vw, 0.0991079svh, 1.6px);
+
+    /* width-only frame pixel — for things that should span the page rather
+       than shrink with the composition, like the nav bar */
+    --kw: min(0.069444vw, 1.6px);
+
+    /* Curtain step, locked to the step baked into the mascot artwork: the
+       female cut-outs sit 182.5px apart in a 1656px-tall source, the male
+       199.5px in 1522px. Panel steps and mascot sizes both derive from it, so
+       artwork and curtain edge always meet exactly. */
+    --u: calc(61 * var(--k));
+
+    /* Where each panel's top edge hangs, measured from the top of the hero.
+       The max() caps how deep the band can grow on very tall viewports. */
+    --p0: max(calc(995 * var(--k)), calc(100svh - 3.7 * var(--u)));  /* centre */
+    --p1: max(calc(945 * var(--k)), calc(100svh - 4.55 * var(--u)));
+    --p2: max(calc(890 * var(--k)), calc(100svh - 5.45 * var(--u))); /* mascot line */
+    --p3: max(calc(828 * var(--k)), calc(100svh - 6.45 * var(--u))); /* edges */
+
+    --nav-h: clamp(56px, calc(80 * var(--k)), 104px);
+    --hero-h: max(100svh, 620px);
+    --travel: calc(var(--hero-h) + 4px);
   }
+
+  /* Phones: the reference frame is far wider than the screen, so the frame
+     pixel gets a floor of its own and the mascots a width cap. */
+  @media (max-width: 767px) {
+    :root {
+      --k: min(0.135vw, 0.0991079svh);
+      --u: min(calc(61 * var(--k)), 5.4vw);
+    }
+  }
+
+  body {
+    background: #fbfbfe;
+    color: var(--color-ink);
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-curtain) 20%, transparent);
+    color: #141a26;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-iris);
+    outline-offset: 3px;
+  }
+
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: #f2f1fa; }
+  ::-webkit-scrollbar-thumb {
+    background: #c9c5e6;
+    border: 2px solid #f2f1fa;
+    border-radius: 99px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: #b0aad8; }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* ---------------------------------------------------------------- stage */
+  .hero {
+    position: relative;
+    isolation: isolate;
+    min-height: var(--hero-h);
+    overflow: hidden;
+  }
+
+  /* lavender bloom behind everything — corners stay near-white */
+  .hero-backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background:
+      radial-gradient(50% 31% at 50% 21%, rgba(138, 120, 234, 0.44) 0%, rgba(162, 150, 238, 0.2) 56%, transparent 80%),
+      radial-gradient(62% 26% at 50% 1%, rgba(196, 190, 247, 0.5) 0%, rgba(224, 221, 250, 0.16) 60%, transparent 85%),
+      linear-gradient(180deg, #f8f7fd 0%, #fbfbfe 54%, #ffffff 84%);
+  }
+
+  /* hairline seams between the curtain panels */
+  .hero-seams {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .hero-seam {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.62) 14%,
+      rgba(255, 255, 255, 0.68) 62%,
+      rgba(255, 255, 255, 0.22) 100%
+    );
+  }
+
+  /* ------------------------------------------------------------------ nav */
+  .nav-shell {
+    width: min(calc(1270 * var(--kw)), calc(100vw - 2rem));
+    height: var(--nav-h);
+    margin: calc(13 * var(--k)) auto 0;
+    padding-inline: clamp(10px, calc(10 * var(--k)), 18px);
+    border-radius: clamp(18px, calc(24 * var(--k)), 30px);
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    background: rgba(255, 255, 255, 0.44);
+    backdrop-filter: blur(18px) saturate(1.4);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.8),
+      0 14px 36px -16px rgba(60, 48, 122, 0.22);
+  }
+
+  .nav-link {
+    position: relative;
+    color: var(--color-ink-nav);
+    font-size: clamp(13.5px, calc(15 * var(--k)), 18px);
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    transition: color 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -0.45em;
+    height: 1.5px;
+    width: 0;
+    translate: -50% 0;
+    border-radius: 2px;
+    background: var(--color-ink-deep);
+    transition: width 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .nav-link:hover { color: var(--color-ink-deep); }
+  .nav-link:hover::after { width: 100%; }
+
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: clamp(40px, calc(47 * var(--k)), 58px);
+    padding-inline: clamp(16px, calc(24 * var(--k)), 30px);
+    border-radius: clamp(11px, calc(14 * var(--k)), 18px);
+    border: 1px solid #e4e4f0;
+    background: #fff;
+    color: var(--color-ink-deep);
+    font-size: clamp(13.5px, calc(15 * var(--k)), 18px);
+    font-weight: 500;
+    white-space: nowrap;
+    transition: background 180ms ease-out, border-color 180ms ease-out,
+      translate 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .btn-outline:hover {
+    background: #fbfaff;
+    border-color: #d5d4e8;
+    translate: 0 -1px;
+  }
+
+  /* ------------------------------------------------------------ hero type */
+  .hero-copy {
+    padding-top: max(calc(242 * var(--k)), calc(var(--nav-h) + 3.5rem));
+  }
+
+  /* Tall viewports — phones, split windows — would otherwise leave a void
+     between the copy and the curtain, so the copy centres in the room the
+     curtain leaves instead of hanging from the top. */
+  @media (max-aspect-ratio: 5 / 4) {
+    .hero {
+      display: flex;
+      flex-direction: column;
+    }
+    .hero-copy {
+      flex: 1 1 auto;
+      justify-content: center;
+      padding-top: calc(var(--nav-h) + 1.5rem);
+      /* clears the curtain and the mascots' heads */
+      padding-bottom: calc(100svh - var(--p2) + 6.6 * var(--u) + 0.75rem);
+    }
+  }
+
+  .hero-title {
+    font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
+    font-size: clamp(30px, calc(65 * var(--k)), 96px);
+    line-height: 1.277;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+  }
+
+  .hero-lede {
+    margin-top: calc(6 * var(--k));
+    max-width: min(calc(760 * var(--k)), 90vw);
+    font-size: clamp(14px, calc(18 * var(--k)), 23px);
+    line-height: 1.778;
+    color: var(--color-ink-soft);
+  }
+
+  .hero-actions {
+    margin-top: max(calc(31 * var(--k)), 1.1rem);
+    gap: calc(12 * var(--k));
+  }
+
+  .btn-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: clamp(42px, calc(47 * var(--k)), 58px);
+    padding-inline: clamp(18px, calc(18 * var(--k)), 26px);
+    border-radius: 999px;
+    font-size: clamp(13.5px, calc(14.5 * var(--k)), 18px);
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    white-space: nowrap;
+    transition: background 180ms ease-out,
+      box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1),
+      translate 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .btn-pill--solid {
+    background: var(--color-ink-deep);
+    color: #fff;
+    box-shadow: 0 12px 26px -12px rgba(23, 30, 45, 0.55);
+  }
+  .btn-pill--solid:hover {
+    background: #111823;
+    translate: 0 -2px;
+    box-shadow: 0 18px 32px -14px rgba(23, 30, 45, 0.6);
+  }
+  .btn-pill--ghost {
+    background: #fff;
+    color: var(--color-ink-deep);
+    box-shadow: 0 10px 24px -14px rgba(46, 41, 82, 0.4);
+  }
+  .btn-pill--ghost:hover {
+    translate: 0 -2px;
+    box-shadow: 0 16px 30px -14px rgba(46, 41, 82, 0.45);
+  }
+
+  /* Sponsor marks are sized optically, not uniformly: each source file has
+     its own padding and wordmark weight. */
+  .hero-sponsors {
+    margin-top: max(calc(155.5 * var(--k)), 2.25rem);
+    gap: clamp(1rem, calc(88 * var(--k)), 6rem);
+  }
+  .hero-sponsors img { width: auto; }
+  /* Two of the three source files were exported at partial opacity (peak
+     alpha 207 and 171, with the Pertamina wordmark down at 64–96), so a
+     gamma curve on the alpha channel brings them back to solid ink. */
+  .sponsor-sardjito {
+    height: clamp(22px, calc(50 * var(--k)), 62px);
+    filter: url(#solidify-soft);
+  }
+  .sponsor-opt { height: clamp(24px, calc(54 * var(--k)), 66px); }
+  .sponsor-pertamina {
+    height: clamp(26px, calc(59 * var(--k)), 72px);
+    filter: url(#solidify-hard);
+  }
+
+  /* -------------------------------------------------------------- mascots */
+  /* Both figures are pinned so the lower cut in their artwork lands exactly
+     on the --p2 panel edge, and the higher cut lands on --p3 (one --u above). */
+  .mascot {
+    position: absolute;
+    z-index: 2;
+    height: auto;
+    user-select: none;
+    pointer-events: none;
+  }
+  /* female — source 1531x1656, cuts at y1450.5 / y1633, step at x372.5 */
+  .mascot--f {
+    width: calc(8.389 * var(--u));
+    bottom: calc(100% - var(--p2) - 0.1041 * var(--u));
+    left: calc(8.3333% - 2.0411 * var(--u));
+  }
+  /* male — source 1375x1522, cuts at y1320.5 / y1520, step at x990.5 */
+  .mascot--m {
+    width: calc(6.8922 * var(--u));
+    bottom: calc(100% - var(--p2) - 0.01 * var(--u));
+    left: calc(91.6667% - 4.9649 * var(--u));
+  }
+
+  /* --------------------------------------------------------- the curtain */
+  .curtain {
+    position: absolute;
+    inset: 0;
+    z-index: 10; /* above every hero layer — it reveals all of them */
+    pointer-events: none;
+  }
+
+  .slat {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    overflow: hidden;
+  }
+
+  /* One panel of fabric. It covers the viewport on first paint and slides
+     down to its resting edge; the page underneath is already laid out, so a
+     skipped animation simply shows the finished state. */
+  .fabric {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: var(--panel-top);
+    bottom: calc(-1 * var(--travel));
+    background: var(--color-curtain);
+    box-shadow: 0 calc(-0.05 * var(--u)) calc(0.22 * var(--u)) rgba(78, 78, 255, 0.22);
+    animation: curtain-drop 1.25s cubic-bezier(0.16, 1, 0.3, 1) var(--delay, 0s) both;
+  }
+
+  @keyframes curtain-drop {
+    from { transform: translateY(calc(-1 * var(--travel))); }
+    to   { transform: translateY(0); }
+  }
+
+  /* the light caught along the top edge */
+  .fabric-glow {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: calc(0.24 * var(--u));
+    background: linear-gradient(
+      to bottom,
+      rgba(226, 235, 255, 0.62) 0,
+      rgba(158, 178, 255, 0.28) 34%,
+      transparent 100%
+    );
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fabric { animation: none; }
+  }
 }
