@@ -1,6 +1,7 @@
 import Image from "next/image";
 
-import { Curtain, HeroSeams } from "@/components/curtain";
+import { Curtain } from "@/components/curtain";
+import { HeroTiles } from "@/components/hero-tiles";
 import { SiteHeader } from "@/components/site-header";
 
 const SPONSORS = [
@@ -52,7 +53,7 @@ export function Hero() {
       </svg>
 
       <div className="hero-backdrop" aria-hidden="true" />
-      <HeroSeams />
+      <HeroTiles />
 
       <SiteHeader />
 
@@ -79,7 +80,7 @@ export function Hero() {
           </a>
         </div>
 
-        <ul
+        {/* <ul
           className="hero-sponsors flex flex-wrap items-center justify-center"
           aria-label="Partners and sponsors"
         >
@@ -94,7 +95,7 @@ export function Hero() {
               />
             </li>
           ))}
-        </ul>
+        </ul> */}
       </div>
 
       <Image

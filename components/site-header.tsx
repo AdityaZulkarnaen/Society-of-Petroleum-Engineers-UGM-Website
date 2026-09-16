@@ -16,7 +16,7 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="absolute inset-x-0 top-0 z-[3]">
+    <header className="absolute inset-x-0 top-[3%] z-[3]">
       <nav className="nav-shell flex items-center" aria-label="Main">
         <a
           href="#home"

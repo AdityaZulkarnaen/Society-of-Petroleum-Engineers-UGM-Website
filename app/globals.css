@@ -24,6 +24,14 @@
 }
 
 @layer base {
+  *,
+  *::before,
+  *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
   :root {
     color-scheme: light;
 
@@ -46,7 +54,15 @@
     --p0: max(calc(995 * var(--k)), calc(100svh - 3.7 * var(--u)));  /* centre */
     --p1: max(calc(945 * var(--k)), calc(100svh - 4.55 * var(--u)));
     --p2: max(calc(890 * var(--k)), calc(100svh - 5.45 * var(--u))); /* mascot line */
-    --p3: max(calc(828 * var(--k)), calc(100svh - 6.45 * var(--u))); /* edges */
+    --p3: calc(var(--p2) - var(--m)); /* edges — one mascot step higher */
+
+    /* Mascot step. The mascots scale with the page width (capped on short
+       viewports) instead of --u, so they stay large and flush against the
+       screen edges; each edge panel takes its width from the step cut into
+       the figure beside it. */
+    --m: min(4.8vw, 7.4svh, 77px);
+    --edge-l: calc(1.5753 * var(--m));
+    --edge-r: calc(1.9273 * var(--m));
 
     --nav-h: clamp(56px, calc(80 * var(--k)), 104px);
     --hero-h: max(100svh, 620px);
@@ -59,6 +75,7 @@
     :root {
       --k: min(0.135vw, 0.0991079svh);
       --u: min(calc(61 * var(--k)), 5.4vw);
+      --m: min(6.2vw, 7.4svh);
     }
   }
 
@@ -98,38 +115,77 @@
     overflow: hidden;
   }
 
-  /* lavender bloom behind everything — corners stay near-white */
+  /* near-white ground; the lavender comes from the lit tiles above it */
   .hero-backdrop {
     position: absolute;
     inset: 0;
     z-index: 0;
-    background:
-      radial-gradient(50% 31% at 50% 21%, rgba(138, 120, 234, 0.44) 0%, rgba(162, 150, 238, 0.2) 56%, transparent 80%),
-      radial-gradient(62% 26% at 50% 1%, rgba(196, 190, 247, 0.5) 0%, rgba(224, 221, 250, 0.16) 60%, transparent 85%),
-      linear-gradient(180deg, #f8f7fd 0%, #fbfbfe 54%, #ffffff 84%);
+    background: linear-gradient(180deg, #f6f5fd 0%, #fbfbfe 30%, #ffffff 70%);
   }
 
-  /* hairline seams between the curtain panels */
-  .hero-seams {
+  /* twelve backdrop tiles — see components/hero-tiles.tsx */
+  .hero-tiles {
     position: absolute;
     inset: 0;
     z-index: 1;
     pointer-events: none;
   }
-  .hero-seam {
+  .hero-tiles-grid {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 1px;
-    background: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 0.62) 14%,
-      rgba(255, 255, 255, 0.68) 62%,
-      rgba(255, 255, 255, 0.22) 100%
-    );
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
+  /* a round light behind the glass, radiating out and blurred soft */
+  .hero-light {
+    position: absolute;
+    left: var(--light-x);
+    top: calc(var(--light-y) * var(--k));
+    width: calc(var(--light-size) * var(--k));
+    aspect-ratio: 1;
+    translate: -50% -50%;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle closest-side,
+      rgb(108 92 242 / var(--light-a)) 0%,
+      rgb(128 114 246 / calc(var(--light-a) * 0.55)) 45%,
+      rgb(150 140 250 / 0) 100%
+    );
+    filter: blur(calc(28 * var(--k)));
+  }
+
+  /* Each tile is a pane of glass, after the Figma effect stack:
+       Glass — light -45° at 20%, depth 52.57, dispersion 58, frost 2.1
+       Inner shadow — x 4.21, y 4.21, blur 7.25, spread 0, #FFFFFF 20%
+     CSS can't bend the backdrop, so refraction is suggested by the depth
+     bevel (brighter on the lit edge, shaded on the far one) and dispersion
+     by faint warm/cool fringes along the two edges. */
+  .hero-tile {
+    position: relative;
+    background:
+      /* light, -45° (from the top left) at 20% */
+      linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 55%),
+      /* depth bevel, 52.57 from each edge */
+      linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.22) 0,
+        rgba(255, 255, 255, 0) calc(52.57 * var(--k)),
+        rgba(255, 255, 255, 0) calc(100% - 52.57 * var(--k)),
+        rgba(92, 80, 196, 0.06) 100%
+      );
+    /* frost 2.1 */
+    backdrop-filter: blur(calc(2.1 * var(--k))) saturate(1.15);
+    -webkit-backdrop-filter: blur(calc(2.1 * var(--k))) saturate(1.15);
+    box-shadow:
+      /* inner shadow */
+      inset calc(4.21 * var(--k)) calc(4.21 * var(--k)) calc(7.25 * var(--k)) 0 rgba(255, 255, 255, 0.2),
+      /* edge catch-light */
+      inset 1px 0 0 rgba(255, 255, 255, 0.6),
+      /* dispersion fringes */
+      inset calc(2 * var(--k)) 0 calc(3 * var(--k)) calc(-1 * var(--k)) rgba(255, 130, 190, 0.14),
+      inset calc(-2 * var(--k)) 0 calc(3 * var(--k)) calc(-1 * var(--k)) rgba(100, 170, 255, 0.16);
+  }
   /* ------------------------------------------------------------------ nav */
   .nav-shell {
     width: min(calc(1270 * var(--kw)), calc(100vw - 2rem));
@@ -209,14 +265,14 @@
       justify-content: center;
       padding-top: calc(var(--nav-h) + 1.5rem);
       /* clears the curtain and the mascots' heads */
-      padding-bottom: calc(100svh - var(--p2) + 6.6 * var(--u) + 0.75rem);
+      padding-bottom: calc(100svh - var(--p2) + 6.6 * var(--m) + 0.75rem);
     }
   }
 
   .hero-title {
     font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
     font-weight: 700;
-    font-size: clamp(30px, calc(65 * var(--k)), 96px);
+    font-size: clamp(30px, calc(80 * var(--k)), 96px);
     line-height: 1.277;
     letter-spacing: -0.02em;
     color: var(--color-ink);
@@ -292,7 +348,7 @@
 
   /* -------------------------------------------------------------- mascots */
   /* Both figures are pinned so the lower cut in their artwork lands exactly
-     on the --p2 panel edge, and the higher cut lands on --p3 (one --u above). */
+     on the --p2 panel edge, and the higher cut lands on --p3 (one --m above). */
   .mascot {
     position: absolute;
     z-index: 2;
@@ -300,17 +356,19 @@
     user-select: none;
     pointer-events: none;
   }
-  /* female — source 1531x1656, cuts at y1450.5 / y1633, step at x372.5 */
+  /* female — source 1531x1656, visible from x85, cuts at y1450.5 / y1633,
+     step at x372.5; pulled left so the figure touches the screen edge */
   .mascot--f {
-    width: calc(8.389 * var(--u));
-    bottom: calc(100% - var(--p2) - 0.1041 * var(--u));
-    left: calc(8.3333% - 2.0411 * var(--u));
+    width: calc(8.389 * var(--m));
+    bottom: calc(100% - var(--p2) - 0.1041 * var(--m));
+    left: calc(-0.4658 * var(--m));
   }
-  /* male — source 1375x1522, cuts at y1320.5 / y1520, step at x990.5 */
+  /* male — source 1375x1522, visible to x1375, cuts at y1320.5 / y1520,
+     step at x990.5 */
   .mascot--m {
-    width: calc(6.8922 * var(--u));
-    bottom: calc(100% - var(--p2) - 0.01 * var(--u));
-    left: calc(91.6667% - 4.9649 * var(--u));
+    width: calc(6.8922 * var(--m));
+    bottom: calc(100% - var(--p2) - 0.01 * var(--m));
+    right: 0;
   }
 
   /* --------------------------------------------------------- the curtain */
