@@ -18,6 +18,17 @@
 /* Tall viewports — phones, split windows — lay the hero out as a column. */
 @custom-variant tall (@media (max-aspect-ratio: 5 / 4));
 
+/* The header's docked bar: once the hero has scrolled away (data-docked),
+   and always on phones. */
+@custom-variant docked {
+  &:where([data-docked], [data-docked] *) {
+    @slot;
+  }
+  @media (width < 48rem) {
+    @slot;
+  }
+}
+
 @theme inline {
   --font-sans: var(--font-jakarta);
   --font-display: var(--font-sora);
@@ -86,12 +97,18 @@
        artwork and curtain edge always meet exactly. */
     --u: calc(61 * var(--k));
 
+    /* The height the curtain is laid out against. */
+    --stage: 100svh;
+
     /* Where each panel's top edge hangs, measured from the top of the hero.
        The max() caps how deep the band can grow on very tall viewports. */
-    --p0: max(calc(995 * var(--k)), calc(100svh - 3.7 * var(--u)));  /* centre */
-    --p1: max(calc(945 * var(--k)), calc(100svh - 4.55 * var(--u)));
-    --p2: max(calc(890 * var(--k)), calc(100svh - 5.45 * var(--u))); /* mascot line */
+    --p0: max(calc(995 * var(--k)), calc(var(--stage) - 3.7 * var(--u)));  /* centre */
+    --p1: max(calc(945 * var(--k)), calc(var(--stage) - 4.55 * var(--u)));
+    --p2: max(calc(890 * var(--k)), calc(var(--stage) - 5.45 * var(--u))); /* mascot line */
     --p3: calc(var(--p2) - var(--m)); /* edges — one mascot step higher */
+
+    /* The panel edge the mascots' lower cut rests on. */
+    --mascot-line: var(--p2);
 
     /* Mascot step. The mascots scale with the page width (capped on short
        viewports) instead of --u, so they stay large and flush against the
@@ -107,12 +124,20 @@
   }
 
   /* Phones: the reference frame is far wider than the screen, so the frame
-     pixel gets a floor of its own and the mascots a width cap. */
+     pixel gets a floor of its own. The mascots grow much wider than the
+     --p2 panels here, so their cut rests on the lowest edge (--p0) instead:
+     every panel then hangs above it and hides the cut, whatever the size.
+     --m stays under 12.9vw so the right edge panel never reaches 75%, and
+     is capped by height. Short phones get a taller hero than the screen,
+     laid out against that height, so the copy clears the mascots' heads. */
   @media (max-width: 767px) {
     :root {
+      --hero-h: max(100svh, 780px);
+      --stage: var(--hero-h);
       --k: min(0.135vw, 0.0991079svh);
       --u: min(calc(61 * var(--k)), 5.4vw);
-      --m: min(6.2vw, 7.4svh);
+      --m: min(10vw, 4.6svh);
+      --mascot-line: var(--p0);
     }
   }
 

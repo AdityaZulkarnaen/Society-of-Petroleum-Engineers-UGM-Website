@@ -56,10 +56,12 @@ export function Curtain() {
       aria-hidden="true"
     >
       {SLATS.map((slat) => (
+        /* each slat runs 1px past its right and bottom edges so fractional
+           panel widths never open a hairline seam onto the hero behind */
         <div
           key={slat.left}
-          className="absolute inset-y-0 overflow-hidden"
-          style={{ left: slat.left, width: slat.width }}
+          className="absolute top-0 -bottom-px overflow-hidden"
+          style={{ left: slat.left, width: `calc(${slat.width} + 1px)` }}
         >
           <div
             className="absolute inset-x-0 top-(--panel-top) -bottom-(--travel) animate-curtain-drop bg-curtain shadow-[0_calc(-0.05*var(--u))_calc(0.22*var(--u))_rgba(78,78,255,0.22)] motion-reduce:animate-none"

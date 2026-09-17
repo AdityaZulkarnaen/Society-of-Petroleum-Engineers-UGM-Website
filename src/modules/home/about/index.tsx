@@ -17,7 +17,7 @@ export function About() {
     >
       <ScrollRevealText
         text={MISSION}
-        className="mx-auto max-w-[85%] text-center font-display text-4xl md:text-7xl leading-[1.18] font-bold tracking-[-0.02em] whitespace-pre-line text-white"
+        className="mx-auto max-w-[90%] md:max-w-[85%] text-center font-display text-3xl md:text-7xl leading-[1.18] font-bold tracking-[-0.02em] whitespace-pre-line text-white"
       />
     </section>
   );

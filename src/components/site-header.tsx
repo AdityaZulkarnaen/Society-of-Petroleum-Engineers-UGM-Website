@@ -19,7 +19,7 @@ const LINKS = [
  * The header floats as a rounded bar while the page's `[data-nav-float]`
  * section (the hero) is still under it, and docks to the top at full width
  * once that section has scrolled away. Pages without such a section get the
- * docked bar straight away.
+ * docked bar straight away, and phones always do (see the `docked` variant).
  */
 function useDocked(navRef: React.RefObject<HTMLElement | null>) {
   const pathname = usePathname();
@@ -60,7 +60,7 @@ export function SiteHeader() {
   return (
     <header
       data-docked={docked || undefined}
-      className="group/header fixed inset-x-0 top-[3svh] z-50 animate-nav-in transition-[top] duration-500 ease-out-soft data-docked:top-0 motion-reduce:animate-none"
+      className="fixed inset-x-0 top-[3svh] z-50 animate-nav-in transition-[top] duration-500 ease-out-soft docked:top-0 motion-reduce:animate-none"
     >
       <nav
         ref={navRef}
@@ -72,7 +72,7 @@ export function SiteHeader() {
           "mt-[calc(13*var(--k))] w-[min(calc(1270*var(--kw)),calc(100%_-_2rem))] rounded-[clamp(18px,calc(24*var(--k)),30px)] border-white/55 px-[clamp(10px,calc(10*var(--k)),18px)] shadow-nav",
           /* docked — the inner padding keeps the logo and button where they
              sat in the floating bar */
-          "group-data-docked/header:mt-0 group-data-docked/header:w-full group-data-docked/header:rounded-none group-data-docked/header:border-transparent group-data-docked/header:border-b-[#ececf6] group-data-docked/header:px-[max(1rem,calc((100%_-_min(calc(1270*var(--kw)),calc(100%_-_2rem)))/2_+_clamp(10px,calc(10*var(--k)),18px)))] group-data-docked/header:shadow-nav-docked",
+          "docked:mt-0 docked:w-full docked:rounded-none docked:border-transparent docked:border-b-[#ececf6] docked:px-[max(1rem,calc((100%_-_min(calc(1270*var(--kw)),calc(100%_-_2rem)))/2_+_clamp(10px,calc(10*var(--k)),18px)))] docked:shadow-nav-docked",
         ].join(" ")}
       >
         <a
@@ -103,9 +103,12 @@ export function SiteHeader() {
           ))}
         </ul>
 
-        <a href="#join" className={`${outlineButton} ml-auto hidden md:inline-flex`}>
-          Join SPE
-        </a>
+        {/* on phones the CTA lives in the menu */}
+        <div className="ml-auto hidden md:block">
+          <a href="#join" className={outlineButton}>
+            Join SPE
+          </a>
+        </div>
 
         <button
           type="button"

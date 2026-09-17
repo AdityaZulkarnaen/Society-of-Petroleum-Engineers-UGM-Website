@@ -73,7 +73,7 @@ export function Hero() {
 
       {/* On tall viewports the copy centres in the room the curtain leaves
           (clearing the mascots' heads) instead of hanging from the top. */}
-      <div className="relative z-[2] flex flex-col items-center px-6 pt-[max(calc(242*var(--k)),calc(var(--nav-h)+3.5rem))] text-center tall:flex-auto tall:justify-center tall:pt-[calc(var(--nav-h)+1.5rem)] tall:pb-[calc(100svh_-_var(--p2)_+_6.6*var(--m)_+_0.75rem)]">
+      <div className="relative z-[2] flex flex-col items-center px-6 pt-[max(calc(242*var(--k)),calc(var(--nav-h)+3.5rem))] text-center tall:flex-auto tall:justify-center tall:pt-[calc(var(--nav-h)+1.5rem)] tall:pb-[calc(var(--stage)_-_var(--mascot-line)_+_6.6*var(--m)_+_0.75rem)]">
         <h1 className="font-display text-[clamp(30px,calc(80*var(--k)),96px)] leading-[1.277] font-bold tracking-[-0.02em] text-ink">
           Engineering
           <br />
@@ -115,7 +115,10 @@ export function Hero() {
       </div>
 
       {/* Both figures are pinned so the lower cut in their artwork lands
-          exactly on the --p2 panel edge, and the higher cut on --p3.
+          on the --mascot-line panel edge (--p2 on desktop), and the higher
+          cut one step above it — nudged down and
+          outwards a touch so the cuts sit under the curtain rather than
+          exactly on its edge, where rounding could expose them.
           female — source 1531x1656, visible from x85, cuts at y1450.5 /
           y1633, step at x372.5; pulled left to touch the screen edge */}
       <Image
@@ -124,8 +127,8 @@ export function Hero() {
         width={1531}
         height={1656}
         priority
-        sizes="(max-width: 767px) 50vw, 40vw"
-        className={`${mascot} bottom-[10%] left-0 translate-x-[-7%] w-[30%]`}
+        sizes="(max-width: 767px) 90vw, 40vw"
+        className={`${mascot} bottom-[calc(100%_-_var(--mascot-line)_-_0.1541*var(--m))] left-[calc(-0.5058*var(--m))] w-[calc(8.389*var(--m))] md:bottom-[10%] md:left-0 md:w-[30%] md:translate-x-[-7%]`}
       />
       {/* male — source 1375x1522, visible to x1375, cuts at y1320.5 /
           y1520, step at x990.5 */}
@@ -135,8 +138,8 @@ export function Hero() {
         width={1375}
         height={1522}
         priority
-        sizes="(max-width: 767px) 45vw, 34vw"
-        className={`${mascot} right-0 bottom-[calc(100%_-_var(--p2)_-_0.01*var(--m))] w-[calc(6.8922*var(--m))]`}
+        sizes="(max-width: 767px) 75vw, 34vw"
+        className={`${mascot} -right-[calc(0.04*var(--m))] bottom-[calc(100%_-_var(--mascot-line)_-_0.06*var(--m))] w-[calc(6.8922*var(--m))]`}
       />
 
       <Curtain />
