@@ -1,0 +1,144 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   SPE UGM Student Chapter — design tokens
+
+   Styling lives in Tailwind utilities on the components. This file only holds
+   what utilities can't: theme tokens, the reference-frame layout variables
+   the utilities calculate from, custom variants, and base element styles.
+
+   The composition is driven by the reference design's width: one frame pixel
+   (--k) is 1px of the 1440px-wide reference, so type, spacing, mascots and
+   the curtain all keep the reference's proportions. The curtain panels hang
+   from fixed positions measured from the top of the page, which is why a
+   shorter viewport shows only the tip of the centre panel and a taller one
+   shows a deeper band — exactly as the two reference frames do.
+   ========================================================================== */
+
+/* Tall viewports — phones, split windows — lay the hero out as a column. */
+@custom-variant tall (@media (max-aspect-ratio: 5 / 4));
+
+@theme inline {
+  --font-sans: var(--font-jakarta);
+  --font-display: var(--font-sora);
+
+  --color-ink: #252c3a;        /* display type */
+  --color-ink-soft: #4b5565;   /* body copy */
+  --color-ink-nav: #3e4757;    /* nav links */
+  --color-ink-deep: #1c2433;   /* solid controls */
+  --color-iris: #6d5ae0;       /* focus / selection */
+  --color-curtain: #4e4eff;    /* the curtain itself */
+  --color-ground: #fbfbfe;     /* page background */
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Glass tile, after the Figma effect stack:
+       Inner shadow — x 4.21, y 4.21, blur 7.25, spread 0, #FFFFFF 20%
+     plus an edge catch-light and faint warm/cool dispersion fringes. */
+  --shadow-glass:
+    inset calc(4.21 * var(--k)) calc(4.21 * var(--k)) calc(7.25 * var(--k)) 0 rgba(255, 255, 255, 0.2),
+    inset 1px 0 0 rgba(255, 255, 255, 0.6),
+    inset calc(2 * var(--k)) 0 calc(3 * var(--k)) calc(-1 * var(--k)) rgba(255, 130, 190, 0.14),
+    inset calc(-2 * var(--k)) 0 calc(3 * var(--k)) calc(-1 * var(--k)) rgba(100, 170, 255, 0.16);
+  --shadow-nav:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 14px 36px -16px rgba(60, 48, 122, 0.22);
+  --shadow-nav-docked: 0 10px 28px -20px rgba(60, 48, 122, 0.28);
+
+  /* One panel of fabric covers the viewport on first paint and slides down
+     to its resting edge; a skipped animation simply shows the finished state. */
+  --animate-curtain-drop: curtain-drop 1.25s cubic-bezier(0.16, 1, 0.3, 1) var(--delay, 0s) both;
+  /* the curtain's edge glow lights up as the panels settle */
+  --animate-glow-in: glow-in 0.9s ease-out 0.85s both;
+  --animate-nav-in: nav-in 0.7s var(--ease-out-soft) 0.35s both;
+
+  @keyframes curtain-drop {
+    from { transform: translateY(calc(-1 * var(--travel))); }
+    to   { transform: translateY(0); }
+  }
+
+  @keyframes glow-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @keyframes nav-in {
+    from { opacity: 0; transform: translateY(-12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+
+    /* One reference-frame pixel. Width drives the design; the height term
+       only keeps the whole composition inside short viewports. */
+    --k: min(0.069444vw, 0.0991079svh, 1.6px);
+
+    /* width-only frame pixel — for things that should span the page rather
+       than shrink with the composition, like the nav bar */
+    --kw: min(0.069444vw, 1.6px);
+
+    /* Curtain step, locked to the step baked into the mascot artwork: the
+       female cut-outs sit 182.5px apart in a 1656px-tall source, the male
+       199.5px in 1522px. Panel steps and mascot sizes both derive from it, so
+       artwork and curtain edge always meet exactly. */
+    --u: calc(61 * var(--k));
+
+    /* Where each panel's top edge hangs, measured from the top of the hero.
+       The max() caps how deep the band can grow on very tall viewports. */
+    --p0: max(calc(995 * var(--k)), calc(100svh - 3.7 * var(--u)));  /* centre */
+    --p1: max(calc(945 * var(--k)), calc(100svh - 4.55 * var(--u)));
+    --p2: max(calc(890 * var(--k)), calc(100svh - 5.45 * var(--u))); /* mascot line */
+    --p3: calc(var(--p2) - var(--m)); /* edges — one mascot step higher */
+
+    /* Mascot step. The mascots scale with the page width (capped on short
+       viewports) instead of --u, so they stay large and flush against the
+       screen edges; each edge panel takes its width from the step cut into
+       the figure beside it. */
+    --m: min(4.8vw, 7.4svh, 77px);
+    --edge-l: calc(1.5753 * var(--m));
+    --edge-r: calc(1.9273 * var(--m));
+
+    --nav-h: clamp(56px, calc(80 * var(--k)), 104px);
+    --hero-h: max(100svh, 620px);
+    --travel: calc(var(--hero-h) + 4px);
+  }
+
+  /* Phones: the reference frame is far wider than the screen, so the frame
+     pixel gets a floor of its own and the mascots a width cap. */
+  @media (max-width: 767px) {
+    :root {
+      --k: min(0.135vw, 0.0991079svh);
+      --u: min(calc(61 * var(--k)), 5.4vw);
+      --m: min(6.2vw, 7.4svh);
+    }
+  }
+
+  body {
+    background: var(--color-ground);
+    color: var(--color-ink);
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-curtain) 20%, transparent);
+    color: #141a26;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-iris);
+    outline-offset: 3px;
+  }
+
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: #f2f1fa; }
+  ::-webkit-scrollbar-thumb {
+    background: #c9c5e6;
+    border: 2px solid #f2f1fa;
+    border-radius: 99px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: #b0aad8; }
+}
