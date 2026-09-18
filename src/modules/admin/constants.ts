@@ -10,3 +10,13 @@ export const ACCOUNT_EMAIL_DOMAIN = "accounts.spe-ugm.internal";
 
 export const accountEmail = (username: string) =>
   `${username.toLowerCase()}@${ACCOUNT_EMAIL_DOMAIN}`;
+
+/**
+ * The current management period. Drives the period progress card; update it
+ * when a new period starts.
+ */
+export const CURRENT_PERIOD = {
+  label: "2025/2026",
+  startsOn: "2025-10-01",
+  endsOn: "2026-09-30",
+};

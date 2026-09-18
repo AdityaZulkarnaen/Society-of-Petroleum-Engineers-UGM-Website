@@ -9,12 +9,16 @@ export type AdminRole = "super_admin" | "admin";
 
 export type Admin = {
   id: string;
-  email: string;
   username: string;
   fullName: string;
   role: AdminRole;
   /** Super admins manage the admin accounts of this division. */
-  division: { id: string; name: string } | null;
+  division: { id: string; name: string; tags: string[] } | null;
+  nim: string | null;
+  department: string | null;
+  position: string | null;
+  whatsapp: string | null;
+  contactEmail: string | null;
 };
 
 /**
@@ -30,7 +34,9 @@ export const getAdmin = cache(async (): Promise<Admin | null> => {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("id, username, full_name, role, division:divisions(id, name)")
+    .select(
+      "id, username, full_name, role, nim, department, position, whatsapp, contact_email, division:divisions(id, name, tags)",
+    )
     .eq("id", claims.sub)
     .maybeSingle();
   if (!profile) return null;
@@ -42,11 +48,15 @@ export const getAdmin = cache(async (): Promise<Admin | null> => {
 
   return {
     id: profile.id,
-    email: claims.email ?? "",
     username: profile.username,
-    fullName: profile.full_name,
+    fullName: profile.full_name || profile.username,
     role: profile.role,
     division,
+    nim: profile.nim,
+    department: profile.department,
+    position: profile.position,
+    whatsapp: profile.whatsapp,
+    contactEmail: profile.contact_email,
   };
 });
 

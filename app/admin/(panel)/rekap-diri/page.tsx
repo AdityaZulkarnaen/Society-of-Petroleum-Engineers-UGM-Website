@@ -1,0 +1,5 @@
+import { ComingSoonPage } from "@/modules/admin/coming-soon";
+
+export default function Page() {
+  return <ComingSoonPage title="Rekap Diri" />;
+}

@@ -84,6 +84,7 @@ for (const division of DIVISIONS) {
       id: userId,
       username,
       full_name: `Koordinator ${division.name}`,
+      position: "Koordinator",
       role: "super_admin",
       division_id: divisionRow.id,
     },
