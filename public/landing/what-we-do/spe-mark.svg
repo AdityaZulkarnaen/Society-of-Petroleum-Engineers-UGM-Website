@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 88" fill="none">
+  <ellipse cx="80" cy="44" rx="78" ry="42" fill="#2b3050"/>
+  <ellipse cx="80" cy="44" rx="67" ry="32" stroke="#fff" stroke-width="3.5"/>
+  <text x="80" y="62" text-anchor="middle" font-family="Arial Black, Arial, Helvetica, sans-serif" font-size="50" font-weight="900" letter-spacing="-2" fill="#fff" stroke="#2b3050" stroke-width="7" paint-order="stroke">SPE</text>
+</svg>
