@@ -12,6 +12,7 @@ import {
   Label,
   ProgressBar,
   SectionHeading,
+  Stat,
 } from "../components/ui";
 import { CURRENT_PERIOD } from "../constants";
 import { periodProgress } from "./period";
@@ -32,26 +33,6 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
         {empty ? <span className="text-[#5d6075]">—</span> : children}
       </dd>
     </div>
-  );
-}
-
-function Stat({
-  label,
-  value,
-  caption,
-}: {
-  label: string;
-  value: string;
-  caption: string;
-}) {
-  return (
-    <Card className="px-6 py-6">
-      <Label>{label}</Label>
-      <p className="mt-2.5 text-[30px] leading-none font-bold tracking-[-0.02em]">
-        {value}
-      </p>
-      <p className="mt-3 text-[13px] text-[#6f7286]">{caption}</p>
-    </Card>
   );
 }
 

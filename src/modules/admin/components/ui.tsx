@@ -64,6 +64,27 @@ export function Label({ children }: { children: ReactNode }) {
   );
 }
 
+/** Headline number card: label, value and a short caption. */
+export function Stat({
+  label,
+  value,
+  caption,
+}: {
+  label: string;
+  value: ReactNode;
+  caption: string;
+}) {
+  return (
+    <Card className="px-6 py-6">
+      <Label>{label}</Label>
+      <p className="mt-2.5 text-[30px] leading-none font-bold tracking-[-0.02em]">
+        {value}
+      </p>
+      <p className="mt-3 text-[13px] text-[#6f7286]">{caption}</p>
+    </Card>
+  );
+}
+
 const TONES = {
   blue: "border-[#3b82f6]/35 bg-[#3b82f6]/12 text-[#6aa5ff]",
   green: "border-[#34d399]/30 bg-[#34d399]/10 text-[#4ade80]",
