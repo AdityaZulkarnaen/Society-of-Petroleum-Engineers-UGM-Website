@@ -10,7 +10,7 @@ function Brand() {
   return (
     <div className="flex items-center gap-3">
       <Image
-        src="/global/logo.webp"
+        src="/global/logo-light.webp"
         alt=""
         width={169}
         height={147}

@@ -13,7 +13,7 @@ export async function LoginPage() {
       <div className="w-full max-w-[472px] rounded-3xl border border-white/[0.08] bg-[linear-gradient(180deg,#25273a_0%,#1b1d2d_100%)] px-6 py-10 shadow-[0_40px_90px_-30px_rgba(0,0,0,0.7)] sm:px-10 sm:py-11">
         <div className="flex items-center justify-center gap-3">
           <Image
-            src="/global/logo.webp"
+            src="/global/logo-light.webp"
             alt=""
             width={169}
             height={147}

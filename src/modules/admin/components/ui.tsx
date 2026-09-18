@@ -2,6 +2,19 @@ import type { ReactNode } from "react";
 
 /* Shared pieces of the dashboard's dark card language. */
 
+/* Card surface, after the Figma effect stack. It is translucent, so the page
+   background shows through.
+     Fill   — linear #FFFFFF 7% → 0% at 50%, corner to corner (fixed angle
+              here, Figma's follows the card's aspect ratio)
+     Fill   — #FFFFFF 4%
+     Stroke — inside, 0.8, #FFFFFF 12%
+     Inner shadow — x 6, y 6, blur 12, #FFFFFF 6%
+     Inner shadow — x -1.5, y -1.5, blur 6, #308FFF 4% */
+export const cardSurface =
+  "rounded-[20px] border-[0.8px] border-white/12 " +
+  "bg-[linear-gradient(110deg,rgb(255_255_255/0.07)_0%,rgb(255_255_255/0)_50%),linear-gradient(rgb(255_255_255/0.04),rgb(255_255_255/0.04))] " +
+  "shadow-[inset_6px_6px_12px_rgb(255_255_255/0.06),inset_-1.5px_-1.5px_6px_rgb(48_143_255/0.04)]";
+
 export function Card({
   children,
   className = "",
@@ -10,9 +23,7 @@ export function Card({
   className?: string;
 }) {
   return (
-    <section
-      className={`rounded-[20px] border border-white/[0.08] bg-[linear-gradient(180deg,#161a31_0%,#10132a_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_24px_48px_-32px_rgba(0,0,0,0.8)] ${className}`}
-    >
+    <section className={`${cardSurface} ${className}`}>
       {children}
     </section>
   );
