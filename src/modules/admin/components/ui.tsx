@@ -89,6 +89,36 @@ export function Badge({
   );
 }
 
+/** Thin gradient bar. A null percent draws the empty track only. */
+export function ProgressBar({
+  percent,
+  label,
+  className = "",
+}: {
+  percent: number | null;
+  label: string;
+  className?: string;
+}) {
+  const track = `h-1.5 overflow-hidden rounded-full bg-white/[0.08] ${className}`;
+  if (percent == null) return <div aria-hidden="true" className={track} />;
+
+  return (
+    <div
+      role="progressbar"
+      aria-label={label}
+      aria-valuenow={percent}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      className={track}
+    >
+      <div
+        className="h-full rounded-full bg-[linear-gradient(90deg,#2563eb,#4e4eff)]"
+        style={{ width: `${percent}%` }}
+      />
+    </div>
+  );
+}
+
 /** Placeholder for a section whose data isn't recorded yet. */
 export function EmptyState({
   title,

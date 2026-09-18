@@ -10,6 +10,7 @@ import {
   Card,
   EmptyState,
   Label,
+  ProgressBar,
   SectionHeading,
 } from "../components/ui";
 import { CURRENT_PERIOD } from "../constants";
@@ -212,19 +213,11 @@ export async function OverviewPage() {
               </span>
               <span className="font-bold text-[#4f8dff]">{period.percent}%</span>
             </div>
-            <div
-              role="progressbar"
-              aria-label="Progres periode kepengurusan"
-              aria-valuenow={period.percent}
-              aria-valuemin={0}
-              aria-valuemax={100}
-              className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-white/[0.08]"
-            >
-              <div
-                className="h-full rounded-full bg-[linear-gradient(90deg,#2563eb,#4e4eff)]"
-                style={{ width: `${period.percent}%` }}
-              />
-            </div>
+            <ProgressBar
+              percent={period.percent}
+              label="Progres periode kepengurusan"
+              className="mt-2.5"
+            />
             <div className="mt-5 grid grid-cols-2 gap-3">
               <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] px-4 py-3.5">
                 <Label>Bulan Berjalan</Label>

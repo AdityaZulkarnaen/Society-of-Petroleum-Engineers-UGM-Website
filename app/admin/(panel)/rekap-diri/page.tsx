@@ -1,5 +1,5 @@
-import { ComingSoonPage } from "@/modules/admin/coming-soon";
+import { SelfReportPage } from "@/modules/admin/rekap-diri";
 
 export default function Page() {
-  return <ComingSoonPage title="Rekap Diri" />;
+  return <SelfReportPage />;
 }

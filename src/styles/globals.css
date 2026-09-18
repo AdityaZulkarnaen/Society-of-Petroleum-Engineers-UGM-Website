@@ -148,6 +148,11 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  /* Every heading is set in the display face. */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  }
+
   ::selection {
     background: color-mix(in oklab, var(--color-curtain) 20%, transparent);
     color: #141a26;
