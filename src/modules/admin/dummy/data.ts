@@ -5,6 +5,7 @@ import type { Admin } from "../auth/session";
 import type { DivisionSummary } from "../overview/data";
 import type { SelfReport } from "../rekap-diri/data";
 import type { Candidate } from "../voting/data";
+import type { Account } from "@/modules/super-admin/accounts/fields";
 import type { SuperAdminSummary } from "@/modules/super-admin/dashboard/data";
 
 export const dummyAdmin: Admin = {
@@ -185,5 +186,50 @@ export const dummyVote = {
   get: () => store.__speDummyVote ?? null,
   set: (vote: DummyVote) => {
     store.__speDummyVote = vote;
+  },
+};
+
+/* Manajemen Akun --------------------------------------------------------- */
+
+const account = (
+  id: string,
+  fullName: string,
+  username: string,
+  position: string,
+  isActive = true,
+): Account => ({
+  id,
+  username,
+  fullName,
+  nim: "24/123456/TK/12345",
+  email: `${username.replace(".", "")}@mail.ugm.ac.id`,
+  whatsapp: "+62 812-3456-7890",
+  department: "Teknik Perminyakan",
+  division: "MedCre",
+  position,
+  period: "2025/2026",
+  isActive,
+});
+
+const ACCOUNTS: Account[] = [
+  account("a1", "Rizky Ananda", "rizky.ananda", "Head"),
+  account("a2", "Reza Rasendriya Hemawan", "reza.hemawan", "Vice Head"),
+  account("a3", "Budi Santoso", "budi.santoso", "Staff"),
+  account("a4", "Citra Dewi", "citra.dewi", "Staff"),
+  account("a5", "Ahmad Faruq Hakim", "ahmad.hakim", "Vice Head"),
+  account("a6", "Siti Nuraini Fadillah", "siti.fadillah", "Vice Head"),
+  account("a7", "Dewi Lestari", "dewi.lestari", "Staff"),
+  account("a8", "Fajar Nugroho", "fajar.nugroho", "Staff"),
+  account("a9", "Galih Pratama", "galih.pratama", "Staff"),
+  account("a10", "Hana Maharani", "hana.maharani", "Staff", false),
+];
+
+/* Kept on globalThis so edits survive hot reloads until the server restarts. */
+const accountStore = globalThis as { __speDummyAccounts?: Account[] };
+
+export const dummyAccounts = {
+  list: (): Account[] => (accountStore.__speDummyAccounts ??= structuredClone(ACCOUNTS)),
+  save: (accounts: Account[]) => {
+    accountStore.__speDummyAccounts = accounts;
   },
 };

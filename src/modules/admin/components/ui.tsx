@@ -15,6 +15,16 @@ export const cardSurface =
   "bg-[linear-gradient(110deg,rgb(255_255_255/0.07)_0%,rgb(255_255_255/0)_50%),linear-gradient(rgb(255_255_255/0.04),rgb(255_255_255/0.04))] " +
   "shadow-[inset_6px_6px_12px_rgb(255_255_255/0.06),inset_-1.5px_-1.5px_6px_rgb(48_143_255/0.04)]";
 
+/** Blue gradient call-to-action button. */
+export const primaryButton =
+  "inline-flex h-11 items-center justify-center rounded-xl bg-[linear-gradient(90deg,#2f7bff_0%,#4e4eff_100%)] px-6 text-sm font-semibold text-white " +
+  "shadow-[0_8px_24px_-8px_rgba(59,111,255,0.7),inset_0_1px_0_rgba(255,255,255,0.18)] transition-[filter,box-shadow] hover:brightness-110 " +
+  "disabled:cursor-not-allowed disabled:bg-none disabled:bg-white/[0.06] disabled:text-[#5b5e71] disabled:shadow-none disabled:hover:brightness-100";
+
+/** Quiet bordered button, e.g. "Batal". */
+export const secondaryButton =
+  "inline-flex h-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] px-5 text-sm font-medium text-[#c7c9d4] transition-colors hover:border-white/20 hover:text-white disabled:opacity-50";
+
 export function Card({
   children,
   className = "",

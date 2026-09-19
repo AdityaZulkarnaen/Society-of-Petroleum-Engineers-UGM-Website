@@ -2,13 +2,10 @@
 
 import { useRef, useState, useTransition } from "react";
 
-import { Card } from "../components/ui";
+import { modalSurface } from "../components/modal";
+import { Card, primaryButton } from "../components/ui";
 import { castVote } from "./actions";
-import {
-  CandidateCard,
-  CandidateSummary,
-  primaryButton,
-} from "./candidate-card";
+import { CandidateCard, CandidateSummary } from "./candidate-card";
 import type { Candidate } from "./data";
 
 function Radio({ id, checked, onSelect }: {
@@ -130,7 +127,7 @@ export function Ballot({ candidates }: { candidates: Candidate[] }) {
         aria-describedby="confirm-note"
         onCancel={(e) => pending && e.preventDefault()}
         onClick={(e) => e.target === e.currentTarget && close()}
-        className="m-auto w-[calc(100%-32px)] max-w-[540px] rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,#151a38_0%,#0b0e22_100%)] p-0 text-white shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.06)] transition-[opacity,scale,display,overlay] transition-discrete duration-200 backdrop:bg-[#03040d]/75 backdrop:backdrop-blur-sm starting:open:scale-95 starting:open:opacity-0"
+        className={`${modalSurface} max-w-[540px]`}
       >
         {selected && (
           <div className="px-6 pt-8 pb-6 text-center sm:px-9">

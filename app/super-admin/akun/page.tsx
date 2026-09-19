@@ -1,11 +1,5 @@
-import { ComingSoonPage } from "@/modules/admin/coming-soon";
+import { AccountsPage } from "@/modules/super-admin/accounts";
 
-export default function Page() {
-  return (
-    <ComingSoonPage
-      title="Manajemen Akun"
-      backHref="/super-admin"
-      backLabel="Kembali ke Dashboard"
-    />
-  );
+export default function Page({ searchParams }: PageProps<"/super-admin/akun">) {
+  return <AccountsPage searchParams={searchParams} />;
 }

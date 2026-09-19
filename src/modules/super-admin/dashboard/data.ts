@@ -2,7 +2,7 @@ import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
 import { DUMMY_DATA } from "@/modules/admin/dummy";
-import { dummySuperAdminSummary } from "@/modules/admin/dummy/data";
+import { dummyAccounts, dummySuperAdminSummary } from "@/modules/admin/dummy/data";
 
 export type SuperAdminSummary = {
   /** Pengurus accounts in the super admin's division. */
@@ -18,7 +18,14 @@ export type SuperAdminSummary = {
 };
 
 export async function getSuperAdminSummary(): Promise<SuperAdminSummary> {
-  if (DUMMY_DATA) return dummySuperAdminSummary;
+  if (DUMMY_DATA) {
+    const accounts = dummyAccounts.list();
+    return {
+      ...dummySuperAdminSummary,
+      totalAccounts: accounts.length,
+      activeAccounts: accounts.filter((a) => a.isActive).length,
+    };
+  }
 
   const supabase = await createClient();
   const [{ data: rows }, { count: divisionCount }] = await Promise.all([

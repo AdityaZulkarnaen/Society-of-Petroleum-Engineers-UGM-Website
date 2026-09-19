@@ -1,7 +1,7 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
 
-import { cardSurface, initials } from "../components/ui";
+import { cardSurface, initials, primaryButton } from "../components/ui";
 import type { Candidate } from "./data";
 
 /** Portrait, or the candidate's initials when there's no photo. */
@@ -59,11 +59,6 @@ function List({ title, items }: { title: string; items: string[] }) {
     </div>
   );
 }
-
-export const primaryButton =
-  "inline-flex h-11 items-center justify-center rounded-xl bg-[linear-gradient(90deg,#2f7bff_0%,#4e4eff_100%)] px-6 text-sm font-semibold text-white " +
-  "shadow-[0_8px_24px_-8px_rgba(59,111,255,0.7),inset_0_1px_0_rgba(255,255,255,0.18)] transition-[filter,box-shadow] hover:brightness-110 " +
-  "disabled:cursor-not-allowed disabled:bg-none disabled:bg-white/[0.06] disabled:text-[#5b5e71] disabled:shadow-none disabled:hover:brightness-100";
 
 /**
  * A candidate's full profile. `control` sits in the top-right corner (the

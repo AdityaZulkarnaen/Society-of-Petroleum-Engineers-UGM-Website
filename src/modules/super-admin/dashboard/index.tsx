@@ -138,7 +138,7 @@ export async function SuperAdminDashboard() {
         <Card className="p-6">
           <SectionHeading eyebrow="Akses Cepat" title="Tindakan Umum" />
           <ul className="mt-6 space-y-2">
-            <QuickAction href="/super-admin/akun">Tambah pengurus baru</QuickAction>
+            <QuickAction href="/super-admin/akun?tambah=1">Tambah pengurus baru</QuickAction>
             <QuickAction
               href={
                 summary.pendingRekap
