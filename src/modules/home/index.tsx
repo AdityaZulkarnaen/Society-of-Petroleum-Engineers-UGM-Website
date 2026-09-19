@@ -1,5 +1,6 @@
 import { About } from "./about";
 import { Hero } from "./hero";
+import { Testimonials } from "./testimonials";
 import { WhatWeDo } from "./what-we-do";
 
 export function HomePage() {
@@ -8,6 +9,7 @@ export function HomePage() {
       <Hero />
       <About />
       <WhatWeDo />
+      <Testimonials />
     </main>
   );
 }
