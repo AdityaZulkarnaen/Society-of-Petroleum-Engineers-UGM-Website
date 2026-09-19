@@ -2,6 +2,15 @@
 export const ADMIN_CONTACT_EMAIL = "admin@spe-ugm.ac.id";
 
 /**
+ * Where each role's dashboard lives. Super admins are the division accounts;
+ * admins are the pengurus they create.
+ */
+export const HOME_PATH = {
+  super_admin: "/super-admin",
+  admin: "/admin",
+} as const;
+
+/**
  * Accounts sign in with a username only. Supabase Auth still needs an email,
  * so every account gets an internal one: `<username>@ACCOUNT_EMAIL_DOMAIN`.
  * It is never shown or mailed. Keep in sync with scripts/seed-super-admins.mjs.

@@ -2,11 +2,12 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 
 import { getAdmin } from "../auth/session";
-import { ADMIN_CONTACT_EMAIL } from "../constants";
+import { ADMIN_CONTACT_EMAIL, HOME_PATH } from "../constants";
 import { LoginForm } from "./login-form";
 
 export async function LoginPage() {
-  if (await getAdmin()) redirect("/admin");
+  const admin = await getAdmin();
+  if (admin) redirect(HOME_PATH[admin.role]);
 
   return (
     <main className="flex min-h-svh flex-col items-center justify-center bg-[#0e1022] bg-[radial-gradient(ellipse_60%_55%_at_50%_45%,#161a33_0%,#0e1022_100%)] px-4 py-12 text-white">

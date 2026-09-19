@@ -6,7 +6,11 @@ import { requireAdmin, type Admin } from "../auth/session";
 import { Avatar } from "../components/ui";
 import { SidebarNav, TabNav } from "./nav";
 
-function Brand() {
+export function Brand({
+  subtitle = "Dashboard Pengurus",
+}: {
+  subtitle?: string;
+}) {
   return (
     <div className="flex items-center gap-3">
       <Image
@@ -20,7 +24,7 @@ function Brand() {
       <div className="leading-tight">
         <p className="text-sm font-bold text-white">SPE UGM SC</p>
         <p className="mt-0.5 text-[11px] tracking-[0.06em] text-[#6f7286] uppercase">
-          Dashboard Pengurus
+          {subtitle}
         </p>
       </div>
     </div>

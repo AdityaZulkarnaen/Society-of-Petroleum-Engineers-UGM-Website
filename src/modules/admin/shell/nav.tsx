@@ -34,27 +34,74 @@ const icon = {
       <path d="m7.4 6 1.2 1.2L10.8 5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   ),
+  home: (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+      <path d="M2.75 7.6 9 2.75l6.25 4.85V15a.75.75 0 0 1-.75.75h-3.75v-4.5h-3.5v4.5H3.5a.75.75 0 0 1-.75-.75V7.6Z" strokeLinejoin="round" />
+    </svg>
+  ),
+  users: (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+      <circle cx="6.75" cy="6" r="2.75" />
+      <path d="M1.75 15c.6-2.4 2.6-3.75 5-3.75s4.4 1.35 5 3.75" strokeLinecap="round" />
+      <path d="M11.5 3.4a2.75 2.75 0 0 1 0 5.2M13.25 11.5c1.4.5 2.4 1.7 2.9 3.5" strokeLinecap="round" />
+    </svg>
+  ),
+  clipboard: (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+      <rect x="3.25" y="3" width="11.5" height="13" rx="1.75" />
+      <path d="M6.5 1.75h5v2.5h-5zM6.25 8h5.5M6.25 11h3.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
+  layers: (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+      <path d="m9 2.25 6.75 3.5L9 9.25l-6.75-3.5L9 2.25Z" strokeLinejoin="round" />
+      <path d="m2.25 9.25 6.75 3.5 6.75-3.5M2.25 12.5 9 16l6.75-3.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
+  log: (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+      <rect x="2.75" y="2.25" width="12.5" height="13.5" rx="1.75" />
+      <path d="M6 6h6M6 9h6M6 12h3.5" strokeLinecap="round" />
+    </svg>
+  ),
 } satisfies Record<string, ReactNode>;
 
-export const NAV = [
-  { href: "/admin", label: "Overview", icon: icon.overview },
-  { href: "/admin/rekap-diri", label: "Rekap Diri", icon: icon.profile },
-  { href: "/admin/acara", label: "Acara / Proker", icon: icon.calendar },
-  { href: "/admin/voting", label: "Voting Ketua", icon: icon.vote },
-] as const;
+/* The first item of each menu is its dashboard root. */
+const MENUS = {
+  admin: [
+    { href: "/admin", label: "Overview", icon: icon.overview },
+    { href: "/admin/rekap-diri", label: "Rekap Diri", icon: icon.profile },
+    { href: "/admin/acara", label: "Acara / Proker", icon: icon.calendar },
+    { href: "/admin/voting", label: "Voting Ketua", icon: icon.vote },
+  ],
+  superAdmin: [
+    { href: "/super-admin", label: "Dashboard", icon: icon.home },
+    { href: "/super-admin/akun", label: "Manajemen Akun", icon: icon.users },
+    { href: "/super-admin/rekap", label: "Rekap Pengurus", icon: icon.clipboard },
+    { href: "/super-admin/voting", label: "Voting", icon: icon.vote },
+    { href: "/super-admin/acara", label: "Acara / Proker", icon: icon.calendar },
+    { href: "/super-admin/divisi", label: "Divisi", icon: icon.layers },
+    { href: "/super-admin/audit-log", label: "Audit Log", icon: icon.log },
+  ],
+};
 
-function useIsActive() {
+export type Menu = keyof typeof MENUS;
+
+function useIsActive(menu: Menu) {
   const pathname = usePathname();
+  const root = MENUS[menu][0].href;
   return (href: string) =>
-    href === "/admin" ? pathname === href : pathname.startsWith(href);
+    href === root
+      ? pathname === href
+      : pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function SidebarNav() {
-  const isActive = useIsActive();
+export function SidebarNav({ menu = "admin" }: { menu?: Menu }) {
+  const isActive = useIsActive(menu);
 
   return (
     <ul className="space-y-1">
-      {NAV.map((item) => {
+      {MENUS[menu].map((item) => {
         const active = isActive(item.href);
         return (
           <li key={item.href}>
@@ -78,12 +125,12 @@ export function SidebarNav() {
 }
 
 /** Phones and tablets: the same links as a scrollable tab row. */
-export function TabNav() {
-  const isActive = useIsActive();
+export function TabNav({ menu = "admin" }: { menu?: Menu }) {
+  const isActive = useIsActive(menu);
 
   return (
     <ul className="-mx-4 flex gap-1 overflow-x-auto px-4 pb-3 [scrollbar-width:none]">
-      {NAV.map((item) => {
+      {MENUS[menu].map((item) => {
         const active = isActive(item.href);
         return (
           <li key={item.href} className="shrink-0">

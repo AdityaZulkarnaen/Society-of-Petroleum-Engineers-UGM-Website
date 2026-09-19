@@ -2,7 +2,15 @@ import Link from "next/link";
 
 import { Card } from "../components/ui";
 
-export function ComingSoonPage({ title }: { title: string }) {
+export function ComingSoonPage({
+  title,
+  backHref = "/admin",
+  backLabel = "Kembali ke Overview",
+}: {
+  title: string;
+  backHref?: string;
+  backLabel?: string;
+}) {
   return (
     <div>
       <h1 className="text-[28px] font-bold tracking-[-0.02em]">{title}</h1>
@@ -12,10 +20,10 @@ export function ComingSoonPage({ title }: { title: string }) {
           Fitur {title} akan tersedia di pembaruan berikutnya.
         </p>
         <Link
-          href="/admin"
+          href={backHref}
           className="mt-6 inline-flex h-10 items-center rounded-lg border border-white/10 px-4 text-sm text-[#c7c9d4] transition-colors hover:border-white/20 hover:text-white"
         >
-          Kembali ke Overview
+          {backLabel}
         </Link>
       </Card>
     </div>

@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
 
-import { accountEmail } from "../constants";
+import { accountEmail, HOME_PATH } from "../constants";
 import { DUMMY_DATA } from "../dummy";
 
 export type SignInState = {
@@ -60,19 +60,21 @@ export async function signIn(
   /* A valid Supabase account isn't enough: it needs a dashboard profile. */
   const { data: profile } = await supabase
     .from("profiles")
-    .select("id")
+    .select("role, is_active")
     .eq("id", data.user.id)
     .maybeSingle();
 
-  if (!profile) {
+  if (!profile?.is_active) {
     await supabase.auth.signOut();
     return {
-      error: "Akun ini tidak memiliki akses ke dashboard.",
+      error: profile
+        ? "Akun ini sudah dinonaktifkan. Hubungi koordinator divisimu."
+        : "Akun ini tidak memiliki akses ke dashboard.",
       username,
     };
   }
 
-  redirect("/admin");
+  redirect(HOME_PATH[profile.role as keyof typeof HOME_PATH]);
 }
 
 export async function signOut() {

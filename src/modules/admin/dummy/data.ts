@@ -5,6 +5,7 @@ import type { Admin } from "../auth/session";
 import type { DivisionSummary } from "../overview/data";
 import type { SelfReport } from "../rekap-diri/data";
 import type { Candidate } from "../voting/data";
+import type { SuperAdminSummary } from "@/modules/super-admin/dashboard/data";
 
 export const dummyAdmin: Admin = {
   id: "00000000-0000-0000-0000-000000000001",
@@ -21,6 +22,34 @@ export const dummyAdmin: Admin = {
   position: "Vice Head",
   whatsapp: "+62 812-3456-7890",
   contactEmail: "reza.pratama@example.com",
+};
+
+/** A division account, as seeded by scripts/seed-super-admins.mjs. */
+export const dummySuperAdmin: Admin = {
+  id: "00000000-0000-0000-0000-000000000002",
+  username: "spemedcre",
+  fullName: "Koordinator MedCre",
+  role: "super_admin",
+  division: {
+    id: "00000000-0000-0000-0000-0000000000d1",
+    name: "MedCre",
+    tags: ["Desain Grafis", "Videografi", "Social Media", "Dokumentasi"],
+  },
+  nim: null,
+  department: null,
+  position: "Koordinator",
+  whatsapp: null,
+  contactEmail: null,
+};
+
+export const dummySuperAdminSummary: SuperAdminSummary = {
+  totalAccounts: 10,
+  activeAccounts: 9,
+  rekapFilled: 1,
+  pendingRekap: { id: "a2", name: "Reza Rasendriya Hemawan" },
+  divisionCount: 7,
+  /* signed in 25 minutes ago */
+  lastSignInAt: new Date(Date.now() - 25 * 60 * 1000).toISOString(),
 };
 
 export const dummyDivisionSummary: DivisionSummary = {
