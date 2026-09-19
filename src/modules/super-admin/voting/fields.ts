@@ -28,6 +28,10 @@ export type FormErrors = Record<string, string>;
 export type ActionResult = { error?: string; errors?: FormErrors };
 
 export const VISION_MAX = 1000;
+
+/* Photos are resized in the browser before upload; these bound the result. */
+export const PHOTO_TYPES = ["image/webp", "image/jpeg", "image/png"];
+export const PHOTO_MAX_BYTES = 1024 * 1024;
 export const POINT_MAX = 200;
 export const POINTS_MAX = 10;
 
@@ -53,7 +57,10 @@ export function validateCandidate(input: CandidateInput) {
   if (fullName.length < 2 || fullName.length > 100) errors.fullName = "Isi nama kandidat.";
   if (nim && !NIM_PATTERN.test(nim)) errors.nim = NIM_HINT;
   if (position.length > 80) errors.position = "Maksimal 80 karakter.";
-  if (photoUrl && !URL_PATTERN.test(photoUrl)) errors.photoUrl = "URL harus diawali https://";
+  /* an uploaded photo's URL (data: only in the dummy preview) */
+  if (photoUrl && !URL_PATTERN.test(photoUrl) && !photoUrl.startsWith("data:image/")) {
+    errors.photoUrl = "Foto tidak valid. Upload ulang fotonya.";
+  }
   if (vision.length > VISION_MAX) errors.vision = `Maksimal ${VISION_MAX} karakter.`;
   if (grandDesignUrl && !URL_PATTERN.test(grandDesignUrl)) {
     errors.grandDesignUrl = "URL harus diawali https://";

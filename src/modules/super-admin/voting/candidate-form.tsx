@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useTransition, type FormEvent } from "react";
+import { useEffect, useRef, useState, useTransition, type FormEvent } from "react";
 
 import { control, controlBase, Field } from "@/modules/admin/components/form";
 import { ModalHeader } from "@/modules/admin/components/modal";
 import { primaryButton, secondaryButton } from "@/modules/admin/components/ui";
 import type { Candidate } from "@/modules/admin/voting/data";
 
+import { discardCandidatePhotos } from "./actions";
 import {
   POINT_MAX,
   POINTS_MAX,
@@ -16,6 +17,7 @@ import {
   type CandidateInput,
   type FormErrors,
 } from "./fields";
+import { PhotoUpload } from "./photo-upload";
 
 type Point = { key: number; text: string };
 
@@ -123,8 +125,21 @@ export function CandidateForm({
   const [errors, setErrors] = useState<FormErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const [photoUrl, setPhotoUrl] = useState(candidate?.photoUrl ?? null);
   const editing = Boolean(candidate);
   const prefix = editing ? "edit-candidate" : "new-candidate";
+
+  /* Photos uploaded while the dialog is open, and the one that got saved.
+     Whatever else was uploaded is removed when the dialog goes away. */
+  const uploads = useRef<string[]>([]);
+  const savedPhoto = useRef<string | null | undefined>(undefined);
+  useEffect(() => {
+    const uploaded = uploads.current;
+    return () => {
+      const unused = uploaded.filter((url) => url !== savedPhoto.current);
+      if (unused.length) void discardCandidatePhotos(unused);
+    };
+  }, []);
 
   /* onSubmit rather than a form action, which would reset the fields */
   function submit(event: FormEvent<HTMLFormElement>) {
@@ -136,7 +151,7 @@ export function CandidateForm({
       fullName: text("fullName"),
       nim: text("nim"),
       position: text("position"),
-      photoUrl: text("photoUrl"),
+      photoUrl: photoUrl ?? "",
       vision: text("vision"),
       grandDesignUrl: text("grandDesignUrl"),
       programs: programs.map((p) => p.text),
@@ -153,6 +168,7 @@ export function CandidateForm({
     onPendingChange(true);
     startTransition(async () => {
       const result = await onSubmit(input);
+      if (!result.error && !result.errors) savedPhoto.current = photoUrl;
       onPendingChange(false);
       setErrors(result.errors ?? {});
       setFormError(result.error ?? null);
@@ -203,13 +219,14 @@ export function CandidateForm({
             className={control}
           />
         </Field>
-        <Field id={`${prefix}-photoUrl`} label="URL Foto" error={errors.photoUrl}>
-          <input
-            {...fieldProps("photoUrl")}
-            type="url"
-            defaultValue={candidate?.photoUrl ?? ""}
-            placeholder="https://..."
-            className={control}
+        <Field id={`${prefix}-photoUrl`} label="Foto">
+          <PhotoUpload
+            id={`${prefix}-photoUrl`}
+            value={photoUrl}
+            name={candidate?.fullName ?? ""}
+            error={errors.photoUrl}
+            onChange={setPhotoUrl}
+            onUploaded={(url) => uploads.current.push(url)}
           />
         </Field>
         <div className="sm:col-span-2">

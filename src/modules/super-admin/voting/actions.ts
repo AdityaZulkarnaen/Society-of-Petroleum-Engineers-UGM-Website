@@ -9,12 +9,15 @@ import { dummyVote, dummyVoting } from "@/modules/admin/dummy/data";
 import type { Candidate } from "@/modules/admin/voting/data";
 
 import {
+  PHOTO_MAX_BYTES,
+  PHOTO_TYPES,
   validateCandidate,
   validateElection,
   type ActionResult,
   type CandidateInput,
   type ElectionInput,
 } from "./fields";
+import { PHOTO_BUCKET, photoPath, removePhotos } from "./photos";
 
 /* Raised by the election functions in the database. */
 const MESSAGES: Record<string, string> = {
@@ -111,13 +114,70 @@ export async function deleteElection(id: string): Promise<ActionResult> {
   }
 
   const supabase = await createClient();
+  const { data: candidates } = await supabase
+    .from("election_candidates")
+    .select("photo_url")
+    .eq("election_id", id);
   const { error } = await supabase.rpc("delete_election", { p_id: id });
   if (error) {
     console.error("deleteElection", error.message);
     return failed(error.message, "Pemilihan gagal dihapus. Coba lagi.");
   }
+  await removePhotos(
+    supabase,
+    (candidates ?? []).map((c) => c.photo_url),
+  );
   revalidate();
   return {};
+}
+
+/** Stores a candidate photo (already resized by the browser); returns its public URL. */
+export async function uploadCandidatePhoto(
+  formData: FormData,
+): Promise<{ url?: string; error?: string }> {
+  await requireSuperAdmin();
+  const file = formData.get("photo");
+  if (!(file instanceof File) || file.size === 0) return { error: "Pilih foto terlebih dahulu." };
+  if (!PHOTO_TYPES.includes(file.type)) {
+    return { error: "Format foto harus JPG, PNG, atau WebP." };
+  }
+  if (file.size > PHOTO_MAX_BYTES) return { error: "Ukuran foto terlalu besar." };
+
+  /* the preview has no storage, so the photo lives in memory as a data URL */
+  if (DUMMY_DATA) {
+    const base64 = Buffer.from(await file.arrayBuffer()).toString("base64");
+    return { url: `data:${file.type};base64,${base64}` };
+  }
+
+  const extension = file.type.split("/")[1].replace("jpeg", "jpg");
+  const path = `candidates/${crypto.randomUUID()}.${extension}`;
+  const supabase = await createClient();
+  const { error } = await supabase.storage.from(PHOTO_BUCKET).upload(path, file, {
+    contentType: file.type,
+    cacheControl: "31536000",
+  });
+  if (error) {
+    console.error("uploadCandidatePhoto", error.message);
+    return { error: "Foto gagal diupload. Coba lagi." };
+  }
+  return { url: supabase.storage.from(PHOTO_BUCKET).getPublicUrl(path).data.publicUrl };
+}
+
+/** Removes photos uploaded in a dialog that were never saved to a candidate. */
+export async function discardCandidatePhotos(urls: string[]) {
+  await requireSuperAdmin();
+  if (DUMMY_DATA || urls.length === 0) return;
+
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("election_candidates")
+    .select("photo_url")
+    .in("photo_url", urls);
+  const inUse = new Set((data ?? []).map((row) => row.photo_url));
+  await removePhotos(
+    supabase,
+    urls.filter((url) => !inUse.has(url)),
+  );
 }
 
 /** Creates (id null) or updates a candidate of the election. */
@@ -154,6 +214,18 @@ export async function saveCandidate(
   }
 
   const supabase = await createClient();
+  const { data: previous } = id
+    ? await supabase.from("election_candidates").select("photo_url").eq("id", id).maybeSingle()
+    : { data: null };
+  /* only our own uploads, or the photo the candidate already had */
+  if (
+    values.photoUrl &&
+    values.photoUrl !== previous?.photo_url &&
+    !photoPath(values.photoUrl)
+  ) {
+    return { errors: { photoUrl: "Upload ulang fotonya." }, error: "Foto tidak valid." };
+  }
+
   const { error } = await supabase.rpc("save_candidate", {
     p_id: id,
     p_election_id: electionId,
@@ -169,6 +241,9 @@ export async function saveCandidate(
   if (error) {
     console.error("saveCandidate", error.message);
     return failed(error.message, "Kandidat gagal disimpan. Coba lagi.");
+  }
+  if (previous?.photo_url && previous.photo_url !== values.photoUrl) {
+    await removePhotos(supabase, [previous.photo_url]);
   }
   revalidate();
   return {};
@@ -196,11 +271,17 @@ export async function deleteCandidate(id: string): Promise<ActionResult> {
   }
 
   const supabase = await createClient();
+  const { data: candidate } = await supabase
+    .from("election_candidates")
+    .select("photo_url")
+    .eq("id", id)
+    .maybeSingle();
   const { error } = await supabase.rpc("delete_candidate", { p_id: id });
   if (error) {
     console.error("deleteCandidate", error.message);
     return failed(error.message, "Kandidat gagal dihapus. Coba lagi.");
   }
+  await removePhotos(supabase, [candidate?.photo_url]);
   revalidate();
   return {};
 }
