@@ -15,7 +15,8 @@ import {
   Stat,
 } from "../components/ui";
 import { CURRENT_PERIOD } from "../constants";
-import { getSelfReport, MAX_SCORE, type Tally } from "../rekap-diri/data";
+import { CompetencyList } from "../rekap-diri/competency-list";
+import { getSelfReport, type Tally } from "../rekap-diri/data";
 import { getDivisionSummary } from "./data";
 import { periodProgress } from "./period";
 
@@ -88,7 +89,7 @@ export async function OverviewPage() {
   const { attendance, points } = report;
   const done = proker.filter((p) => p.status === "selesai").length;
   const ongoing = proker.filter((p) => p.status === "berlangsung").length;
-  const scored = report.competencies.filter((c) => c.current != null);
+  const rated = report.competencies.some((c) => c.rating != null);
 
   const period = periodProgress(CURRENT_PERIOD);
   const firstName = admin.fullName.split(" ")[0];
@@ -283,25 +284,8 @@ export async function OverviewPage() {
 
           <Card className="p-6 sm:p-7">
             <SectionHeading eyebrow="Evaluasi Diri" title="Ringkasan Kompetensi" />
-            {scored.length > 0 ? (
-              <ul className="mt-6 space-y-4">
-                {scored.map(({ name, current }) => (
-                  <li key={name}>
-                    <div className="flex items-baseline justify-between gap-4 text-[13px]">
-                      <span className="text-[#c7c9d4]">{name}</span>
-                      <span className="font-bold text-white">
-                        {current}
-                        <span className="font-normal text-[#6f7286]"> / {MAX_SCORE}</span>
-                      </span>
-                    </div>
-                    <ProgressBar
-                      percent={Math.round((current! / MAX_SCORE) * 100)}
-                      label={name}
-                      className="mt-2"
-                    />
-                  </li>
-                ))}
-              </ul>
+            {rated ? (
+              <CompetencyList competencies={report.competencies} compact className="mt-6" />
             ) : (
               <div className="mt-6">
                 <EmptyState

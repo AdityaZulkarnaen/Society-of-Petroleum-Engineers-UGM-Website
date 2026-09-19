@@ -28,8 +28,8 @@ export type Election = {
   /** YYYY-MM-DD, Asia/Jakarta, inclusive. */
   closesOn: string;
   phase: VotingPhase;
-  /** Whole days left after today; 0 on the last day. Null unless open. */
-  daysLeft: number | null;
+  /** Milliseconds until voting closes (midnight WIB after closesOn). Null unless open. */
+  msLeft: number | null;
   candidates: Candidate[];
   /** The signed-in admin's vote, if cast. */
   myVote: { candidateId: string; castAt: string } | null;
@@ -45,9 +45,6 @@ function jakartaToday() {
   );
 }
 
-const daysBetween = (from: string, to: string) =>
-  Math.round((Date.parse(to) - Date.parse(from)) / DAY);
-
 /** Where today falls in the voting window. */
 function schedule(opensOn: string, closesOn: string) {
   const today = jakartaToday();
@@ -55,7 +52,10 @@ function schedule(opensOn: string, closesOn: string) {
     today < opensOn ? "upcoming" : today > closesOn ? "closed" : "open";
   return {
     phase,
-    daysLeft: phase === "open" ? daysBetween(today, closesOn) : null,
+    msLeft:
+      phase === "open"
+        ? Math.max(0, Date.parse(`${closesOn}T00:00:00+07:00`) + DAY - Date.now())
+        : null,
   };
 }
 

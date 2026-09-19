@@ -6,6 +6,9 @@ import { Ballot } from "./ballot";
 import { CandidateCard, CandidateSummary } from "./candidate-card";
 import { getElection, type Election, type VotingPhase } from "./data";
 
+const HOUR = 60 * 60 * 1000;
+const DAY = 24 * HOUR;
+
 /* Election dates are plain YYYY-MM-DD days, so format them in UTC. */
 const utc = (date: string) => new Date(`${date}T00:00:00Z`);
 const fmt = (date: string, options: Intl.DateTimeFormatOptions) =>
@@ -98,7 +101,12 @@ function InfoTile({
 function timeLeft(election: Election) {
   if (election.phase === "upcoming") return "Belum dibuka";
   if (election.phase === "closed") return "Selesai";
-  return election.daysLeft ? `${election.daysLeft} hari lagi` : "Hari terakhir";
+
+  const ms = election.msLeft ?? 0;
+  const days = Math.floor(ms / DAY);
+  if (days >= 1) return `${days} hari lagi`;
+  const hours = Math.floor(ms / HOUR);
+  return hours >= 1 ? `${hours} jam lagi` : "Kurang dari 1 jam";
 }
 
 function CheckBadge() {

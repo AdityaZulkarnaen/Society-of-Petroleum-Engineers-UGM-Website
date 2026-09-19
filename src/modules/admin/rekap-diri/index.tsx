@@ -1,21 +1,8 @@
 import { requireAdmin } from "../auth/session";
-import {
-  Badge,
-  Card,
-  Label,
-  ProgressBar,
-  SectionHeading,
-  type Tone,
-} from "../components/ui";
-import { getSelfReport, type Rating, type Tally } from "./data";
+import { Card, Label, ProgressBar, SectionHeading } from "../components/ui";
+import { CompetencyList } from "./competency-list";
+import { getSelfReport, type Tally } from "./data";
 import { RadarChart } from "./radar-chart";
-
-const RATING: Record<Rating, { label: string; tone: Tone }> = {
-  sangat_baik: { label: "Sangat Baik", tone: "green" },
-  baik: { label: "Baik", tone: "blue" },
-  cukup: { label: "Cukup", tone: "neutral" },
-  perlu_ditingkatkan: { label: "Perlu Ditingkatkan", tone: "amber" },
-};
 
 function TallyCard({ label, tally }: { label: string; tally: Tally }) {
   const percent =
@@ -97,26 +84,7 @@ export async function SelfReportPage() {
 
         <Card className="p-6 sm:p-7">
           <SectionHeading eyebrow="Evaluasi HR / Kepala Divisi" title="Detail Kompetensi" />
-          <ul className="mt-5 space-y-2.5">
-            {report.competencies.map(({ name, rating }) => (
-              <li
-                key={name}
-                className="flex items-center justify-between gap-4 rounded-xl border border-white/[0.08] bg-white/[0.02] px-4 py-3.5"
-              >
-                <div className="min-w-0">
-                  <p className="text-[15px] font-medium text-white">{name}</p>
-                  <p className="mt-1 text-xs text-[#6f7286]">
-                    Evaluasi oleh HR / Kepala Divisi
-                  </p>
-                </div>
-                {rating ? (
-                  <Badge tone={RATING[rating].tone}>{RATING[rating].label}</Badge>
-                ) : (
-                  <Badge>Belum dinilai</Badge>
-                )}
-              </li>
-            ))}
-          </ul>
+          <CompetencyList competencies={report.competencies} className="mt-5" />
         </Card>
       </div>
 
