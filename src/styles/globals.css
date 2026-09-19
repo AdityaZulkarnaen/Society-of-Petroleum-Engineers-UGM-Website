@@ -62,6 +62,8 @@
   /* the curtain's edge glow lights up as the panels settle */
   --animate-glow-in: glow-in 0.9s ease-out 0.85s both;
   --animate-nav-in: nav-in 0.7s var(--ease-out-soft) 0.35s both;
+  /* the dashboard's "vote recorded" check */
+  --animate-pop-in: pop-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 
   @keyframes curtain-drop {
     from { transform: translateY(calc(-1 * var(--travel))); }
@@ -71,6 +73,11 @@
   @keyframes glow-in {
     from { opacity: 0; }
     to   { opacity: 1; }
+  }
+
+  @keyframes pop-in {
+    from { opacity: 0; transform: scale(0.6); }
+    to   { opacity: 1; transform: scale(1); }
   }
 
   @keyframes nav-in {

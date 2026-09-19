@@ -1,5 +1,5 @@
-import { ComingSoonPage } from "@/modules/admin/coming-soon";
+import { VotingPage } from "@/modules/admin/voting";
 
 export default function Page() {
-  return <ComingSoonPage title="Voting Ketua" />;
+  return <VotingPage />;
 }

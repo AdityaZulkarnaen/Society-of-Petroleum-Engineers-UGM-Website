@@ -1,5 +1,6 @@
 "use server";
 
+import { isAuthRetryableFetchError } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
@@ -38,6 +39,14 @@ export async function signIn(
   });
 
   if (error) {
+    /* The auth server couldn't be reached — don't blame the password. */
+    if (isAuthRetryableFetchError(error)) {
+      console.error("Sign-in could not reach Supabase Auth:", error.message);
+      return {
+        error: "Tidak dapat terhubung ke server. Periksa koneksi internet lalu coba lagi.",
+        username,
+      };
+    }
     if (error.code === "over_request_rate_limit") {
       return {
         error: "Terlalu banyak percobaan. Coba lagi dalam beberapa menit.",
