@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-import { STATUS } from "../acara";
+import { STATUS } from "../acara/status";
 import { getMyProker } from "../acara/data";
 import { requireAdmin } from "../auth/session";
 import {

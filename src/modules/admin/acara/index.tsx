@@ -7,16 +7,9 @@ import {
   EmptyState,
   SectionHeading,
   Stat,
-  type Tone,
 } from "../components/ui";
-import { getMyProker, PROKER_STATUSES, type ProkerStatus } from "./data";
-
-export const STATUS: Record<ProkerStatus, { label: string; tone: Tone }> = {
-  berlangsung: { label: "Berlangsung", tone: "amber" },
-  selesai: { label: "Selesai", tone: "green" },
-  direncanakan: { label: "Direncanakan", tone: "neutral" },
-  rutin: { label: "Rutin", tone: "blue" },
-};
+import { getMyProker } from "./data";
+import { PROKER_STATUSES, STATUS, type ProkerStatus } from "./status";
 
 /* Column widths from the design: 320 / 192 / 272 / 216. */
 const COLUMNS = "md:grid md:grid-cols-[32fr_19fr_27fr_22fr] md:items-center md:gap-x-6";

@@ -74,7 +74,7 @@ export function Label({ children }: { children: ReactNode }) {
   );
 }
 
-/** Headline number card: label, value and a short caption. */
+/** Headline number card: label, value and an optional short caption. */
 export function Stat({
   label,
   value,
@@ -82,7 +82,7 @@ export function Stat({
 }: {
   label: string;
   value: ReactNode;
-  caption: string;
+  caption?: string;
 }) {
   return (
     <Card className="px-6 py-6">
@@ -90,7 +90,7 @@ export function Stat({
       <p className="mt-2.5 text-[30px] leading-none font-bold tracking-[-0.02em]">
         {value}
       </p>
-      <p className="mt-3 text-[13px] text-[#6f7286]">{caption}</p>
+      {caption && <p className="mt-3 text-[13px] text-[#6f7286]">{caption}</p>}
     </Card>
   );
 }
@@ -100,6 +100,7 @@ const TONES = {
   green: "border-[#34d399]/30 bg-[#34d399]/10 text-[#4ade80]",
   amber: "border-[#f59e0b]/35 bg-[#f59e0b]/10 text-[#fbbf24]",
   neutral: "border-white/15 bg-white/[0.03] text-[#c7c9d4]",
+  red: "border-[#f87171]/30 bg-[#f87171]/10 text-[#fca5a5]",
 } as const;
 
 export type Tone = keyof typeof TONES;

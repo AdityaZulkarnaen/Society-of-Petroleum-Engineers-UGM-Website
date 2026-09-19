@@ -65,7 +65,7 @@ export const dummyProker: Proker[] = [
   { id: "p2", name: "APECX 2026", division: "Media Creative", role: "Panitia Creative Media", status: "berlangsung" },
   { id: "p3", name: "Webinar Energi Terbarukan", division: "Media Creative", role: "Moderator", status: "selesai" },
   { id: "p4", name: "SPE Scholar Fund", division: "Media Creative", role: "Tim Sponsorship", status: "direncanakan" },
-  { id: "p5", name: "Rapat Koordinasi Bulanan", division: "Media Creative", role: "Peserta", status: "rutin" },
+  { id: "p5", name: "Company Visit Pertamina Hulu", division: "Media Creative", role: "Dokumentasi", status: "dibatalkan" },
   { id: "p6", name: "Kunjungan Industri Lapangan", division: "Media Creative", role: "Koordinator", status: "selesai" },
   { id: "p7", name: "Seminar Nasional Energi 2025", division: "Media Creative", role: "Panitia", status: "selesai" },
   { id: "p8", name: "Penggalangan Dana Alumni", division: "Media Creative", role: "Anggota Tim", status: "direncanakan" },

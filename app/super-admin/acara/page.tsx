@@ -1,11 +1,5 @@
-import { ComingSoonPage } from "@/modules/admin/coming-soon";
+import { ProkerPage } from "@/modules/super-admin/proker";
 
 export default function Page() {
-  return (
-    <ComingSoonPage
-      title="Acara / Proker"
-      backHref="/super-admin"
-      backLabel="Kembali ke Dashboard"
-    />
-  );
+  return <ProkerPage />;
 }

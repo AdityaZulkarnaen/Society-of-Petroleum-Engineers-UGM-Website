@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useTransition, type ReactNode } from "react";
+import { useState, useTransition } from "react";
 
 import { Modal, ModalHeader } from "@/modules/admin/components/modal";
-import {
-  Badge,
-  primaryButton,
-  secondaryButton,
-} from "@/modules/admin/components/ui";
+import { Badge, primaryButton } from "@/modules/admin/components/ui";
+
+import { ConfirmDelete } from "../components/confirm-delete";
+import { IconButton, icons } from "../components/table";
 
 import { AccountForm } from "./account-form";
 import {
@@ -36,143 +35,7 @@ type Dialog =
 
 type Notice = { tone: "success" | "error"; text: string };
 
-/* Icons ------------------------------------------------------------------ */
-
-const icons = {
-  search: (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-      <circle cx="7" cy="7" r="4.75" />
-      <path d="m10.5 10.5 3 3" strokeLinecap="round" />
-    </svg>
-  ),
-  plus: (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
-      <path d="M8 3v10M3 8h10" strokeLinecap="round" />
-    </svg>
-  ),
-  edit: (
-    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true">
-      <path d="m10.5 2.75 2.75 2.75L6 12.75l-3.5.75.75-3.5 7.25-7.25Z" strokeLinejoin="round" />
-    </svg>
-  ),
-  toggle: (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true">
-      <rect x="1.75" y="4.75" width="12.5" height="6.5" rx="3.25" />
-      <circle cx="10.75" cy="8" r="1.6" fill="currentColor" stroke="none" />
-    </svg>
-  ),
-  trash: (
-    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true">
-      <path d="M2.75 4.25h10.5M6.25 4.25V2.75h3.5v1.5M4 4.25l.6 8.6a1 1 0 0 0 1 .9h4.8a1 1 0 0 0 1-.9l.6-8.6" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M6.75 7v4M9.25 7v4" strokeLinecap="round" />
-    </svg>
-  ),
-  copy: (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true">
-      <rect x="5.25" y="5.25" width="8.5" height="8.5" rx="1.5" />
-      <path d="M10.75 5.25V3.75a1.5 1.5 0 0 0-1.5-1.5h-5.5a1.5 1.5 0 0 0-1.5 1.5v5.5a1.5 1.5 0 0 0 1.5 1.5h1.5" />
-    </svg>
-  ),
-};
-
-function IconButton({
-  label,
-  onClick,
-  disabled,
-  danger = false,
-  children,
-}: {
-  label: string;
-  onClick: () => void;
-  disabled?: boolean;
-  danger?: boolean;
-  children: ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      aria-label={label}
-      title={label}
-      className={`grid size-7 place-items-center rounded-md text-[#8a8ea3] transition-colors hover:bg-white/[0.06] disabled:opacity-40 ${
-        danger ? "hover:text-[#f87171]" : "hover:text-white"
-      }`}
-    >
-      {children}
-    </button>
-  );
-}
-
 /* Dialog bodies ------------------------------------------------------------ */
-
-function DeleteDialog({
-  account,
-  onClose,
-  onDeleted,
-  onPendingChange,
-}: {
-  account: Account;
-  onClose: () => void;
-  onDeleted: () => void;
-  onPendingChange: (pending: boolean) => void;
-}) {
-  const [error, setError] = useState<string | null>(null);
-  const [pending, startTransition] = useTransition();
-
-  function confirm() {
-    if (pending) return;
-    onPendingChange(true);
-    startTransition(async () => {
-      const result = await deleteAccount(account.id);
-      onPendingChange(false);
-      if (result.error) setError(result.error);
-      else onDeleted();
-    });
-  }
-
-  return (
-    <div className="px-6 pt-7 pb-7 sm:px-8">
-      <ModalHeader
-        id="delete-account-title"
-        title="Hapus Akun Pengurus"
-        onClose={onClose}
-        disabled={pending}
-      />
-      <p className="mt-6 text-sm leading-relaxed text-[#c7c9d4]">
-        Akun <strong className="font-semibold text-white">{account.fullName}</strong>{" "}
-        akan dihapus permanen. Tindakan ini tidak dapat diurungkan.
-      </p>
-      {error && (
-        <p
-          role="alert"
-          className="mt-4 rounded-xl border border-[#f87171]/25 bg-[#f87171]/10 px-4 py-3 text-[13px] text-[#fca5a5]"
-        >
-          {error}
-        </p>
-      )}
-      <div className="mt-6 flex justify-end gap-3">
-        <button
-          type="button"
-          autoFocus
-          onClick={onClose}
-          disabled={pending}
-          className={secondaryButton}
-        >
-          Batal
-        </button>
-        <button
-          type="button"
-          onClick={confirm}
-          aria-disabled={pending}
-          className="inline-flex h-11 items-center justify-center rounded-xl bg-[#d63a3a] px-5 text-sm font-semibold text-white shadow-[0_8px_22px_-10px_rgba(214,58,58,0.8)] transition-colors hover:bg-[#e04747] aria-disabled:cursor-wait aria-disabled:opacity-70"
-        >
-          {pending ? "Menghapus…" : "Ya, Hapus"}
-        </button>
-      </div>
-    </div>
-  );
-}
 
 function CopyButton({ value, label }: { value: string; label: string }) {
   const [copied, setCopied] = useState(false);
@@ -572,15 +435,21 @@ export function AccountManager({
         labelledBy="delete-account-title"
       >
         {dialog?.type === "delete" && (
-          <DeleteDialog
-            account={dialog.account}
+          <ConfirmDelete
+            titleId="delete-account-title"
+            title="Hapus Akun Pengurus"
+            onConfirm={() => deleteAccount(dialog.account.id)}
             onClose={close}
             onPendingChange={setBusy}
             onDeleted={() => {
               setNotice({ tone: "success", text: `Akun ${dialog.account.fullName} dihapus.` });
               close();
             }}
-          />
+          >
+            Akun{" "}
+            <strong className="font-semibold text-white">{dialog.account.fullName}</strong>{" "}
+            akan dihapus permanen. Tindakan ini tidak dapat diurungkan.
+          </ConfirmDelete>
         )}
       </Modal>
 

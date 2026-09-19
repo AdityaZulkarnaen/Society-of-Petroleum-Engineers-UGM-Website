@@ -1,13 +1,8 @@
 "use client";
 
-import {
-  useState,
-  useTransition,
-  type ComponentProps,
-  type FormEvent,
-  type ReactNode,
-} from "react";
+import { useState, useTransition, type FormEvent } from "react";
 
+import { control, Field, Select } from "@/modules/admin/components/form";
 import { ModalHeader } from "@/modules/admin/components/modal";
 import { primaryButton, secondaryButton } from "@/modules/admin/components/ui";
 
@@ -18,66 +13,6 @@ import {
   type ActionResult,
   type FieldErrors,
 } from "./fields";
-
-const control =
-  "h-[42px] w-full rounded-lg border border-white/10 bg-white/[0.04] px-3.5 text-sm text-white " +
-  "placeholder:text-[#6f7286] transition-[border-color,box-shadow] " +
-  "focus-visible:border-[#4f8dff]/60 focus-visible:ring-4 focus-visible:ring-[#4f8dff]/15 focus-visible:outline-none " +
-  "aria-invalid:border-[#f87171]/60 disabled:cursor-not-allowed";
-
-function Field({
-  id,
-  label,
-  error,
-  children,
-}: {
-  id: string;
-  label: string;
-  error?: string;
-  children: ReactNode;
-}) {
-  return (
-    <div>
-      <label
-        htmlFor={id}
-        className="mb-2 block text-[11px] font-medium tracking-[0.08em] text-[#8a8ea3] uppercase"
-      >
-        {label}
-      </label>
-      {children}
-      {error && (
-        <p id={`${id}-error`} className="mt-1.5 text-xs text-[#fca5a5]">
-          {error}
-        </p>
-      )}
-    </div>
-  );
-}
-
-function Select({ children, ...props }: ComponentProps<"select">) {
-  return (
-    <div className="relative">
-      <select
-        {...props}
-        className={`${control} appearance-none pr-10 [&>option]:bg-[#151a38]`}
-      >
-        {children}
-      </select>
-      <svg
-        width="12"
-        height="12"
-        viewBox="0 0 12 12"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        aria-hidden="true"
-        className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-[#8a8ea3]"
-      >
-        <path d="m3 4.5 3 3 3-3" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    </div>
-  );
-}
 
 /**
  * Tambah / Edit Pengurus. Pengurus always belong to the super admin's own
