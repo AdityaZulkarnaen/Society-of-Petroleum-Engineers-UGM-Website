@@ -11,6 +11,8 @@ import { DUMMY_DATA } from "@/modules/admin/dummy";
 import { dummyAccounts } from "@/modules/admin/dummy/data";
 
 import {
+  NIM_HINT,
+  NIM_PATTERN,
   POSITIONS,
   type AccountInput,
   type ActionResult,
@@ -18,8 +20,6 @@ import {
   type FieldErrors,
 } from "./fields";
 
-/* the two letters are the faculty code: TK, SV, FM, ... */
-const NIM = /^\d{2}\/\d{6}\/[A-Z]{2}\/\d{5}$/i;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE = /^\+?[\d\s-]{8,20}$/;
 const PERIOD = /^\d{4}\/\d{4}$/;
@@ -37,7 +37,7 @@ function validate(input: AccountInput) {
   const errors: FieldErrors = {};
 
   if (v.fullName.length < 2) errors.fullName = "Isi nama lengkap.";
-  if (v.nim && !NIM.test(v.nim)) errors.nim = "Format NIM: 24/123456/XX/12345, XX kode fakultas (TK, SV, FM, …).";
+  if (v.nim && !NIM_PATTERN.test(v.nim)) errors.nim = NIM_HINT;
   if (v.email && !EMAIL.test(v.email)) errors.email = "Email tidak valid.";
   if (v.whatsapp && !PHONE.test(v.whatsapp)) {
     errors.whatsapp = "Nomor WhatsApp tidak valid.";

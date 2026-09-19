@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 
 import { requireAdmin } from "../auth/session";
 import { DUMMY_DATA } from "../dummy";
-import { dummyCandidates, dummyVote } from "../dummy/data";
+import { dummyVote, dummyVoting } from "../dummy/data";
 
 export type VoteResult = { error?: string };
 
@@ -21,7 +21,7 @@ export async function castVote(candidateId: string): Promise<VoteResult> {
   await requireAdmin();
 
   if (DUMMY_DATA) {
-    if (!dummyCandidates.some((c) => c.id === candidateId)) {
+    if (!dummyVoting.get().candidates.some((c) => c.id === candidateId)) {
       return { error: MESSAGES.candidate_not_found };
     }
     if (!dummyVote.get()) {

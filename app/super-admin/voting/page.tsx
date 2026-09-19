@@ -1,13 +1,5 @@
-import { ComingSoonPage } from "@/modules/admin/coming-soon";
-import { compactCardSurface } from "@/modules/admin/components/ui";
+import { VotingAdminPage } from "@/modules/super-admin/voting";
 
 export default function Page() {
-  return (
-    <ComingSoonPage
-      title="Voting"
-      backHref="/super-admin"
-      backLabel="Kembali ke Dashboard"
-      surface={compactCardSurface}
-    />
-  );
+  return <VotingAdminPage />;
 }

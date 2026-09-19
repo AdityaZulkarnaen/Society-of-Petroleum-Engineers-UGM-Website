@@ -4,11 +4,9 @@ import { requireAdmin } from "../auth/session";
 import { Badge, Card, EmptyState, Label } from "../components/ui";
 import { Ballot } from "./ballot";
 import { CandidateCard, CandidateSummary } from "./candidate-card";
-import { getElection, type Election, type VotingPhase } from "./data";
-import { formatRange, longDate } from "./format";
-
-const HOUR = 60 * 60 * 1000;
-const DAY = 24 * HOUR;
+import { getElection, type Election } from "./data";
+import { formatRange, longDate, timeLeft } from "./format";
+import { PhasePill } from "./phase-pill";
 
 const castAtLabel = (timestamp: string) =>
   `${new Intl.DateTimeFormat("id-ID", {
@@ -19,38 +17,6 @@ const castAtLabel = (timestamp: string) =>
     minute: "2-digit",
     timeZone: "Asia/Jakarta",
   }).format(new Date(timestamp))} WIB`;
-
-const PHASE: Record<VotingPhase, { label: string; className: string }> = {
-  open: {
-    label: "Voting Dibuka",
-    className: "border-[#34d399]/30 bg-[#34d399]/10 text-[#4ade80]",
-  },
-  upcoming: {
-    label: "Belum Dibuka",
-    className: "border-[#f59e0b]/35 bg-[#f59e0b]/10 text-[#fbbf24]",
-  },
-  closed: {
-    label: "Voting Ditutup",
-    className: "border-white/15 bg-white/[0.03] text-[#c7c9d4]",
-  },
-};
-
-function PhasePill({ phase }: { phase: VotingPhase }) {
-  const { label, className } = PHASE[phase];
-  return (
-    <span
-      className={`inline-flex h-7 items-center gap-2 rounded-full border px-3 text-[11px] font-semibold tracking-[0.08em] whitespace-nowrap uppercase ${className}`}
-    >
-      <span className="relative flex size-1.5">
-        {phase === "open" && (
-          <span className="absolute inset-0 rounded-full bg-current opacity-60 motion-safe:animate-ping" />
-        )}
-        <span className="relative size-1.5 rounded-full bg-current" />
-      </span>
-      {label}
-    </span>
-  );
-}
 
 function InfoTile({
   label,
@@ -72,17 +38,6 @@ function InfoTile({
       </p>
     </Card>
   );
-}
-
-function timeLeft(election: Election) {
-  if (election.phase === "upcoming") return "Belum dibuka";
-  if (election.phase === "closed") return "Selesai";
-
-  const ms = election.msLeft ?? 0;
-  const days = Math.floor(ms / DAY);
-  if (days >= 1) return `${days} hari lagi`;
-  const hours = Math.floor(ms / HOUR);
-  return hours >= 1 ? `${hours} jam lagi` : "Kurang dari 1 jam";
 }
 
 function CheckBadge() {

@@ -102,12 +102,13 @@ const PROGRAMS = [
   "Membangun sistem mentorship lintas angkatan yang terstruktur dan berkelanjutan",
 ];
 
-export const dummyCandidates: Candidate[] = [
+const CANDIDATES: Candidate[] = [
   {
     id: "c1",
     number: 1,
     fullName: "Bintang Aryadita",
     nim: "24/123456/TK/12345",
+    position: "Kepala Bidang Teknik",
     photoUrl: null,
     vision:
       "Mewujudkan SPE UGM sebagai pusat inovasi energi terbarukan yang relevan secara global, dengan membangun jembatan antara riset akademik dan industri minyak & gas di Indonesia.",
@@ -124,6 +125,7 @@ export const dummyCandidates: Candidate[] = [
     number: 2,
     fullName: "Salsabila Rahmawati",
     nim: "24/234567/TK/23456",
+    position: "Ketua Pelaksana Seminar Nasional",
     photoUrl: null,
     vision:
       "SPE UGM yang inklusif dan berdampak: setiap anggota punya ruang bertumbuh, dan setiap program memberi manfaat nyata bagi mahasiswa dan masyarakat sekitar.",
@@ -143,6 +145,7 @@ export const dummyCandidates: Candidate[] = [
     number: 3,
     fullName: "Dimas Prasetyo",
     nim: "24/345678/TK/34567",
+    position: "Head of Research & Development",
     photoUrl: null,
     vision:
       "Menjadikan SPE UGM organisasi yang adaptif terhadap transisi energi, dengan budaya kerja yang profesional, kolaboratif, dan berbasis data.",
@@ -170,13 +173,32 @@ function jakartaDate(offset: number) {
 }
 
 /** Always open: started 6 days ago, 8 days to go. */
-export const dummyElection = {
+const ELECTION = {
   id: "e1",
   title: "Pemilihan President SPE UGM SC 2027",
   termLabel: "2026/2027",
   opensOn: jakartaDate(-6),
   closesOn: jakartaDate(8),
+  isOpen: true,
   turnout: { votes: 47, eligible: 68 },
+};
+
+export type DummyElection = typeof ELECTION;
+
+/* The election and its candidates, editable from the super admin's Voting
+   page; kept on globalThis so edits survive hot reloads. */
+type VotingState = { election: DummyElection | null; candidates: Candidate[] };
+const votingStore = globalThis as { __speDummyVoting?: VotingState };
+
+export const dummyVoting = {
+  get: (): VotingState =>
+    (votingStore.__speDummyVoting ??= structuredClone({
+      election: ELECTION as DummyElection | null,
+      candidates: CANDIDATES,
+    })),
+  save: (state: VotingState) => {
+    votingStore.__speDummyVoting = state;
+  },
 };
 
 /* The dummy vote lives on globalThis so it survives hot reloads. */
@@ -187,6 +209,9 @@ export const dummyVote = {
   get: () => store.__speDummyVote ?? null,
   set: (vote: DummyVote) => {
     store.__speDummyVote = vote;
+  },
+  clear: () => {
+    store.__speDummyVote = null;
   },
 };
 

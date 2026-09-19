@@ -2,6 +2,10 @@
 
 export const POSITIONS = ["Head", "Vice Head", "Staff"] as const;
 
+/** UGM NIM; the two letters are the faculty code: TK, SV, FM, ... */
+export const NIM_PATTERN = /^\d{2}\/\d{6}\/[A-Z]{2}\/\d{5}$/i;
+export const NIM_HINT = "Format NIM: 24/123456/XX/12345, XX kode fakultas (TK, SV, FM, …).";
+
 export type Account = {
   id: string;
   username: string;
