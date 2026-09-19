@@ -107,7 +107,17 @@ function TopGlow({ id, mirrored = false }: { id: string; mirrored?: boolean }) {
   );
 }
 
-function StatementCard({ title, mirrored = false }: { title: string; mirrored?: boolean }) {
+/* The metrics card: plain light glass, lit only by the ellipse at its foot. */
+const metricsCard =
+  "rounded-[clamp(20px,calc(28*var(--k)),32px)] border border-white bg-[linear-gradient(160deg,#f8f8ff_0%,#f1f2fd_100%)] shadow-[0_24px_60px_-34px_rgba(60,48,160,0.35),inset_0_1px_0_rgba(255,255,255,0.9)]";
+
+function StatementCard({
+  title,
+  mirrored = false,
+}: {
+  title: string;
+  mirrored?: boolean;
+}) {
   const id = `glow-${title.toLowerCase().replace(/\s+/g, "-")}`;
   return (
     <article
@@ -130,7 +140,13 @@ function StatementCard({ title, mirrored = false }: { title: string; mirrored?: 
       <ul className="mt-8 space-y-4">
         {POINTS.map((point) => (
           <li key={point.title} className="flex gap-3">
-            <svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true" className="mt-1 shrink-0 text-curtain">
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 16 16"
+              aria-hidden="true"
+              className="mt-1 shrink-0 text-curtain"
+            >
               <path
                 fill="currentColor"
                 d="M8 0c.5 3.9 2.1 5.5 6 6-3.9.5-5.5 2.1-6 6-.5-3.9-2.1-5.5-6-6 3.9-.5 5.5-2.1 6-6Z"
@@ -139,7 +155,9 @@ function StatementCard({ title, mirrored = false }: { title: string; mirrored?: 
             </svg>
             <div>
               <p className="text-sm font-semibold text-ink">{point.title}</p>
-              <p className="mt-0.5 text-[13px] leading-relaxed text-ink-soft">{point.body}</p>
+              <p className="mt-0.5 text-[13px] leading-relaxed text-ink-soft">
+                {point.body}
+              </p>
             </div>
           </li>
         ))}
@@ -236,28 +254,39 @@ export function AboutPage() {
             How We Measure Success
           </h2>
         </header>
-        <dl
-          className={`${glassCard} mx-auto mt-[clamp(1.5rem,calc(40*var(--k)),3rem)] grid w-[min(calc(1270*var(--kw)),100%)] grid-cols-1 px-6 py-4 sm:grid-cols-2 sm:px-10 sm:py-8`}
+        <div
+          className={`${metricsCard} relative isolate mx-auto mt-[clamp(1.5rem,calc(40*var(--k)),3rem)] w-[min(calc(1270*var(--kw)),100%)] overflow-hidden`}
         >
-          {METRICS.map((metric, i) => (
-            <div
-              key={metric.label}
-              className={[
-                "flex flex-col-reverse items-center py-8 text-center sm:py-12",
-                /* the cross between the four cells */
-                i > 0 ? "max-sm:border-t" : "",
-                i % 2 === 0 ? "sm:border-r" : "",
-                i >= 2 ? "sm:border-t" : "",
-                "border-[#d9dcf3]",
-              ].join(" ")}
-            >
-              <dt className="mt-2 text-lg font-semibold text-ink md:text-2xl">{metric.label}</dt>
-              <dd className="font-display text-[clamp(56px,calc(120*var(--k)),132px)] leading-none font-bold tracking-[-0.03em] text-ink">
-                <CountUp value={metric.value} suffix="+" />
-              </dd>
-            </div>
-          ))}
-        </dl>
+          {/* After Figma: an ellipse nearly the card's width whose top sits at
+              ~85% of its height, linear #FFFFFF → #4E4EFF (40%) → #9999FF,
+              layer blur 102.7 (≈ 51px in CSS). */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-[1%] top-[85%] -z-10 h-[32%] rounded-[50%] bg-[linear-gradient(90deg,#ffffff_0%,#4e4eff_40%,#9999ff_100%)] opacity-55 blur-[51px]"
+          />
+          <dl className="grid grid-cols-1 px-6 py-4 sm:grid-cols-2 sm:px-10 sm:py-8">
+            {METRICS.map((metric, i) => (
+              <div
+                key={metric.label}
+                className={[
+                  "flex flex-col-reverse items-center py-8 text-center sm:py-12",
+                  /* the cross between the four cells */
+                  i > 0 ? "max-sm:border-t" : "",
+                  i % 2 === 0 ? "sm:border-r" : "",
+                  i >= 2 ? "sm:border-t" : "",
+                  "border-[#d9dcf3]",
+                ].join(" ")}
+              >
+                <dt className="mt-2 text-lg font-semibold text-ink md:text-2xl">
+                  {metric.label}
+                </dt>
+                <dd className="font-display text-[clamp(56px,calc(120*var(--k)),132px)] leading-none font-bold tracking-[-0.03em] text-ink">
+                  <CountUp value={metric.value} suffix="+" />
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
       </section>
     </main>
   );
