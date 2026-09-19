@@ -5,6 +5,7 @@ import { useState, useTransition, type ComponentProps } from "react";
 
 import {
   Card,
+  compactCardSurface,
   primaryButton,
   ProgressBar,
   SectionHeading,
@@ -268,7 +269,7 @@ export function RekapEditor({
       </div>
 
       <div className={`space-y-6 transition-opacity ${switching ? "opacity-50" : ""}`}>
-        <Card className="p-6">
+        <Card surface={compactCardSurface} className="p-6">
           <SectionHeading eyebrow="Input Data" title="Statistik Kontribusi" />
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             {STATS.map(({ key, label: title }) => {
@@ -330,7 +331,7 @@ export function RekapEditor({
           </div>
         </Card>
 
-        <Card className="p-6">
+        <Card surface={compactCardSurface} className="p-6">
           <SectionHeading eyebrow="Penilaian HR" title="Evaluasi Kompetensi" />
 
           <div className="mt-6 hidden grid-cols-[minmax(0,1fr)_120px_160px_32px] gap-2.5 border-b border-white/[0.06] pb-2.5 sm:grid">
@@ -435,7 +436,7 @@ export function RekapEditor({
           </div>
         </Card>
 
-        <Card className="p-6">
+        <Card surface={compactCardSurface} className="p-6">
           <SectionHeading eyebrow="Narasi Evaluator" title="Catatan & Ringkasan dari HR" />
           <div className="mt-6 space-y-6">
             {NOTES.map(({ key, label: title }) => (

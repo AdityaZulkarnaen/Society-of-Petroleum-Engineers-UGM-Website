@@ -68,7 +68,7 @@ export async function DivisionsPage() {
           </div>
         </div>
       ) : (
-        <Card className="p-6">
+        <Card surface={compactCardSurface} className="p-6">
           <EmptyState
             title="Belum ada divisi"
             description="Divisi dibuat lewat skrip seed super admin."

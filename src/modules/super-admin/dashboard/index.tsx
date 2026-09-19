@@ -2,7 +2,12 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { requireSuperAdmin } from "@/modules/admin/auth/session";
-import { Card, SectionHeading, Stat } from "@/modules/admin/components/ui";
+import {
+  Card,
+  compactCardSurface,
+  SectionHeading,
+  Stat,
+} from "@/modules/admin/components/ui";
 import { CURRENT_PERIOD } from "@/modules/admin/constants";
 import { getElection } from "@/modules/admin/voting/data";
 import { formatRange } from "@/modules/admin/voting/format";
@@ -105,16 +110,19 @@ export async function SuperAdminDashboard() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Stat
+          surface={compactCardSurface}
           label="Total Pengurus"
           value={summary.totalAccounts ?? dash}
           caption="akun terdaftar"
         />
         <Stat
+          surface={compactCardSurface}
           label="Akun Aktif"
           value={summary.activeAccounts ?? dash}
           caption="dari total pengurus"
         />
         <Stat
+          surface={compactCardSurface}
           label="Rekap Terisi"
           value={summary.rekapFilled ?? dash}
           caption={
@@ -124,6 +132,7 @@ export async function SuperAdminDashboard() {
           }
         />
         <Stat
+          surface={compactCardSurface}
           label="Partisipasi Voting"
           value={participation != null ? `${participation}%` : dash}
           caption={
@@ -135,7 +144,7 @@ export async function SuperAdminDashboard() {
       </div>
 
       <div className="grid items-start gap-6 lg:grid-cols-2">
-        <Card className="p-6">
+        <Card surface={compactCardSurface} className="p-6">
           <SectionHeading eyebrow="Akses Cepat" title="Tindakan Umum" />
           <ul className="mt-6 space-y-2">
             <QuickAction href="/super-admin/akun?tambah=1">Tambah pengurus baru</QuickAction>
@@ -156,7 +165,7 @@ export async function SuperAdminDashboard() {
           </ul>
         </Card>
 
-        <Card className="p-6">
+        <Card surface={compactCardSurface} className="p-6">
           <SectionHeading eyebrow="Status Sistem" title="Ringkasan Periode" />
           <dl className="mt-4 divide-y divide-white/[0.06] border-b border-white/[0.06] text-sm">
             {(

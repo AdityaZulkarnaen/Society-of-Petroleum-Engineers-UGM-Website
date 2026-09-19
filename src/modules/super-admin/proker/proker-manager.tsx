@@ -8,7 +8,12 @@ import {
   type ProkerStatus,
 } from "@/modules/admin/acara/status";
 import { Modal } from "@/modules/admin/components/modal";
-import { Badge, primaryButton, Stat } from "@/modules/admin/components/ui";
+import {
+  Badge,
+  compactCardSurface,
+  primaryButton,
+  Stat,
+} from "@/modules/admin/components/ui";
 
 import { ConfirmDelete } from "../components/confirm-delete";
 import { IconButton, icons } from "../components/table";
@@ -134,10 +139,10 @@ export function ProkerManager({
       </header>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Stat label="Total Proker" value={proker.length} />
-        <Stat label="Berlangsung" value={count("berlangsung")} />
-        <Stat label="Direncanakan" value={count("direncanakan")} />
-        <Stat label="Selesai" value={count("selesai")} />
+        <Stat surface={compactCardSurface} label="Total Proker" value={proker.length} />
+        <Stat surface={compactCardSurface} label="Berlangsung" value={count("berlangsung")} />
+        <Stat surface={compactCardSurface} label="Direncanakan" value={count("direncanakan")} />
+        <Stat surface={compactCardSurface} label="Selesai" value={count("selesai")} />
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -201,7 +206,7 @@ export function ProkerManager({
         )}
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.015]">
+      <div className={`overflow-hidden ${compactCardSurface}`}>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[1040px] text-left text-[13px]">
             <thead>

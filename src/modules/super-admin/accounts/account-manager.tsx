@@ -3,7 +3,11 @@
 import { useState, useTransition } from "react";
 
 import { Modal, ModalHeader } from "@/modules/admin/components/modal";
-import { Badge, primaryButton } from "@/modules/admin/components/ui";
+import {
+  Badge,
+  compactCardSurface,
+  primaryButton,
+} from "@/modules/admin/components/ui";
 
 import { ConfirmDelete } from "../components/confirm-delete";
 import { IconButton, icons } from "../components/table";
@@ -278,7 +282,7 @@ export function AccountManager({
         )}
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.015]">
+      <div className={`overflow-hidden ${compactCardSurface}`}>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[1040px] text-left text-[13px]">
             <thead>

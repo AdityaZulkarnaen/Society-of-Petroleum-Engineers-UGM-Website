@@ -1,5 +1,5 @@
 import { requireSuperAdmin } from "@/modules/admin/auth/session";
-import { Card, EmptyState } from "@/modules/admin/components/ui";
+import { Card, compactCardSurface, EmptyState } from "@/modules/admin/components/ui";
 import { CURRENT_PERIOD } from "@/modules/admin/constants";
 
 import { getAccounts } from "../accounts/data";
@@ -24,7 +24,7 @@ export async function RekapPage({
         <h1 className="text-[28px] font-bold tracking-[-0.02em] sm:text-[32px]">
           Rekap Pengurus
         </h1>
-        <Card className="p-6">
+        <Card surface={compactCardSurface} className="p-6">
           <EmptyState
             title="Belum ada pengurus"
             description="Buat akun pengurus di Manajemen Akun terlebih dahulu, lalu isi rekapnya di sini."

@@ -6,15 +6,18 @@ export function ComingSoonPage({
   title,
   backHref = "/admin",
   backLabel = "Kembali ke Overview",
+  surface,
 }: {
   title: string;
   backHref?: string;
   backLabel?: string;
+  /** Card glass; the super admin pages use compactCardSurface. */
+  surface?: string;
 }) {
   return (
     <div>
       <h1 className="text-[28px] font-bold tracking-[-0.02em]">{title}</h1>
-      <Card className="mt-8 px-6 py-14 text-center">
+      <Card surface={surface} className="mt-8 px-6 py-14 text-center">
         <p className="text-base font-semibold">Halaman ini sedang disiapkan</p>
         <p className="mx-auto mt-2 max-w-sm text-sm text-[#8a8ea3]">
           Fitur {title} akan tersedia di pembaruan berikutnya.

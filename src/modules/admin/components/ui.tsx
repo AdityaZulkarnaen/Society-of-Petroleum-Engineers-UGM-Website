@@ -25,15 +25,18 @@ export const primaryButton =
 export const secondaryButton =
   "inline-flex h-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] px-5 text-sm font-medium text-[#c7c9d4] transition-colors hover:border-white/20 hover:text-white disabled:opacity-50";
 
-/* Compact card ("ACard" in Figma), e.g. the Divisi cards.
-     Fill   — linear #FFFFFF 6% → 0% at 50%, top-left to bottom-right corner
+/* Compact card ("ACard" in Figma), used for every super admin container.
+     Fill   — linear #FFFFFF 6% → 0% at 50%. The Figma handle runs mostly
+              left to right (about 109° on the 552 × 159 Divisi card), so a
+              fixed angle; 'to bottom right' would run almost top to bottom
+              on wide cards.
      Fill   — #FFFFFF 3%
      Stroke — inside, 1.19, #FFFFFF 9%
      Inner shadow — x 4, y 4, blur 10, spread 0, #FFFFFF 3%
      Radius — 16 */
 export const compactCardSurface =
   "rounded-2xl border-[1.19px] border-white/9 " +
-  "bg-[linear-gradient(to_bottom_right,rgb(255_255_255/0.06)_0%,rgb(255_255_255/0)_50%),linear-gradient(rgb(255_255_255/0.03),rgb(255_255_255/0.03))] " +
+  "bg-[linear-gradient(109deg,rgb(255_255_255/0.06)_0%,rgb(255_255_255/0)_50%),linear-gradient(rgb(255_255_255/0.03),rgb(255_255_255/0.03))] " +
   "shadow-[inset_4px_4px_10px_0_rgb(255_255_255/0.03)]";
 
 export function Card({
@@ -93,13 +96,15 @@ export function Stat({
   label,
   value,
   caption,
+  surface,
 }: {
   label: string;
   value: ReactNode;
   caption?: string;
+  surface?: string;
 }) {
   return (
-    <Card className="px-6 py-6">
+    <Card surface={surface} className="px-6 py-6">
       <Label>{label}</Label>
       <p className="mt-2.5 text-[30px] leading-none font-bold tracking-[-0.02em]">
         {value}
