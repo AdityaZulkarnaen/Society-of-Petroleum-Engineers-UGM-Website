@@ -15,11 +15,11 @@ import { createClient } from "@supabase/supabase-js";
 const ACCOUNT_EMAIL_DOMAIN = "accounts.spe-ugm.internal";
 
 const DIVISIONS = [
-  { slug: "medcre", name: "MedCre" },
-  { slug: "hrd", name: "HRD" },
-  { slug: "rne", name: "RnE" },
-  { slug: "ea", name: "EA" },
-  { slug: "compdev", name: "CompDev" },
+  { slug: "medcre", name: "Media Creative" },
+  { slug: "hrd", name: "Human Resource Development" },
+  { slug: "rne", name: "Research & Education" },
+  { slug: "ea", name: "External Affairs" },
+  { slug: "compdev", name: "Competency Development" },
   { slug: "finance", name: "Finance" },
   { slug: "executive", name: "Executive" },
 ];

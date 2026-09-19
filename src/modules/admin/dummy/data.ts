@@ -29,11 +29,11 @@ export const dummyAdmin: Admin = {
 export const dummySuperAdmin: Admin = {
   id: "00000000-0000-0000-0000-000000000002",
   username: "spemedcre",
-  fullName: "Koordinator MedCre",
+  fullName: "Koordinator Media Creative",
   role: "super_admin",
   division: {
     id: "00000000-0000-0000-0000-0000000000d1",
-    name: "MedCre",
+    name: "Media Creative",
     tags: ["Desain Grafis", "Videografi", "Social Media", "Dokumentasi"],
   },
   nim: null,
@@ -206,7 +206,7 @@ const account = (
   email: `${username.replace(".", "")}@mail.ugm.ac.id`,
   whatsapp: "+62 812-3456-7890",
   department: "Teknik Perminyakan",
-  division: "MedCre",
+  division: "Media Creative",
   position,
   period: "2025/2026",
   isActive,

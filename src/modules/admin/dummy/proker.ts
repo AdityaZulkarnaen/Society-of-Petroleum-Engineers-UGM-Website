@@ -10,21 +10,21 @@ import { dummyAccounts } from "./data";
 
 /* As seeded by scripts/seed-super-admins.mjs; d1 is dummySuperAdmin's. */
 export const dummyDivisions: Division[] = [
-  { id: "00000000-0000-0000-0000-0000000000d1", name: "MedCre" },
-  { id: "00000000-0000-0000-0000-0000000000d2", name: "CompDev" },
-  { id: "00000000-0000-0000-0000-0000000000d3", name: "RnE" },
-  { id: "00000000-0000-0000-0000-0000000000d4", name: "HRD" },
-  { id: "00000000-0000-0000-0000-0000000000d5", name: "EA" },
+  { id: "00000000-0000-0000-0000-0000000000d1", name: "Media Creative" },
+  { id: "00000000-0000-0000-0000-0000000000d2", name: "Competency Development" },
+  { id: "00000000-0000-0000-0000-0000000000d3", name: "Research & Education" },
+  { id: "00000000-0000-0000-0000-0000000000d4", name: "Human Resource Development" },
+  { id: "00000000-0000-0000-0000-0000000000d5", name: "External Affairs" },
   { id: "00000000-0000-0000-0000-0000000000d6", name: "Finance" },
   { id: "00000000-0000-0000-0000-0000000000d7", name: "Executive" },
 ];
 
 const OTHER_PENGURUS: PengurusOption[] = [
-  { id: "o1", fullName: "Nadia Putri Kusuma", division: "CompDev" },
-  { id: "o2", fullName: "Yoga Aditama", division: "CompDev" },
-  { id: "o3", fullName: "Laras Wulandari", division: "RnE" },
-  { id: "o4", fullName: "Bayu Firmansyah", division: "RnE" },
-  { id: "o5", fullName: "Intan Permatasari", division: "HRD" },
+  { id: "o1", fullName: "Nadia Putri Kusuma", division: "Competency Development" },
+  { id: "o2", fullName: "Yoga Aditama", division: "Competency Development" },
+  { id: "o3", fullName: "Laras Wulandari", division: "Research & Education" },
+  { id: "o4", fullName: "Bayu Firmansyah", division: "Research & Education" },
+  { id: "o5", fullName: "Intan Permatasari", division: "Human Resource Development" },
 ];
 
 /** Active pengurus of every division, as list_pengurus() returns them. */

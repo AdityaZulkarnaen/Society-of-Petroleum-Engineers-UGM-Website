@@ -1,11 +1,5 @@
-import { ComingSoonPage } from "@/modules/admin/coming-soon";
+import { DivisionsPage } from "@/modules/super-admin/divisions";
 
 export default function Page() {
-  return (
-    <ComingSoonPage
-      title="Divisi"
-      backHref="/super-admin"
-      backLabel="Kembali ke Dashboard"
-    />
-  );
+  return <DivisionsPage />;
 }
