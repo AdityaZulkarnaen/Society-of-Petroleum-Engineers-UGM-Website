@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
 import { accountEmail } from "../constants";
+import { DUMMY_DATA } from "../dummy";
 
 export type SignInState = {
   error?: string;
@@ -75,7 +76,10 @@ export async function signIn(
 }
 
 export async function signOut() {
-  const supabase = await createClient();
-  await supabase.auth.signOut();
+  /* the sample-data preview has no session; the login page sends it back */
+  if (!DUMMY_DATA) {
+    const supabase = await createClient();
+    await supabase.auth.signOut();
+  }
   redirect("/admin/login");
 }

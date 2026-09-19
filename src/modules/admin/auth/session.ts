@@ -5,6 +5,9 @@ import { cache } from "react";
 
 import { createClient } from "@/lib/supabase/server";
 
+import { DUMMY_DATA } from "../dummy";
+import { dummyAdmin } from "../dummy/data";
+
 export type AdminRole = "super_admin" | "admin";
 
 export type Admin = {
@@ -26,6 +29,8 @@ export type Admin = {
  * admin when they have a profile row. Cached per request.
  */
 export const getAdmin = cache(async (): Promise<Admin | null> => {
+  if (DUMMY_DATA) return dummyAdmin;
+
   const supabase = await createClient();
 
   const { data } = await supabase.auth.getClaims();

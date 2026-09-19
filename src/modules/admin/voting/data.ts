@@ -2,6 +2,9 @@ import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
 
+import { DUMMY_DATA } from "../dummy";
+import { dummyCandidates, dummyElection, dummyVote } from "../dummy/data";
+
 export type Candidate = {
   id: string;
   number: number;
@@ -45,8 +48,33 @@ function jakartaToday() {
 const daysBetween = (from: string, to: string) =>
   Math.round((Date.parse(to) - Date.parse(from)) / DAY);
 
+/** Where today falls in the voting window. */
+function schedule(opensOn: string, closesOn: string) {
+  const today = jakartaToday();
+  const phase: VotingPhase =
+    today < opensOn ? "upcoming" : today > closesOn ? "closed" : "open";
+  return {
+    phase,
+    daysLeft: phase === "open" ? daysBetween(today, closesOn) : null,
+  };
+}
+
+function getDummyElection(): Election {
+  const { turnout, ...election } = dummyElection;
+  const myVote = dummyVote.get();
+  return {
+    ...election,
+    ...schedule(election.opensOn, election.closesOn),
+    candidates: dummyCandidates,
+    myVote,
+    turnout: { ...turnout, votes: turnout.votes + (myVote ? 1 : 0) },
+  };
+}
+
 /** The election that opens latest, with the admin's own vote, or null. */
 export async function getElection(): Promise<Election | null> {
+  if (DUMMY_DATA) return getDummyElection();
+
   const supabase = await createClient();
 
   const { data: election } = await supabase
@@ -75,14 +103,6 @@ export async function getElection(): Promise<Election | null> {
       supabase.rpc("election_turnout", { p_election_id: election.id }),
     ]);
 
-  const today = jakartaToday();
-  const phase: VotingPhase =
-    today < election.opens_on
-      ? "upcoming"
-      : today > election.closes_on
-        ? "closed"
-        : "open";
-
   const counts = (turnout as { votes: number; eligible: number }[] | null)?.[0];
 
   return {
@@ -91,8 +111,7 @@ export async function getElection(): Promise<Election | null> {
     termLabel: election.term_label,
     opensOn: election.opens_on,
     closesOn: election.closes_on,
-    phase,
-    daysLeft: phase === "open" ? daysBetween(today, election.closes_on) : null,
+    ...schedule(election.opens_on, election.closes_on),
     candidates: (candidates ?? []).map((c) => ({
       id: c.id,
       number: c.number,

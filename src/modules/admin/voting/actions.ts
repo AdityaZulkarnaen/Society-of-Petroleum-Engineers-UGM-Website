@@ -5,6 +5,8 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 
 import { requireAdmin } from "../auth/session";
+import { DUMMY_DATA } from "../dummy";
+import { dummyCandidates, dummyVote } from "../dummy/data";
 
 export type VoteResult = { error?: string };
 
@@ -17,6 +19,18 @@ const MESSAGES: Record<string, string> = {
 
 export async function castVote(candidateId: string): Promise<VoteResult> {
   await requireAdmin();
+
+  if (DUMMY_DATA) {
+    if (!dummyCandidates.some((c) => c.id === candidateId)) {
+      return { error: MESSAGES.candidate_not_found };
+    }
+    if (!dummyVote.get()) {
+      dummyVote.set({ candidateId, castAt: new Date().toISOString() });
+    }
+    revalidatePath("/admin/voting");
+    return {};
+  }
+
   const supabase = await createClient();
 
   const { error } = await supabase.rpc("cast_vote", {

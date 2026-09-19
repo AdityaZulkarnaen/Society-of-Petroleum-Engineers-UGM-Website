@@ -1,3 +1,6 @@
+import { DUMMY_DATA } from "../dummy";
+import { dummySelfReport } from "../dummy/data";
+
 /** The competencies HR scores, in the order the radar chart draws them
     (clockwise from the top). */
 export const COMPETENCIES = [
@@ -48,6 +51,8 @@ export type SelfReport = {
  * their tables exist.
  */
 export async function getSelfReport(): Promise<SelfReport> {
+  if (DUMMY_DATA) return dummySelfReport;
+
   return {
     proker: null,
     workHours: null,

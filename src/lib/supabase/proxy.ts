@@ -1,6 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+import { DUMMY_DATA } from "@/modules/admin/dummy";
+
 import { supabasePublishableKey, supabaseUrl } from "./env";
 
 const LOGIN_PATH = "/admin/login";
@@ -11,6 +13,9 @@ const LOGIN_PATH = "/admin/login";
  * still checks the user's profile on the server.
  */
 export async function updateSession(request: NextRequest) {
+  /* sample-data preview: no Supabase session to refresh or require */
+  if (DUMMY_DATA) return NextResponse.next({ request });
+
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(supabaseUrl(), supabasePublishableKey(), {

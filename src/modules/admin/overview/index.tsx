@@ -1,8 +1,8 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-import { createClient } from "@/lib/supabase/server";
-
+import { STATUS } from "../acara";
+import { getMyProker } from "../acara/data";
 import { requireAdmin } from "../auth/session";
 import {
   Avatar,
@@ -15,6 +15,8 @@ import {
   Stat,
 } from "../components/ui";
 import { CURRENT_PERIOD } from "../constants";
+import { getSelfReport, MAX_SCORE, type Tally } from "../rekap-diri/data";
+import { getDivisionSummary } from "./data";
 import { periodProgress } from "./period";
 
 const ROLE_LABEL = {
@@ -36,6 +38,33 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
+const percentOf = (tally: NonNullable<Tally>) =>
+  tally.total > 0 ? Math.round(Math.min(1, tally.done / tally.total) * 100) : 0;
+
+/** Rows share the Acara/Proker table's look, condensed. */
+function RecentProker({
+  proker,
+}: {
+  proker: Awaited<ReturnType<typeof getMyProker>>;
+}) {
+  return (
+    <ul className="mt-6 space-y-2">
+      {proker.slice(0, 4).map((p) => (
+        <li
+          key={p.id}
+          className="flex items-center justify-between gap-4 rounded-xl border border-white/[0.08] bg-white/[0.02] px-4 py-3"
+        >
+          <div className="min-w-0">
+            <p className="truncate text-[15px] font-medium text-white">{p.name}</p>
+            <p className="mt-1 truncate text-xs text-[#6f7286]">{p.role}</p>
+          </div>
+          <Badge tone={STATUS[p.status].tone}>{STATUS[p.status].label}</Badge>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 function DetailLink({ href, children }: { href: string; children: ReactNode }) {
   return (
     <div className="mt-6 border-t border-white/[0.06] pt-5">
@@ -51,12 +80,15 @@ function DetailLink({ href, children }: { href: string; children: ReactNode }) {
 
 export async function OverviewPage() {
   const admin = await requireAdmin();
-  const supabase = await createClient();
-
-  const { data: summaryRows } = await supabase.rpc("my_division_summary");
-  const summary = (
-    summaryRows as { member_count: number; head_name: string | null }[] | null
-  )?.[0];
+  const [summary, proker, report] = await Promise.all([
+    getDivisionSummary(),
+    getMyProker(),
+    getSelfReport(),
+  ]);
+  const { attendance, points } = report;
+  const done = proker.filter((p) => p.status === "selesai").length;
+  const ongoing = proker.filter((p) => p.status === "berlangsung").length;
+  const scored = report.competencies.filter((c) => c.current != null);
 
   const period = periodProgress(CURRENT_PERIOD);
   const firstName = admin.fullName.split(" ")[0];
@@ -110,11 +142,34 @@ export async function OverviewPage() {
         </dl>
       </Card>
 
-      {/* stats — recorded once events, attendance and points are tracked */}
       <div className="grid gap-4 sm:grid-cols-3">
-        <Stat label="Proker Terlibat" value="—" caption="Belum ada data proker" />
-        <Stat label="Kehadiran Rapat" value="—" caption="Belum ada data rapat" />
-        <Stat label="Poin Kontribusi" value="—" caption="Belum ada poin periode ini" />
+        {proker.length > 0 ? (
+          <Stat
+            label="Proker Terlibat"
+            value={proker.length}
+            caption={`${done} selesai · ${ongoing} berjalan`}
+          />
+        ) : (
+          <Stat label="Proker Terlibat" value="—" caption="Belum ada data proker" />
+        )}
+        {attendance ? (
+          <Stat
+            label="Kehadiran Rapat"
+            value={`${percentOf(attendance)}%`}
+            caption={`${attendance.done} dari ${attendance.total} rapat`}
+          />
+        ) : (
+          <Stat label="Kehadiran Rapat" value="—" caption="Belum ada data rapat" />
+        )}
+        {points ? (
+          <Stat
+            label="Poin Kontribusi"
+            value={points.done}
+            caption={`dari target ${points.total} poin`}
+          />
+        ) : (
+          <Stat label="Poin Kontribusi" value="—" caption="Belum ada poin periode ini" />
+        )}
       </div>
 
       <div className="grid items-start gap-6 lg:grid-cols-[1.08fr_1fr]">
@@ -124,12 +179,16 @@ export async function OverviewPage() {
               eyebrow="Keterlibatan Terbaru"
               title="Riwayat Acara & Proker"
             />
-            <div className="mt-6">
-              <EmptyState
-                title="Belum ada keterlibatan"
-                description="Acara dan proker yang kamu ikuti akan muncul di sini beserta statusnya."
-              />
-            </div>
+            {proker.length > 0 ? (
+              <RecentProker proker={proker} />
+            ) : (
+              <div className="mt-6">
+                <EmptyState
+                  title="Belum ada keterlibatan"
+                  description="Acara dan proker yang kamu ikuti akan muncul di sini beserta statusnya."
+                />
+              </div>
+            )}
             <DetailLink href="/admin/acara">
               Lihat detail lengkap di Acara/Proker
             </DetailLink>
@@ -159,10 +218,15 @@ export async function OverviewPage() {
                   {[
                     [
                       "Total anggota divisi",
-                      summary ? `${summary.member_count} orang` : "—",
+                      summary ? `${summary.memberCount} orang` : "—",
                     ],
-                    ["Proker aktif", "—"],
-                    ["Kepala divisi", summary?.head_name || "—"],
+                    [
+                      "Proker aktif",
+                      summary?.activeProker != null
+                        ? `${summary.activeProker} proker`
+                        : "—",
+                    ],
+                    ["Kepala divisi", summary?.headName || "—"],
                   ].map(([term, value]) => (
                     <div key={term} className="flex justify-between gap-4 py-3">
                       <dt className="text-[#8a8ea3]">{term}</dt>
@@ -219,12 +283,33 @@ export async function OverviewPage() {
 
           <Card className="p-6 sm:p-7">
             <SectionHeading eyebrow="Evaluasi Diri" title="Ringkasan Kompetensi" />
-            <div className="mt-6">
-              <EmptyState
-                title="Belum ada evaluasi"
-                description="Hasil evaluasi kompetensi periode ini akan tampil di sini setelah diisi."
-              />
-            </div>
+            {scored.length > 0 ? (
+              <ul className="mt-6 space-y-4">
+                {scored.map(({ name, current }) => (
+                  <li key={name}>
+                    <div className="flex items-baseline justify-between gap-4 text-[13px]">
+                      <span className="text-[#c7c9d4]">{name}</span>
+                      <span className="font-bold text-white">
+                        {current}
+                        <span className="font-normal text-[#6f7286]"> / {MAX_SCORE}</span>
+                      </span>
+                    </div>
+                    <ProgressBar
+                      percent={Math.round((current! / MAX_SCORE) * 100)}
+                      label={name}
+                      className="mt-2"
+                    />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="mt-6">
+                <EmptyState
+                  title="Belum ada evaluasi"
+                  description="Hasil evaluasi kompetensi periode ini akan tampil di sini setelah diisi."
+                />
+              </div>
+            )}
             <DetailLink href="/admin/rekap-diri">
               Lihat detail lengkap di Rekap Diri
             </DetailLink>

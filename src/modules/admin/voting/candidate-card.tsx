@@ -107,7 +107,7 @@ export function CandidateCard({
           />
           <span
             aria-hidden="true"
-            className="absolute -top-2 -left-2 grid size-6 place-items-center rounded-full bg-[#2f7bff] text-xs font-bold text-white shadow-[0_0_0_3px_#0c1030,0_0_14px_rgba(47,123,255,0.6)]"
+            className="absolute -top-2 -left-2 grid size-6 place-items-center rounded-full bg-[#308FFF] text-xs font-bold text-[#04051A] shadow-[inset_0_0_0_2px_rgba(4,5,26,0.4)]"
           >
             {candidate.number}
           </span>

@@ -1,3 +1,6 @@
+import { DUMMY_DATA } from "../dummy";
+import { dummyProker } from "../dummy/data";
+
 export const PROKER_STATUSES = [
   "berlangsung",
   "selesai",
@@ -22,5 +25,6 @@ export type Proker = {
  * state. Scope this query to the admin once the table exists.
  */
 export async function getMyProker(): Promise<Proker[]> {
+  if (DUMMY_DATA) return dummyProker;
   return [];
 }

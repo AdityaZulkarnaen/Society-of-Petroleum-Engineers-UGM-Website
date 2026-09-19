@@ -11,14 +11,15 @@ import {
 } from "../components/ui";
 import { getMyProker, PROKER_STATUSES, type ProkerStatus } from "./data";
 
-const STATUS: Record<ProkerStatus, { label: string; tone: Tone }> = {
+export const STATUS: Record<ProkerStatus, { label: string; tone: Tone }> = {
   berlangsung: { label: "Berlangsung", tone: "amber" },
   selesai: { label: "Selesai", tone: "green" },
   direncanakan: { label: "Direncanakan", tone: "neutral" },
   rutin: { label: "Rutin", tone: "blue" },
 };
 
-const COLUMNS = "md:grid md:grid-cols-[1.6fr_0.95fr_1.35fr_1fr] md:items-center md:gap-6";
+/* Column widths from the design: 320 / 192 / 272 / 216. */
+const COLUMNS = "md:grid md:grid-cols-[32fr_19fr_27fr_22fr] md:items-center md:gap-x-6";
 
 function FilterChips({ active }: { active: ProkerStatus | null }) {
   const chips = [
@@ -101,7 +102,7 @@ export async function EventsPage({
           <div className="mt-6" role="table" aria-label="Daftar program kerja">
             <div
               role="row"
-              className={`hidden px-3.5 pb-3 text-[11px] font-medium tracking-[0.08em] text-[#8a8ea3] uppercase ${COLUMNS}`}
+              className={`hidden px-[15px] pb-3 text-[11px] font-medium tracking-[0.08em] text-[#8a8ea3] uppercase ${COLUMNS}`}
             >
               <span role="columnheader">Nama Proker</span>
               <span role="columnheader">Divisi</span>
@@ -114,15 +115,15 @@ export async function EventsPage({
                 <div
                   key={p.id}
                   role="row"
-                  className={`grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 rounded-xl border border-white/[0.08] bg-white/[0.02] px-3.5 py-3 ${COLUMNS}`}
+                  className={`grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 rounded-xl border border-white/[0.08] bg-white/[0.02] px-3.5 py-3 md:min-h-[50px] md:py-2.5 ${COLUMNS}`}
                 >
                   <span role="cell" className="text-[15px] font-semibold text-white">
                     {p.name}
                   </span>
-                  <span role="cell" className="col-start-1 text-[13px] text-[#8a8ea3]">
+                  <span role="cell" className="col-start-1 text-[13px] text-[#8a8ea3] md:col-start-auto">
                     {p.division}
                   </span>
-                  <span role="cell" className="col-start-1 text-[13px] text-[#c7c9d4]">
+                  <span role="cell" className="col-start-1 text-[13px] text-[#c7c9d4] md:col-start-auto">
                     {p.role}
                   </span>
                   <span
