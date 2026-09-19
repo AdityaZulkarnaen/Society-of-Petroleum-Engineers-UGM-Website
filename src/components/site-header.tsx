@@ -1,18 +1,20 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import { outlineButton, pillSolid } from "@/components/ui/button-styles";
 
+/* Home sections are linked as /#…, so the links also work from other pages. */
 const LINKS = [
-  { label: "Home", href: "#home" },
-  { label: "About us", href: "#about" },
-  { label: "Cabinet", href: "#cabinet" },
-  { label: "Event", href: "#event" },
-  { label: "Apecx", href: "#apecx" },
-  { label: "Contact", href: "#contact" },
+  { label: "Home", href: "/" },
+  { label: "About us", href: "/about" },
+  { label: "Cabinet", href: "/#cabinet" },
+  { label: "Event", href: "/#event" },
+  { label: "Apecx", href: "/#apecx" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 /**
@@ -53,6 +55,7 @@ function useDocked(navRef: React.RefObject<HTMLElement | null>) {
 }
 
 export function SiteHeader() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
   const docked = useDocked(navRef);
@@ -75,8 +78,8 @@ export function SiteHeader() {
           "docked:mt-0 docked:w-full docked:rounded-none docked:border-transparent docked:border-b-[#ececf6] docked:px-[max(1rem,calc((100%_-_min(calc(1270*var(--kw)),calc(100%_-_2rem)))/2_+_clamp(10px,calc(10*var(--k)),18px)))] docked:shadow-nav-docked",
         ].join(" ")}
       >
-        <a
-          href="#home"
+        <Link
+          href="/"
           className="flex shrink-0 items-center rounded-xl"
           aria-label="SPE UGM Student Chapter — home"
         >
@@ -88,26 +91,27 @@ export function SiteHeader() {
             priority
             className="h-[clamp(38px,calc(54*var(--k)),66px)] w-auto"
           />
-        </a>
+        </Link>
 
         <ul className="hidden flex-1 items-center justify-center gap-[calc(31*var(--k))] md:flex">
           {LINKS.map((link) => (
             <li key={link.label}>
-              <a
+              <Link
                 href={link.href}
-                className="relative text-[clamp(13.5px,calc(15*var(--k)),18px)] font-medium tracking-[-0.005em] text-ink-nav transition-colors duration-200 ease-out-soft after:absolute after:-bottom-[0.45em] after:left-1/2 after:h-[1.5px] after:w-0 after:-translate-x-1/2 after:rounded-xs after:bg-ink-deep after:transition-[width] after:duration-200 after:ease-out-soft hover:text-ink-deep hover:after:w-full"
+                aria-current={link.href === pathname ? "page" : undefined}
+                className="relative text-[clamp(13.5px,calc(15*var(--k)),18px)] font-medium tracking-[-0.005em] text-ink-nav transition-colors duration-200 ease-out-soft after:absolute after:-bottom-[0.45em] after:left-1/2 after:h-[1.5px] after:w-0 after:-translate-x-1/2 after:rounded-xs after:bg-ink-deep after:transition-[width] after:duration-200 after:ease-out-soft hover:text-ink-deep hover:after:w-full aria-[current=page]:text-ink-deep aria-[current=page]:after:w-full"
               >
                 {link.label}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
 
         {/* on phones the CTA lives in the menu */}
         <div className="ml-auto hidden md:block">
-          <a href="#join" className={outlineButton}>
+          <Link href="/#join" className={outlineButton}>
             Join SPE
-          </a>
+          </Link>
         </div>
 
         <button
@@ -151,23 +155,24 @@ export function SiteHeader() {
         <ul className="flex flex-col">
           {LINKS.map((link) => (
             <li key={link.label}>
-              <a
+              <Link
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="block rounded-xl px-4 py-3 text-[15px] font-medium text-ink-nav transition-colors hover:bg-[#f4f3fc] hover:text-ink-deep"
+                aria-current={link.href === pathname ? "page" : undefined}
+                className="block rounded-xl px-4 py-3 text-[15px] font-medium text-ink-nav transition-colors hover:bg-[#f4f3fc] hover:text-ink-deep aria-[current=page]:bg-[#f4f3fc] aria-[current=page]:text-ink-deep"
               >
                 {link.label}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
-        <a
-          href="#join"
+        <Link
+          href="/#join"
           onClick={() => setOpen(false)}
           className={`${pillSolid} mt-1 w-full`}
         >
           Join SPE
-        </a>
+        </Link>
       </div>
     </header>
   );
