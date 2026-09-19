@@ -46,8 +46,9 @@ export const dummySuperAdmin: Admin = {
 export const dummySuperAdminSummary: SuperAdminSummary = {
   totalAccounts: 10,
   activeAccounts: 9,
-  rekapFilled: 1,
-  pendingRekap: { id: "a2", name: "Reza Rasendriya Hemawan" },
+  /* derived from the dummy accounts and rekap in dashboard/data.ts */
+  rekapFilled: null,
+  pendingRekap: null,
   divisionCount: 7,
   /* signed in 25 minutes ago */
   lastSignInAt: new Date(Date.now() - 25 * 60 * 1000).toISOString(),
@@ -231,5 +232,44 @@ export const dummyAccounts = {
   list: (): Account[] => (accountStore.__speDummyAccounts ??= structuredClone(ACCOUNTS)),
   save: (accounts: Account[]) => {
     accountStore.__speDummyAccounts = accounts;
+  },
+};
+
+/* Rekap Pengurus --------------------------------------------------------- */
+
+const REKAP: Record<string, SelfReport> = {
+  a2: {
+    proker: { done: 6, total: 8 },
+    workHours: null,
+    attendance: { done: 22, total: 24 },
+    points: { done: 340, total: 400 },
+    competencies: [
+      { name: "Kepemimpinan", initial: 3, current: 4, rating: "baik" },
+      { name: "Kerja Tim", initial: 3.5, current: 4.5, rating: "sangat_baik" },
+      { name: "Tanggung Jawab", initial: 4, current: 4.5, rating: "sangat_baik" },
+      { name: "Inisiatif", initial: 3, current: 4, rating: "baik" },
+      { name: "Komunikasi", initial: 3.5, current: 4, rating: "baik" },
+      { name: "Manajemen Waktu", initial: 2.5, current: 3, rating: "perlu_ditingkatkan" },
+    ],
+    notes: {
+      achievements:
+        "Reza menunjukkan kinerja yang konsisten dan dapat diandalkan selama periode 2025/2026. Kontribusi paling menonjol tercatat pada APECX 2026, di mana ia berperan sebagai PIC Logistik dan berhasil mengkoordinasikan persiapan venue dan konsumsi untuk lebih dari 300 peserta secara lintas divisi.",
+      strengths:
+        "Kerja tim dan tanggung jawab menjadi dua kompetensi yang paling menonjol. Reza secara konsisten hadir dalam rapat (22 dari 24 pertemuan) dan menyelesaikan tugas tepat waktu. Rekan satu divisi mencatat bahwa ia aktif membantu anggota baru beradaptasi.",
+      improvements:
+        "Berdasarkan observasi sepanjang periode, manajemen waktu masih menjadi area yang perlu mendapat perhatian — terutama saat jadwal kegiatan SPE berbenturan dengan kalender akademik.",
+    },
+  },
+};
+
+/* Kept on globalThis so saves survive hot reloads until the server restarts. */
+const rekapStore = globalThis as { __speDummyRekap?: Record<string, SelfReport> };
+const rekapRecords = () => (rekapStore.__speDummyRekap ??= structuredClone(REKAP));
+
+export const dummyRekap = {
+  ids: () => Object.keys(rekapRecords()),
+  get: (id: string): SelfReport | null => rekapRecords()[id] ?? null,
+  set: (id: string, report: SelfReport) => {
+    rekapRecords()[id] = report;
   },
 };

@@ -16,7 +16,8 @@ import {
 } from "../components/ui";
 import { CURRENT_PERIOD } from "../constants";
 import { CompetencyList } from "../rekap-diri/competency-list";
-import { getSelfReport, type Tally } from "../rekap-diri/data";
+import type { Tally } from "../rekap-diri/data";
+import { getSelfReport } from "../rekap-diri/load";
 import { getDivisionSummary } from "./data";
 import { periodProgress } from "./period";
 

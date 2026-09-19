@@ -1,7 +1,7 @@
 import { Badge, type Tone } from "../components/ui";
 import type { CompetencyResult, Rating } from "./data";
 
-const RATING: Record<Rating, { label: string; tone: Tone }> = {
+export const RATING: Record<Rating, { label: string; tone: Tone }> = {
   sangat_baik: { label: "Sangat Baik", tone: "green" },
   baik: { label: "Baik", tone: "blue" },
   cukup: { label: "Cukup", tone: "neutral" },

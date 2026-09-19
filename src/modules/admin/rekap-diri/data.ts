@@ -1,5 +1,5 @@
-import { DUMMY_DATA } from "../dummy";
-import { dummySelfReport } from "../dummy/data";
+/* Shared rekap types and constants; safe to import from client components.
+   The loaders live in ./load.ts. */
 
 /** The competencies HR scores, in the order the radar chart draws them
     (clockwise from the top). */
@@ -44,15 +44,10 @@ export type SelfReport = {
   };
 };
 
-/**
- * The signed-in admin's report for the current period. Work programs, work
- * hours, attendance, points and HR evaluations aren't recorded yet, so every
- * section renders its empty state. Scope these queries to the admin once
- * their tables exist.
- */
-export async function getSelfReport(): Promise<SelfReport> {
-  if (DUMMY_DATA) return dummySelfReport;
+export const RATINGS: Rating[] = ["sangat_baik", "baik", "cukup", "perlu_ditingkatkan"];
 
+/** A report with nothing recorded: every section shows its empty state. */
+export function emptyReport(): SelfReport {
   return {
     proker: null,
     workHours: null,

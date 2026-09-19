@@ -1,7 +1,8 @@
 import { requireAdmin } from "../auth/session";
 import { Card, Label, ProgressBar, SectionHeading } from "../components/ui";
 import { CompetencyList } from "./competency-list";
-import { getSelfReport, type Tally } from "./data";
+import type { Tally } from "./data";
+import { getSelfReport } from "./load";
 import { RadarChart } from "./radar-chart";
 
 function TallyCard({ label, tally }: { label: string; tally: Tally }) {

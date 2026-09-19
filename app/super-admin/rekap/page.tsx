@@ -1,11 +1,5 @@
-import { ComingSoonPage } from "@/modules/admin/coming-soon";
+import { RekapPage } from "@/modules/super-admin/rekap";
 
-export default function Page() {
-  return (
-    <ComingSoonPage
-      title="Rekap Pengurus"
-      backHref="/super-admin"
-      backLabel="Kembali ke Dashboard"
-    />
-  );
+export default function Page({ searchParams }: PageProps<"/super-admin/rekap">) {
+  return <RekapPage searchParams={searchParams} />;
 }
