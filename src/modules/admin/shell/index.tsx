@@ -4,7 +4,8 @@ import type { ReactNode } from "react";
 import { signOut } from "../auth/actions";
 import { requireAdmin, type Admin } from "../auth/session";
 import { Avatar } from "../components/ui";
-import { SidebarNav, TabNav } from "./nav";
+import { MobileNav } from "./mobile-nav";
+import { SidebarNav } from "./nav";
 
 export function Brand({
   subtitle = "Dashboard Pengurus",
@@ -67,7 +68,11 @@ function AccountMenu({
               className="text-[#6f7286] transition-transform group-open:-rotate-90"
               aria-hidden="true"
             >
-              <path d="m6 4 4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
+              <path
+                d="m6 4 4 4-4 4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </>
         )}
@@ -80,7 +85,8 @@ function AccountMenu({
         }`}
       >
         <p className="truncate px-3 pt-2 pb-2.5 text-xs text-[#6f7286]">
-          Masuk sebagai <span className="text-[#c7c9d4]">@{admin.username}</span>
+          Masuk sebagai{" "}
+          <span className="text-[#c7c9d4]">@{admin.username}</span>
         </p>
         <form action={signOut}>
           <button
@@ -117,14 +123,14 @@ export async function AdminShell({ children }: { children: ReactNode }) {
         </div>
       </aside>
 
-      <header className="sticky top-0 z-10 border-b border-white/[0.06] bg-[#0b0e22]/90 px-4 backdrop-blur-lg lg:hidden">
-        <div className="flex h-16 items-center justify-between">
-          <Brand />
+      <header className="sticky top-0 z-10 border-b border-white/[0.06] bg-[#0b0e22] px-4 lg:hidden">
+        <div className="flex h-16 items-center gap-3">
+          <MobileNav brand={<Brand />} footer={<AccountMenu admin={admin} />} />
+          <div className="min-w-0 flex-1">
+            <Brand />
+          </div>
           <AccountMenu admin={admin} compact />
         </div>
-        <nav aria-label="Dashboard">
-          <TabNav />
-        </nav>
       </header>
 
       <main className="min-w-0 flex-1 px-4 py-8 sm:px-8 lg:px-12 lg:py-10">

@@ -237,7 +237,7 @@ export function AccountManager({
             className="h-10 w-full rounded-xl border border-white/10 bg-white/[0.03] pr-4 pl-10 text-sm text-white placeholder:text-[#6f7286] focus-visible:border-[#4f8dff]/60 focus-visible:ring-4 focus-visible:ring-[#4f8dff]/15 focus-visible:outline-none"
           />
         </label>
-        <div role="group" aria-label="Filter status akun" className="flex gap-2">
+        <div role="group" aria-label="Filter status akun" className="flex flex-wrap gap-2">
           {FILTERS.map(({ key, label }) => (
             <button
               key={key}
@@ -375,14 +375,14 @@ export function AccountManager({
           </table>
         </div>
 
-        <div className="flex items-center justify-between gap-4 border-t border-white/[0.06] px-5 py-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.06] px-5 py-4">
           <p className="text-[13px] text-[#6f7286]">
             {shown.length > 0
               ? `Menampilkan ${start + 1}-${start + rows.length} dari ${shown.length} pengurus`
               : "Tidak ada data"}
           </p>
           {pageCount > 1 && (
-            <nav aria-label="Halaman" className="flex gap-1.5">
+            <nav aria-label="Halaman" className="flex flex-wrap gap-1.5">
               {Array.from({ length: pageCount }, (_, i) => i + 1).map((n) => (
                 <button
                   key={n}
