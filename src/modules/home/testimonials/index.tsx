@@ -78,13 +78,7 @@ export function Testimonials() {
     >
       <header className="relative z-10 text-center">
         <p className="flex items-center justify-center gap-2 text-base text-curtain md:text-lg">
-          <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
-            <path
-              fill="currentColor"
-              d="M8 0c.5 3.9 2.1 5.5 6 6-3.9.5-5.5 2.1-6 6-.5-3.9-2.1-5.5-6-6 3.9-.5 5.5-2.1 6-6Z"
-              transform="translate(0 2)"
-            />
-          </svg>
+          <img src="/global/SVG-star.svg" width="14" height="14" aria-hidden="true" alt="" />
           Testimonials
         </p>
         <h2

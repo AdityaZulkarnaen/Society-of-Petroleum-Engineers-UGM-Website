@@ -183,13 +183,7 @@ export function AboutPage() {
       >
         <header className="text-center">
           <p className="flex items-center justify-center gap-2 text-base text-curtain md:text-lg">
-            <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
-              <path
-                fill="currentColor"
-                d="M8 0c.5 3.9 2.1 5.5 6 6-3.9.5-5.5 2.1-6 6-.5-3.9-2.1-5.5-6-6 3.9-.5 5.5-2.1 6-6Z"
-                transform="translate(0 2)"
-              />
-            </svg>
+            <img src="/global/SVG-star.svg" width="14" height="14" aria-hidden="true" alt="" />
             About us
           </p>
           <h1
@@ -224,7 +218,10 @@ export function AboutPage() {
         className="px-6 pb-[clamp(3rem,calc(72*var(--k)),5.5rem)] md:px-10"
       >
         <header className="text-center">
-          <Eyebrow>SPE UGM SC</Eyebrow>
+          <p className="flex items-center justify-center gap-2 text-base text-curtain md:text-lg">
+            <img src="/global/SVG-star.svg" width="14" height="14" aria-hidden="true" alt="" />
+            SPE UGM SC
+          </p>
           <h2 id="story-title" className={sectionTitle}>
             Who We Are &amp; What We Stand For
           </h2>
@@ -252,7 +249,10 @@ export function AboutPage() {
         className="px-4 pb-[clamp(5rem,calc(120*var(--k)),9rem)]"
       >
         <header className="text-center">
-          <Eyebrow>Key Metrics</Eyebrow>
+          <p className="flex items-center justify-center gap-2 text-base text-curtain md:text-lg">
+            <img src="/global/SVG-star.svg" width="14" height="14" aria-hidden="true" alt="" />
+            Key Metrics
+          </p>
           <h2 id="metrics-title" className={sectionTitle}>
             How We Measure Success
           </h2>
