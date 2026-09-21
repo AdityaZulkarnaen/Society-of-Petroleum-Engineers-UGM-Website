@@ -1,5 +1,7 @@
 import "server-only";
 
+import { cache } from "react";
+
 import { createClient } from "@/lib/supabase/server";
 
 import { requireAdmin } from "../auth/session";
@@ -27,23 +29,27 @@ type Row = {
   } | null;
 };
 
-const one = <T,>(value: T | T[] | null) =>
+const one = <T>(value: T | T[] | null) =>
   Array.isArray(value) ? (value[0] ?? null) : value;
 
 /** Proker the signed-in pengurus takes part in, most recent first. */
-export async function getMyProker(): Promise<Proker[]> {
+export const getMyProker = cache(async (): Promise<Proker[]> => {
   if (DUMMY_DATA) return dummyProker;
 
   const admin = await requireAdmin();
   const supabase = await createClient();
   const { data } = await supabase
     .from("proker_members")
-    .select("role, proker:proker(id, name, status, starts_on, division:divisions(name))")
+    .select(
+      "role, proker:proker(id, name, status, starts_on, division:divisions(name))",
+    )
     .eq("profile_id", admin.id);
 
   return ((data ?? []) as unknown as Row[])
     .flatMap(({ role, proker }) => (proker ? [{ role, proker }] : []))
-    .sort((a, b) => (b.proker.starts_on ?? "").localeCompare(a.proker.starts_on ?? ""))
+    .sort((a, b) =>
+      (b.proker.starts_on ?? "").localeCompare(a.proker.starts_on ?? ""),
+    )
     .map(({ role, proker }) => ({
       id: proker.id,
       name: proker.name,
@@ -51,4 +57,4 @@ export async function getMyProker(): Promise<Proker[]> {
       role,
       status: proker.status,
     }));
-}
+});

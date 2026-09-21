@@ -1,5 +1,7 @@
 import "server-only";
 
+import { cache } from "react";
+
 import { createClient } from "@/lib/supabase/server";
 import { DUMMY_DATA } from "@/modules/admin/dummy";
 import { dummyAccounts } from "@/modules/admin/dummy/data";
@@ -7,7 +9,7 @@ import { dummyAccounts } from "@/modules/admin/dummy/data";
 import type { Account } from "./fields";
 
 /** Pengurus accounts of the super admin's division, newest first. */
-export async function getAccounts(): Promise<Account[]> {
+export const getAccounts = cache(async (): Promise<Account[]> => {
   if (DUMMY_DATA) return dummyAccounts.list();
 
   /* RLS limits super admins to profiles in their own division */
@@ -36,4 +38,4 @@ export async function getAccounts(): Promise<Account[]> {
       isActive: p.is_active,
     };
   });
-}
+});

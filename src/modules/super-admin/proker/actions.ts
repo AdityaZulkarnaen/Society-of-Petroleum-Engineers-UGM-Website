@@ -1,9 +1,11 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 import { createClient } from "@/lib/supabase/server";
 import { requireSuperAdmin } from "@/modules/admin/auth/session";
+
+import { DIVISIONS_TAG } from "../cache";
 import { DUMMY_DATA } from "@/modules/admin/dummy";
 import {
   dummyManagedProker,
@@ -19,6 +21,7 @@ const MESSAGES: Record<string, string> = {
 };
 
 function revalidate() {
+  revalidateTag(DIVISIONS_TAG, "seconds");
   revalidatePath("/super-admin/acara");
   revalidatePath("/admin/acara");
   revalidatePath("/admin");
@@ -35,7 +38,9 @@ export async function saveProker(
 
   if (DUMMY_DATA) {
     if (!me.division) return { error: MESSAGES.not_allowed };
-    const names = new Map(dummyPengurusOptions().map((p) => [p.id, p.fullName]));
+    const names = new Map(
+      dummyPengurusOptions().map((p) => [p.id, p.fullName]),
+    );
     const list = dummyManagedProker.list();
     const existing = id ? list.find((p) => p.id === id) : null;
     if (id && existing?.divisionId !== me.division.id) {
@@ -70,11 +75,16 @@ export async function saveProker(
     p_starts_on: values.startsOn,
     p_ends_on: values.endsOn,
     p_status: values.status,
-    p_members: values.members.map((m) => ({ profile_id: m.profileId, role: m.role })),
+    p_members: values.members.map((m) => ({
+      profile_id: m.profileId,
+      role: m.role,
+    })),
   });
   if (error) {
     console.error("saveProker", error.message);
-    return { error: MESSAGES[error.message] ?? "Proker gagal disimpan. Coba lagi." };
+    return {
+      error: MESSAGES[error.message] ?? "Proker gagal disimpan. Coba lagi.",
+    };
   }
 
   revalidate();
@@ -98,7 +108,9 @@ export async function deleteProker(id: string): Promise<ActionResult> {
   const { error } = await supabase.rpc("delete_proker", { p_id: id });
   if (error) {
     console.error("deleteProker", error.message);
-    return { error: MESSAGES[error.message] ?? "Proker gagal dihapus. Coba lagi." };
+    return {
+      error: MESSAGES[error.message] ?? "Proker gagal dihapus. Coba lagi.",
+    };
   }
 
   revalidate();

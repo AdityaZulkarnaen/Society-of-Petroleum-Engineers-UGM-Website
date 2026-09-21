@@ -1,6 +1,12 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import {
+  useDeferredValue,
+  useMemo,
+  useOptimistic,
+  useState,
+  useTransition,
+} from "react";
 
 import { Modal, ModalHeader } from "@/modules/admin/components/modal";
 import {
@@ -80,7 +86,11 @@ function CredentialsDialog({
 
   return (
     <div className="px-6 pt-7 pb-7 sm:px-8">
-      <ModalHeader id="credentials-title" title="Akun Berhasil Dibuat" onClose={onClose} />
+      <ModalHeader
+        id="credentials-title"
+        title="Akun Berhasil Dibuat"
+        onClose={onClose}
+      />
       <p className="mt-5 text-sm leading-relaxed text-[#c7c9d4]">
         Bagikan kredensial berikut langsung kepada{" "}
         <strong className="font-semibold text-white">{name}</strong>. Password
@@ -108,7 +118,12 @@ function CredentialsDialog({
         Pengurus masuk di halaman login dashboard memakai username di atas.
       </p>
       <div className="mt-6 flex justify-end">
-        <button type="button" autoFocus onClick={onClose} className={primaryButton}>
+        <button
+          type="button"
+          autoFocus
+          onClick={onClose}
+          className={primaryButton}
+        >
           Selesai
         </button>
       </div>
@@ -140,18 +155,32 @@ export function AccountManager({
   const [notice, setNotice] = useState<Notice | null>(null);
   const [togglingId, setTogglingId] = useState<string | null>(null);
   const [, startToggle] = useTransition();
-
-  const activeCount = accounts.filter((a) => a.isActive).length;
-
-  const needle = query.trim().toLowerCase();
-  const shown = accounts.filter(
-    (a) =>
-      (filter === "all" || a.isActive === (filter === "active")) &&
-      (!needle ||
-        [a.fullName, a.nim, a.email, a.username].some((field) =>
-          field?.toLowerCase().includes(needle),
-        )),
+  /* The switch flips at once; the server action confirms it a moment later,
+     and a failure re-renders from the unchanged server data. */
+  const [optimistic, flipOptimistic] = useOptimistic(
+    accounts,
+    (current, id: string) =>
+      current.map((a) => (a.id === id ? { ...a, isActive: !a.isActive } : a)),
   );
+
+  const activeCount = optimistic.filter((a) => a.isActive).length;
+
+  /* Typing stays responsive on long lists: the keystroke paints first and the
+     filtered table follows in the next, interruptible render. */
+  const needle = useDeferredValue(query).trim().toLowerCase();
+  const shown = useMemo(
+    () =>
+      optimistic.filter(
+        (a) =>
+          (filter === "all" || a.isActive === (filter === "active")) &&
+          (!needle ||
+            [a.fullName, a.nim, a.email, a.username].some((field) =>
+              field?.toLowerCase().includes(needle),
+            )),
+      ),
+    [optimistic, filter, needle],
+  );
+  const stale = needle !== query.trim().toLowerCase();
   const pageCount = Math.max(1, Math.ceil(shown.length / PAGE_SIZE));
   const current = Math.min(page, pageCount);
   const start = (current - 1) * PAGE_SIZE;
@@ -167,7 +196,10 @@ export function AccountManager({
         name: input.fullName.trim(),
         credentials: result.credentials,
       });
-      setNotice({ tone: "success", text: `Akun ${input.fullName.trim()} berhasil dibuat.` });
+      setNotice({
+        tone: "success",
+        text: `Akun ${input.fullName.trim()} berhasil dibuat.`,
+      });
     }
     return result;
   }
@@ -177,7 +209,10 @@ export function AccountManager({
       const result = await updateAccount(account.id, input);
       if (!result.error && !result.fieldErrors) {
         close();
-        setNotice({ tone: "success", text: `Data ${input.fullName.trim()} diperbarui.` });
+        setNotice({
+          tone: "success",
+          text: `Data ${input.fullName.trim()} diperbarui.`,
+        });
       }
       return result;
     };
@@ -186,6 +221,7 @@ export function AccountManager({
   function toggle(account: Account) {
     setTogglingId(account.id);
     startToggle(async () => {
+      flipOptimistic(account.id);
       const result = await setAccountActive(account.id, !account.isActive);
       setTogglingId(null);
       setNotice(
@@ -207,7 +243,8 @@ export function AccountManager({
             Manajemen Akun
           </h1>
           <p className="mt-2 text-sm text-[#8a8ea3]">
-            {activeCount} pengurus aktif · {accounts.length - activeCount} nonaktif
+            {activeCount} pengurus aktif · {optimistic.length - activeCount}{" "}
+            nonaktif
           </p>
         </div>
         <button
@@ -237,7 +274,11 @@ export function AccountManager({
             className="h-10 w-full rounded-xl border border-white/10 bg-white/[0.03] pr-4 pl-10 text-sm text-white placeholder:text-[#6f7286] focus-visible:border-[#4f8dff]/60 focus-visible:ring-4 focus-visible:ring-[#4f8dff]/15 focus-visible:outline-none"
           />
         </label>
-        <div role="group" aria-label="Filter status akun" className="flex flex-wrap gap-2">
+        <div
+          role="group"
+          aria-label="Filter status akun"
+          className="flex flex-wrap gap-2"
+        >
           {FILTERS.map(({ key, label }) => (
             <button
               key={key}
@@ -283,18 +324,40 @@ export function AccountManager({
       </div>
 
       <div className={`overflow-hidden ${compactCardSurface}`}>
-        <div className="overflow-x-auto">
+        <div
+          className={`overflow-x-auto transition-opacity ${stale ? "opacity-60" : ""}`}
+          aria-busy={stale}
+        >
           <table className="w-full min-w-[1040px] text-left text-[13px]">
             <thead>
               <tr className="border-b border-white/[0.06] text-[11px] font-medium tracking-[0.08em] text-[#8a8ea3] uppercase">
-                <th scope="col" className="py-4 pr-3 pl-[18px] font-medium">Nama Lengkap</th>
-                <th scope="col" className="px-3 py-4 font-medium">NIM</th>
-                <th scope="col" className="px-3 py-4 font-medium">Email</th>
-                <th scope="col" className="px-3 py-4 font-medium">Divisi</th>
-                <th scope="col" className="px-3 py-4 font-medium">Jabatan</th>
-                <th scope="col" className="px-3 py-4 font-medium">Periode</th>
-                <th scope="col" className="px-3 py-4 text-center font-medium">Status</th>
-                <th scope="col" className="py-4 pr-[18px] pl-3 text-right font-medium">Aksi</th>
+                <th scope="col" className="py-4 pr-3 pl-[18px] font-medium">
+                  Nama Lengkap
+                </th>
+                <th scope="col" className="px-3 py-4 font-medium">
+                  NIM
+                </th>
+                <th scope="col" className="px-3 py-4 font-medium">
+                  Email
+                </th>
+                <th scope="col" className="px-3 py-4 font-medium">
+                  Divisi
+                </th>
+                <th scope="col" className="px-3 py-4 font-medium">
+                  Jabatan
+                </th>
+                <th scope="col" className="px-3 py-4 font-medium">
+                  Periode
+                </th>
+                <th scope="col" className="px-3 py-4 text-center font-medium">
+                  Status
+                </th>
+                <th
+                  scope="col"
+                  className="py-4 pr-[18px] pl-3 text-right font-medium"
+                >
+                  Aksi
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -309,7 +372,10 @@ export function AccountManager({
                   <td className="px-3 text-xs whitespace-nowrap text-[#8a8ea3]">
                     {account.nim ?? "—"}
                   </td>
-                  <td className="max-w-[200px] truncate px-3 text-[#c7c9d4]" title={account.email ?? undefined}>
+                  <td
+                    className="max-w-[200px] truncate px-3 text-[#c7c9d4]"
+                    title={account.email ?? undefined}
+                  >
                     {account.email ?? "—"}
                   </td>
                   <td className="px-3 whitespace-nowrap text-[#a3a6b8]">
@@ -407,7 +473,9 @@ export function AccountManager({
         open={dialog?.type === "create" || dialog?.type === "edit"}
         onClose={close}
         busy={busy}
-        labelledBy={dialog?.type === "edit" ? "edit-account-title" : "new-account-title"}
+        labelledBy={
+          dialog?.type === "edit" ? "edit-account-title" : "new-account-title"
+        }
         className="max-w-[760px]"
       >
         {dialog?.type === "create" && (
@@ -446,12 +514,17 @@ export function AccountManager({
             onClose={close}
             onPendingChange={setBusy}
             onDeleted={() => {
-              setNotice({ tone: "success", text: `Akun ${dialog.account.fullName} dihapus.` });
+              setNotice({
+                tone: "success",
+                text: `Akun ${dialog.account.fullName} dihapus.`,
+              });
               close();
             }}
           >
             Akun{" "}
-            <strong className="font-semibold text-white">{dialog.account.fullName}</strong>{" "}
+            <strong className="font-semibold text-white">
+              {dialog.account.fullName}
+            </strong>{" "}
             akan dihapus permanen. Tindakan ini tidak dapat diurungkan.
           </ConfirmDelete>
         )}

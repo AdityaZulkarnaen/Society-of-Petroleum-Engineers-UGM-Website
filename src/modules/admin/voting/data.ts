@@ -1,5 +1,7 @@
 import "server-only";
 
+import { cache } from "react";
+
 import { createClient } from "@/lib/supabase/server";
 
 import { DUMMY_DATA } from "../dummy";
@@ -56,12 +58,16 @@ function schedule(opensOn: string, closesOn: string, isOpen: boolean) {
   const today = jakartaToday();
   const inWindow: VotingPhase =
     today < opensOn ? "upcoming" : today > closesOn ? "closed" : "open";
-  const phase: VotingPhase = inWindow === "open" && !isOpen ? "closed" : inWindow;
+  const phase: VotingPhase =
+    inWindow === "open" && !isOpen ? "closed" : inWindow;
   return {
     phase,
     msLeft:
       phase === "open"
-        ? Math.max(0, Date.parse(`${closesOn}T00:00:00+07:00`) + DAY - Date.now())
+        ? Math.max(
+            0,
+            Date.parse(`${closesOn}T00:00:00+07:00`) + DAY - Date.now(),
+          )
         : null,
   };
 }
@@ -81,7 +87,7 @@ function getDummyElection(): Election | null {
 }
 
 /** The election that opens latest, with the admin's own vote, or null. */
-export async function getElection(): Promise<Election | null> {
+export const getElection = cache(async (): Promise<Election | null> => {
   if (DUMMY_DATA) return getDummyElection();
 
   const supabase = await createClient();
@@ -139,4 +145,4 @@ export async function getElection(): Promise<Election | null> {
       : null,
     turnout: counts ?? null,
   };
-}
+});

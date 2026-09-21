@@ -1,5 +1,7 @@
 import "server-only";
 
+import { cache } from "react";
+
 import { createClient } from "@/lib/supabase/server";
 
 import { getAdmin } from "../auth/session";
@@ -14,28 +16,30 @@ export type DivisionSummary = {
 };
 
 /** Member count and head of the signed-in admin's division. */
-export async function getDivisionSummary(): Promise<DivisionSummary | null> {
-  if (DUMMY_DATA) return dummyDivisionSummary;
+export const getDivisionSummary = cache(
+  async (): Promise<DivisionSummary | null> => {
+    if (DUMMY_DATA) return dummyDivisionSummary;
 
-  const [admin, supabase] = await Promise.all([getAdmin(), createClient()]);
-  if (!admin?.division) return null;
+    const [admin, supabase] = await Promise.all([getAdmin(), createClient()]);
+    if (!admin?.division) return null;
 
-  const [{ data }, { count: activeProker }] = await Promise.all([
-    supabase.rpc("my_division_summary"),
-    supabase
-      .from("proker")
-      .select("id", { count: "exact", head: true })
-      .eq("division_id", admin.division.id)
-      .eq("status", "berlangsung"),
-  ]);
-  const row = (
-    data as { member_count: number; head_name: string | null }[] | null
-  )?.[0];
-  if (!row) return null;
+    const [{ data }, { count: activeProker }] = await Promise.all([
+      supabase.rpc("my_division_summary"),
+      supabase
+        .from("proker")
+        .select("id", { count: "exact", head: true })
+        .eq("division_id", admin.division.id)
+        .eq("status", "berlangsung"),
+    ]);
+    const row = (
+      data as { member_count: number; head_name: string | null }[] | null
+    )?.[0];
+    if (!row) return null;
 
-  return {
-    memberCount: row.member_count,
-    headName: row.head_name,
-    activeProker: activeProker ?? null,
-  };
-}
+    return {
+      memberCount: row.member_count,
+      headName: row.head_name,
+      activeProker: activeProker ?? null,
+    };
+  },
+);

@@ -2,10 +2,12 @@
 
 import { randomInt } from "node:crypto";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireSuperAdmin } from "@/modules/admin/auth/session";
+
+import { DIVISIONS_TAG } from "../cache";
 import { accountEmail } from "@/modules/admin/constants";
 import { DUMMY_DATA } from "@/modules/admin/dummy";
 import { dummyAccounts } from "@/modules/admin/dummy/data";
@@ -25,6 +27,7 @@ const PHONE = /^\+?[\d\s-]{8,20}$/;
 const PERIOD = /^\d{4}\/\d{4}$/;
 
 function revalidate() {
+  revalidateTag(DIVISIONS_TAG, "seconds");
   revalidatePath("/super-admin/akun");
   revalidatePath("/super-admin");
 }
@@ -68,7 +71,9 @@ function usernameBase(fullName: string) {
     .split(/\s+/)
     .filter(Boolean);
   const base =
-    words.length > 1 ? `${words[0]}.${words[words.length - 1]}` : (words[0] ?? "");
+    words.length > 1
+      ? `${words[0]}.${words[words.length - 1]}`
+      : (words[0] ?? "");
   return (base.length >= 3 ? base : `pengurus${base}`).slice(0, 26);
 }
 
@@ -80,7 +85,8 @@ function uniqueUsername(base: string, taken: Set<string>) {
 }
 
 /* No look-alike characters, since it's read out or typed by hand. */
-const PASSWORD_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+const PASSWORD_CHARS =
+  "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
 
 function temporaryPassword() {
   return Array.from(
@@ -95,14 +101,18 @@ export async function createAccount(
   const me = await requireSuperAdmin();
   const { errors, profile, ok } = validate(input);
   if (!ok) return { fieldErrors: errors };
-  if (!me.division) return { error: "Akun super admin ini belum terhubung ke divisi." };
+  if (!me.division)
+    return { error: "Akun super admin ini belum terhubung ke divisi." };
 
   const base = usernameBase(profile.full_name);
   const password = temporaryPassword();
 
   if (DUMMY_DATA) {
     const accounts = dummyAccounts.list();
-    const username = uniqueUsername(base, new Set(accounts.map((a) => a.username)));
+    const username = uniqueUsername(
+      base,
+      new Set(accounts.map((a) => a.username)),
+    );
     dummyAccounts.save([
       {
         id: crypto.randomUUID(),
@@ -133,12 +143,14 @@ export async function createAccount(
     new Set((similar ?? []).map((row) => row.username)),
   );
 
-  const { data: created, error: authError } = await admin.auth.admin.createUser({
-    email: accountEmail(username),
-    password,
-    email_confirm: true,
-    user_metadata: { username },
-  });
+  const { data: created, error: authError } = await admin.auth.admin.createUser(
+    {
+      email: accountEmail(username),
+      password,
+      email_confirm: true,
+      user_metadata: { username },
+    },
+  );
   if (authError) {
     console.error("createAccount: auth user", authError.message);
     return { error: "Akun gagal dibuat. Coba lagi." };
@@ -225,7 +237,9 @@ export async function setAccountActive(
 
   if (DUMMY_DATA) {
     dummyAccounts.save(
-      dummyAccounts.list().map((a) => (a.id === id ? { ...a, isActive: active } : a)),
+      dummyAccounts
+        .list()
+        .map((a) => (a.id === id ? { ...a, isActive: active } : a)),
     );
     revalidate();
     return {};

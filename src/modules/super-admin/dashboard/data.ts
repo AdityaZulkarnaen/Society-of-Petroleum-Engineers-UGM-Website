@@ -1,8 +1,13 @@
 import "server-only";
 
+import { cache } from "react";
+
 import { createClient } from "@/lib/supabase/server";
 import { DUMMY_DATA } from "@/modules/admin/dummy";
-import { dummyAccounts, dummySuperAdminSummary } from "@/modules/admin/dummy/data";
+import {
+  dummyAccounts,
+  dummySuperAdminSummary,
+} from "@/modules/admin/dummy/data";
 
 import { getAccounts } from "../accounts/data";
 import { getRekapProfileIds } from "../rekap/data";
@@ -37,39 +42,43 @@ async function rekapProgress() {
   };
 }
 
-export async function getSuperAdminSummary(): Promise<SuperAdminSummary> {
-  if (DUMMY_DATA) {
-    const accounts = dummyAccounts.list();
+export const getSuperAdminSummary = cache(
+  async (): Promise<SuperAdminSummary> => {
+    if (DUMMY_DATA) {
+      const accounts = dummyAccounts.list();
+      return {
+        ...dummySuperAdminSummary,
+        totalAccounts: accounts.length,
+        activeAccounts: accounts.filter((a) => a.isActive).length,
+        ...(await rekapProgress()),
+      };
+    }
+
+    const supabase = await createClient();
+    const [{ data: rows }, { count: divisionCount }, rekap] = await Promise.all(
+      [
+        supabase.rpc("super_admin_summary"),
+        supabase.from("divisions").select("id", { count: "exact", head: true }),
+        rekapProgress(),
+      ],
+    );
+
+    const row = (
+      rows as
+        | {
+            total_accounts: number;
+            active_accounts: number;
+            last_sign_in_at: string | null;
+          }[]
+        | null
+    )?.[0];
+
     return {
-      ...dummySuperAdminSummary,
-      totalAccounts: accounts.length,
-      activeAccounts: accounts.filter((a) => a.isActive).length,
-      ...(await rekapProgress()),
+      totalAccounts: row?.total_accounts ?? null,
+      activeAccounts: row?.active_accounts ?? null,
+      ...rekap,
+      divisionCount: divisionCount ?? null,
+      lastSignInAt: row?.last_sign_in_at ?? null,
     };
-  }
-
-  const supabase = await createClient();
-  const [{ data: rows }, { count: divisionCount }, rekap] = await Promise.all([
-    supabase.rpc("super_admin_summary"),
-    supabase.from("divisions").select("id", { count: "exact", head: true }),
-    rekapProgress(),
-  ]);
-
-  const row = (
-    rows as
-      | {
-          total_accounts: number;
-          active_accounts: number;
-          last_sign_in_at: string | null;
-        }[]
-      | null
-  )?.[0];
-
-  return {
-    totalAccounts: row?.total_accounts ?? null,
-    activeAccounts: row?.active_accounts ?? null,
-    ...rekap,
-    divisionCount: divisionCount ?? null,
-    lastSignInAt: row?.last_sign_in_at ?? null,
-  };
-}
+  },
+);
