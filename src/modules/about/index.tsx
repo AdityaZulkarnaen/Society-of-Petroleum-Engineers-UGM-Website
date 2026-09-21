@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
 
+import { CoreValues } from "./core-values";
 import { CountUp } from "./count-up";
 
 /* The copy below follows the design; the Vision and Mission cards share the
@@ -244,6 +245,7 @@ export function AboutPage() {
         </div>
       </section>
 
+
       <section
         aria-labelledby="metrics-title"
         className="px-4 pb-[clamp(5rem,calc(120*var(--k)),9rem)]"
@@ -288,6 +290,7 @@ export function AboutPage() {
           </dl>
         </div>
       </section>
+      <CoreValues />
     </main>
   );
 }
