@@ -9,20 +9,12 @@
 
 import { createClient } from "@supabase/supabase-js";
 
+import { DIVISIONS } from "./divisions.mjs";
+
 /* Accounts sign in with a username only. Supabase Auth still needs an email,
    so each account gets an internal one derived from its username. Keep in
    sync with ACCOUNT_EMAIL_DOMAIN in src/modules/admin/constants.ts. */
 const ACCOUNT_EMAIL_DOMAIN = "accounts.spe-ugm.internal";
-
-const DIVISIONS = [
-  { slug: "medcre", name: "Media Creative" },
-  { slug: "hrd", name: "Human Resource Development" },
-  { slug: "rne", name: "Research & Education" },
-  { slug: "ea", name: "External Affairs" },
-  { slug: "compdev", name: "Competency Development" },
-  { slug: "finance", name: "Finance" },
-  { slug: "executive", name: "Executive" },
-];
 
 function env(name) {
   const value = process.env[name];

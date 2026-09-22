@@ -76,10 +76,15 @@ function dummyOverview(): DivisionOverview[] {
  * reaching this page — a super admin — decides whether it runs at all, and an
  * empty or failed read is not cached.
  */
+class NoDivisions extends Error {}
+
 const divisionOverviewRows = unstable_cache(
   async () => {
     const { data, error } = await createAdminClient().rpc("division_overview");
     if (error) throw new Error(error.message);
+    /* thrown rather than returned so it is not cached: divisions seeded
+       afterwards must show up without waiting for revalidation */
+    if (!data?.length) throw new NoDivisions();
     return data;
   },
   ["division-overview"],
@@ -91,7 +96,10 @@ export const getDivisionOverview = cache(
     if (DUMMY_DATA) return dummyOverview();
 
     await requireSuperAdmin();
-    const data = await divisionOverviewRows();
+    const data = await divisionOverviewRows().catch((error: unknown) => {
+      if (error instanceof NoDivisions) return [];
+      throw error;
+    });
     return (
       (data as
         | {

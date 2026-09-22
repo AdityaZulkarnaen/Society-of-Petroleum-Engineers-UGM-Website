@@ -1,7 +1,7 @@
 -- Divisi page for super admins, and full division names.
 
 -- Show divisions by their full names, as the dashboard designs do.
--- Keep in sync with scripts/seed-super-admins.mjs.
+-- Keep in sync with scripts/divisions.mjs.
 update public.divisions d
 set name = v.name
 from (

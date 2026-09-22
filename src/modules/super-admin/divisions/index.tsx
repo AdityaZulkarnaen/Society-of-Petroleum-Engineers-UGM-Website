@@ -71,7 +71,7 @@ export async function DivisionsPage() {
         <Card surface={compactCardSurface} className="p-6">
           <EmptyState
             title="Belum ada divisi"
-            description="Divisi dibuat lewat skrip seed super admin."
+            description="Divisi dibuat lewat skrip seed divisi (pnpm seed:divisions)."
           />
         </Card>
       )}

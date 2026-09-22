@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "seed:divisions": "node --env-file=.env.local scripts/seed-divisions.mjs",
     "seed:super-admins": "node --env-file=.env.local scripts/seed-super-admins.mjs"
   },
   "dependencies": {
