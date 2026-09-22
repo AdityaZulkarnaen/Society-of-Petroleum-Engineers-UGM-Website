@@ -153,6 +153,22 @@ const icon = {
       />
     </svg>
   ),
+  qr: (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      aria-hidden="true"
+    >
+      <rect x="2.5" y="2.5" width="5" height="5" rx="1.25" />
+      <rect x="10.5" y="2.5" width="5" height="5" rx="1.25" />
+      <rect x="2.5" y="10.5" width="5" height="5" rx="1.25" />
+      <path d="M10.5 10.5h2.25M15.5 10.5v2.5M10.5 13.25v2.25M13.5 15.5h2" strokeLinecap="round" />
+    </svg>
+  ),
   log: (
     <svg
       width="18"
@@ -175,6 +191,7 @@ const MENUS = {
     { href: "/admin", label: "Overview", icon: icon.overview },
     { href: "/admin/rekap-diri", label: "Rekap Diri", icon: icon.profile },
     { href: "/admin/acara", label: "Acara / Proker", icon: icon.calendar },
+    { href: "/admin/presensi", label: "Presensi Rapat", icon: icon.qr },
     { href: "/admin/voting", label: "Voting Ketua", icon: icon.vote },
   ],
   superAdmin: [
@@ -190,6 +207,11 @@ const MENUS = {
       href: "/super-admin/acara",
       label: "Acara / Proker",
       icon: icon.calendar,
+    },
+    {
+      href: "/super-admin/presensi",
+      label: "Presensi Rapat",
+      icon: icon.qr,
     },
     { href: "/super-admin/divisi", label: "Divisi", icon: icon.layers },
     { href: "/super-admin/audit-log", label: "Audit Log", icon: icon.log },
