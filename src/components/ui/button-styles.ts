@@ -20,5 +20,5 @@ export const outlineButton =
   "h-[clamp(40px,calc(47*var(--k)),58px)] px-[clamp(16px,calc(24*var(--k)),30px)] " +
   "rounded-[clamp(11px,calc(14*var(--k)),18px)] border border-[#e4e4f0] bg-white " +
   "text-[clamp(13.5px,calc(15*var(--k)),18px)] font-medium text-ink-deep " +
-  "transition-[background-color,border-color,translate] duration-200 ease-out-soft " +
-  "hover:-translate-y-px hover:border-[#d5d4e8] hover:bg-[#fbfaff]";
+  "transition-all duration-900 ease-out-soft " +
+  "hover:-translate-y-px hover:border-iris hover:bg-iris hover:text-white hover:shadow-sm";

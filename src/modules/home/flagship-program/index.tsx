@@ -35,14 +35,14 @@ export function FlagshipProgram() {
     >
       <div className="mx-auto max-w-[1280px]">
         {/* ── Subtitle / Badge Header ───────────────────────────────── */}
-        <header className="mb-10 text-center md:mb-12">
+        <header className="mb-10 text-center md:mb-8">
           <p className="flex items-center justify-center gap-2 text-base text-curtain md:text-lg">
             <img src="/global/SVG-star.svg" width="14" height="14" aria-hidden="true" alt="" />
             Our Flagship Program
           </p>
         </header>
 
-        <div className="flex flex-col gap-6 md:gap-8">
+        <div className="flex flex-col gap-6 md:gap-4">
           {/* ── Top Hero Card: APECX ─────────────────────────────────── */}
           <div className="flagship-glass-card relative overflow-hidden rounded-[24px] border border-black/[0.08] px-6 py-14 sm:px-12 sm:py-20 md:py-24 text-center">
             {/* Ambient bottom purple/blue glow */}
@@ -104,7 +104,7 @@ export function FlagshipProgram() {
           </div>
 
           {/* ── Bottom Cards: 2 Columns ──────────────────────────────── */}
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-4">
             {/* Card 1: Conference Program */}
             <div className="flagship-glass-card relative flex flex-col justify-between overflow-hidden rounded-[24px] border border-black/[0.08] p-6 sm:p-8 md:p-10">
               {/* Corner ambient glow */}
