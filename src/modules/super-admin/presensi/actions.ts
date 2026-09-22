@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import QRCode from "qrcode";
 
 import { createClient } from "@/lib/supabase/server";
@@ -43,7 +44,11 @@ function revalidate(id?: string) {
   revalidatePath("/admin/presensi");
 }
 
-/** Creates (id null) or updates a rapat of the super admin's division. */
+/**
+ * Creates (id null) or updates a rapat of the super admin's division. After
+ * creating, the super admin is taken to the new rapat's session page, where
+ * they open the presensi when it starts.
+ */
 export async function saveMeeting(
   id: string | null,
   input: MeetingInput,
@@ -54,7 +59,7 @@ export async function saveMeeting(
   if (DUMMY_DATA) return PREVIEW_ONLY;
 
   const supabase = await createClient();
-  const { error } = await supabase.rpc("save_meeting", {
+  const { data: savedId, error } = await supabase.rpc("save_meeting", {
     p_id: id,
     p_title: values.title,
     p_scope: values.scope,
@@ -72,8 +77,14 @@ export async function saveMeeting(
       ? { ...failure, errors: { sequence: "Nomor ini sudah dipakai." } }
       : failure;
   }
-  revalidate(id ?? undefined);
-  return {};
+  if (id) {
+    revalidate(id);
+    return {};
+  }
+
+  const newId = savedId as string;
+  revalidate(newId);
+  redirect(`/super-admin/presensi/${newId}`);
 }
 
 /**

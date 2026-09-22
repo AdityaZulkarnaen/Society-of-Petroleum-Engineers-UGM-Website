@@ -84,11 +84,10 @@ export function MeetingManager({
       const result = await saveMeeting(existing?.id ?? null, input);
       if (!result.error && !result.errors) {
         close();
+        /* a new rapat redirects to its session page, so this is an edit */
         setNotice({
           tone: "success",
-          text: existing
-            ? `${input.title.trim()} diperbarui.`
-            : `${input.title.trim()} dibuat. Buka presensinya saat rapat dimulai.`,
+          text: `${input.title.trim()} diperbarui.`,
         });
       }
       return result;

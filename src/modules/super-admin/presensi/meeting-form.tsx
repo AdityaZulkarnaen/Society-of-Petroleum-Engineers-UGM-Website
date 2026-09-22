@@ -270,8 +270,10 @@ export function MeetingForm({
       <p className="mt-4 text-xs leading-relaxed text-[#6f7286]">
         Pengurus yang scan setelah{" "}
         <span className="text-[#c7c9d4]">batas terlambat</span> tercatat
-        Terlambat. Presensi dibuka manual dari halaman rapat, jadi QR baru aktif
-        saat rapat dimulai.
+        Terlambat.{" "}
+        {editing
+          ? "Presensi dibuka dan ditutup dari halaman rapat."
+          : "Setelah dibuat, kamu dibawa ke halaman rapat. Buka presensinya di sana saat rapat dimulai."}
       </p>
 
       {formError && (
@@ -297,7 +299,13 @@ export function MeetingForm({
           aria-disabled={pending}
           className={`${primaryButton} aria-disabled:cursor-wait aria-disabled:opacity-70`}
         >
-          {pending ? "Menyimpan…" : editing ? "Simpan Perubahan" : "Buat Rapat"}
+          {pending
+            ? editing
+              ? "Menyimpan…"
+              : "Membuat…"
+            : editing
+              ? "Simpan Perubahan"
+              : "Buat Rapat"}
         </button>
       </div>
     </form>
