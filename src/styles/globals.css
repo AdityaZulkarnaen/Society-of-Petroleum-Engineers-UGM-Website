@@ -197,7 +197,9 @@
       --k: min(0.135vw, 0.0991079svh);
       --u: min(calc(61 * var(--k)), 5.4vw);
       --m-female: min(8.5vw, calc(0.04 * var(--hero-h)));
-      --m-male: min(10vw, calc(0.046 * var(--hero-h)));
+      /* sized so both hard hats top out at the same height: the male's
+         visible figure is 6.062 steps tall, the female's 6.172 */
+      --m-male: calc(1.018 * var(--m-female));
       --m: var(--m-female);
       --mascot-line: var(--p0);
       /* The whole stepped edge sits inside the hero, just above its floor,

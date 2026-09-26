@@ -75,6 +75,8 @@ export function SiteHeader() {
             "mt-[calc(13*var(--k))] w-[min(calc(1270*var(--kw)),calc(100%_-_2rem))] rounded-[clamp(18px,calc(24*var(--k)),30px)] border-white/30 px-[clamp(10px,calc(10*var(--k)),18px)] shadow-nav",
             /* docked style - overrides when scrolled */
             "docked:mt-0 docked:w-full docked:rounded-none docked:border-b docked:border-white/40 docked:px-[clamp(1rem,5vw,5rem)] docked:shadow-nav-docked",
+            /* phones: a plain white bar */
+            "max-md:border-[#ececf5] max-md:bg-white max-md:backdrop-blur-none",
           ].join(" ")}
         >
           <Link
@@ -118,7 +120,7 @@ export function SiteHeader() {
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-controls="mobile-nav"
-            className="ml-auto grid size-11 place-items-center rounded-xl border border-[#e4e4f0] bg-white/80 text-ink-deep transition-colors hover:bg-white md:hidden"
+            className="ml-auto grid size-11 place-items-center rounded-xl text-ink-deep transition-colors hover:bg-white md:hidden"
           >
             <span className="sr-only">{open ? "Close menu" : "Open menu"}</span>
             <svg
@@ -146,10 +148,14 @@ export function SiteHeader() {
           </button>
         </nav>
 
+        {/* Full-width sheet that slides down from behind the bar; the
+            negative z keeps it under the nav while it travels. */}
         <div
           id="mobile-nav"
-          hidden={!open}
-          className="mx-4 mt-2 rounded-2xl border border-white/70 bg-white/85 p-2 shadow-[0_18px_40px_-20px_rgba(60,48,122,0.35)] backdrop-blur-xl md:hidden"
+          inert={!open}
+          className={`absolute inset-x-0 top-full -z-10 border-b border-[#ececf5] bg-white px-4 pt-2 pb-5 shadow-[0_24px_40px_-24px_rgba(60,48,122,0.35)] transition-[translate,opacity] duration-500 ease-out-soft motion-reduce:transition-none md:hidden ${
+            open ? "translate-y-0" : "pointer-events-none -translate-y-full opacity-0"
+          }`}
         >
           <ul className="flex flex-col">
             {LINKS.map((link) => (

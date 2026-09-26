@@ -36,9 +36,9 @@ const POINTS = [
 ];
 
 const METRICS = [
-  { value: 150, label: "Active Members" },
-  { value: 20, label: "Annual Programs" },
-  { value: 10, label: "International Awards" },
+  { value: 542, label: "Active Members" },
+  { value: 45, label: "Annual Programs" },
+  { value: 9, label: "International Awards" },
   { value: 15, label: "Corporate Partners" },
 ];
 
