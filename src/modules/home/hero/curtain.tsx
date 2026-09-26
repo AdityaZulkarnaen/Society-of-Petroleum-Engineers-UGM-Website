@@ -52,7 +52,7 @@ const ABOVE_SHAPE = `polygon(0 0, ${EDGE}, 100% 0)`;
 export function Curtain() {
   return (
     <div
-      className="pointer-events-none absolute inset-0 z-10"
+      className="pointer-events-none absolute inset-x-0 top-40 -bottom-[calc(0*var(--u))] z-10"
       aria-hidden="true"
     >
       {SLATS.map((slat) => (

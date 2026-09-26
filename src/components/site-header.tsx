@@ -13,7 +13,7 @@ const LINKS = [
   { label: "About us", href: "/about" },
   { label: "Cabinet", href: "/#cabinet" },
   { label: "Event", href: "/#event" },
-  { label: "Apecx", href: "/#apecx" },
+  { label: "APECX", href: "/#apecx" },
   { label: "Contact", href: "/#contact" },
 ];
 
