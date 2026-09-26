@@ -66,14 +66,14 @@ export function Hero() {
 
       {/* near-white ground; the lavender comes from the lit tiles above it */}
       <div
-        className="absolute inset-0 z-0 bg-[linear-gradient(180deg,#f6f5fd_0%,#fbfbfe_30%,#ffffff_70%)]"
+        className="absolute inset-0 z-0 bg-[linear-gradient(180deg,#f6f5fd_0%,#f0effe_20%,#ffffff_55%,#ffffff_100%)]"
         aria-hidden="true"
       />
       <HeroTiles />
 
       {/* On tall viewports the copy centres in the room the curtain leaves
           (clearing the mascots' heads) instead of hanging from the top. */}
-      <div className="relative z-[2] flex flex-col items-center px-6 pt-[max(calc(242*var(--k)),calc(var(--nav-h)+3.5rem))] text-center tall:flex-auto tall:justify-center tall:pt-[calc(var(--nav-h)+1.5rem)] tall:pb-[calc(var(--stage)_-_var(--mascot-line)_+_6.6*var(--m)_+_0.75rem)]">
+      <div className="relative z-[2] flex flex-col items-center px-6 pt-[max(calc(302*var(--k)),calc(var(--nav-h)+3.5rem))] text-center tall:flex-auto tall:justify-center tall:pt-[calc(var(--nav-h)+1.5rem)] tall:pb-[calc(var(--stage)_-_var(--mascot-line)_+_6.6*var(--m)_+_0.75rem)]">
         <h1 className="font-display text-[clamp(30px,calc(80*var(--k)),96px)] leading-[1.277] font-bold tracking-[-0.02em] text-ink">
           Engineering
           <br />
@@ -128,7 +128,7 @@ export function Hero() {
         height={1656}
         priority
         sizes="(max-width: 767px) 90vw, 40vw"
-        className={`${mascot} bottom-[calc(100%_-_var(--mascot-line)_-_0.1541*var(--m))] left-[calc(-0.5058*var(--m))] w-[calc(8.389*var(--m))] md:bottom-[10%] md:left-0 md:w-[30%] md:translate-x-[-7%]`}
+        className={`${mascot} top-[calc(var(--hero-h)_-_8.4*var(--m-female))] md:top-[calc(100svh_-_7.29*var(--m-female))] left-[calc(-0.5058*var(--m-female))] w-[calc(8.389*var(--m-female))] md:pt-8 xl:pt-0`}
       />
       {/* male — source 1375x1522, visible to x1375, cuts at y1320.5 /
           y1520, step at x990.5 */}
@@ -139,7 +139,7 @@ export function Hero() {
         height={1522}
         priority
         sizes="(max-width: 767px) 75vw, 34vw"
-        className={`${mascot} -right-[calc(0.04*var(--m))] bottom-[calc(100%_-_var(--mascot-line)_-_0.06*var(--m))] w-[calc(6.8922*var(--m))]`}
+        className={`${mascot} -right-5 top-[calc(var(--hero-h)_-_7.3*var(--m-male))] md:top-[calc(100svh_-_6.8922*var(--m-male)*1522/1375)] w-[calc(6.8922*var(--m-male))] md:pt-24`}
       />
 
       <Curtain />
