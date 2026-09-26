@@ -128,7 +128,7 @@ export function Hero() {
         height={1656}
         priority
         sizes="(max-width: 767px) 90vw, 40vw"
-        className={`${mascot} top-[calc(var(--hero-h)_-_8.4*var(--m-female))] md:top-[calc(100svh_-_7.29*var(--m-female))] left-[calc(-0.5058*var(--m-female))] w-[calc(8.389*var(--m-female))] md:pt-8 xl:pt-0`}
+        className={`${mascot} max-md:bottom-[calc(100%_-_var(--mascot-line)_-_10px)] md:top-[calc(100svh_-_7.29*var(--m-female))] left-[calc(-0.5058*var(--m-female))] w-[calc(8.389*var(--m-female))] md:pt-8 xl:pt-0`}
       />
       {/* male — source 1375x1522, visible to x1375, cuts at y1320.5 /
           y1520, step at x990.5 */}
@@ -139,7 +139,7 @@ export function Hero() {
         height={1522}
         priority
         sizes="(max-width: 767px) 75vw, 34vw"
-        className={`${mascot} -right-5 top-[calc(var(--hero-h)_-_7.3*var(--m-male))] md:top-[calc(100svh_-_6.8922*var(--m-male)*1522/1375)] w-[calc(6.8922*var(--m-male))] md:pt-24`}
+        className={`${mascot} -right-5 max-md:bottom-[calc(100%_-_var(--mascot-line)_-_10px)] md:top-[calc(100svh_-_6.8922*var(--m-male)*1522/1375)] w-[calc(6.8922*var(--m-male))] md:pt-24`}
       />
 
       <Curtain />

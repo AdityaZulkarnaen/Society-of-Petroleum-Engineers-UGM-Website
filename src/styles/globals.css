@@ -196,15 +196,17 @@
       --stage: var(--hero-h);
       --k: min(0.135vw, 0.0991079svh);
       --u: min(calc(61 * var(--k)), 5.4vw);
-      --m-female: min(8.5vw, 4.0svh);
-      --m-male: min(10vw, 4.6svh);
+      --m-female: min(8.5vw, calc(0.04 * var(--hero-h)));
+      --m-male: min(10vw, calc(0.046 * var(--hero-h)));
       --m: var(--m-female);
       --mascot-line: var(--p0);
-      /* Override panel heights for mobile to maintain visible steps */
-      --p0: max(calc(var(--stage) - 3.5 * var(--u)), calc(var(--stage) * 0.85));
-      --p1: max(calc(var(--stage) - 5.0 * var(--u)), calc(var(--stage) * 0.80));
-      --p2: max(calc(var(--stage) - 7.0 * var(--u)), calc(var(--stage) * 0.75));
-      --p3: calc(var(--p2) - 3 * var(--u));
+      /* The whole stepped edge sits inside the hero, just above its floor,
+         so it shows on the first screen and runs straight into the section
+         below. The mascots' flat cut rests just under --p0. */
+      --p0: calc(var(--stage) - 1.0 * var(--u));
+      --p1: calc(var(--stage) - 1.9 * var(--u));
+      --p2: calc(var(--stage) - 2.9 * var(--u));
+      --p3: calc(var(--stage) - 4.0 * var(--u));
     }
   }
 
