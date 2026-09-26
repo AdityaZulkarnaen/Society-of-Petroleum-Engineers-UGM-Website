@@ -19,7 +19,7 @@ export function HeroTiles() {
       {LIGHTS.map((light) => (
         <span
           key={light.x}
-          className="absolute top-[calc(var(--light-y)*var(--k))] left-(--light-x) aspect-square w-[calc(var(--light-size)*var(--k))] -translate-1/2 rounded-full bg-[radial-gradient(circle_closest-side,rgb(108_92_242/var(--light-a))_0%,rgb(128_114_246/calc(var(--light-a)*0.55))_45%,rgb(150_140_250/0)_100%)] blur-[calc(28*var(--k))]"
+          className="absolute top-[calc(var(--light-y)*var(--k)_+_50px)] left-(--light-x) aspect-square w-[calc(var(--light-size)*var(--k))] -translate-1/2 rounded-full bg-[radial-gradient(circle_closest-side,rgb(108_92_242/var(--light-a))_0%,rgb(128_114_246/calc(var(--light-a)*0.55))_45%,rgb(150_140_250/0)_100%)] blur-[calc(28*var(--k))] max-md:opacity-70"
           style={
             {
               "--light-x": `${light.x}%`,

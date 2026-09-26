@@ -154,11 +154,13 @@
     --stage: 100svh;
 
     /* Where each panel's top edge hangs, measured from the top of the hero.
-       The max() caps how deep the band can grow on very tall viewports. */
-    --p0: max(calc(995 * var(--k)), calc(var(--stage) - 3.7 * var(--u)));
+       The max() caps how deep the band can grow on very tall viewports.
+       Panels are pushed below the 100dvh fold so the stepped edge sits
+       beneath the viewport. */
+    --p0: max(calc(995 * var(--k)), calc(var(--stage) - 1.2 * var(--u)));
     /* centre */
-    --p1: max(calc(945 * var(--k)), calc(var(--stage) - 4.55 * var(--u)));
-    --p2: max(calc(890 * var(--k)), calc(var(--stage) - 5.45 * var(--u)));
+    --p1: max(calc(945 * var(--k)), calc(var(--stage) - 2.0 * var(--u)));
+    --p2: max(calc(890 * var(--k)), calc(var(--stage) - 2.9 * var(--u)));
     /* mascot line */
     --p3: calc(var(--p2) - var(--m));
     /* edges — one mascot step higher */
@@ -170,12 +172,14 @@
        viewports) instead of --u, so they stay large and flush against the
        screen edges; each edge panel takes its width from the step cut into
        the figure beside it. */
-    --m: min(4.8vw, 7.4svh, 77px);
-    --edge-l: calc(1.5753 * var(--m));
-    --edge-r: calc(1.9273 * var(--m));
+    --m-female: min(4.4vw, 9.2svh, 65px);
+    --m-male: min(4.8vw, 9.2svh, 70px);
+    --m: var(--m-female);
+    --edge-l: var(--edge-r);
+    --edge-r: calc(1.9273 * var(--m-male));
 
     --nav-h: clamp(56px, calc(80 * var(--k)), 104px);
-    --hero-h: max(100svh, 620px);
+    --hero-h: max(calc(100svh + 6 * var(--u)), 620px);
     --travel: calc(var(--hero-h) + 4px);
   }
 
@@ -192,8 +196,15 @@
       --stage: var(--hero-h);
       --k: min(0.135vw, 0.0991079svh);
       --u: min(calc(61 * var(--k)), 5.4vw);
-      --m: min(10vw, 4.6svh);
+      --m-female: min(8.5vw, 4.0svh);
+      --m-male: min(10vw, 4.6svh);
+      --m: var(--m-female);
       --mascot-line: var(--p0);
+      /* Override panel heights for mobile to maintain visible steps */
+      --p0: max(calc(var(--stage) - 3.5 * var(--u)), calc(var(--stage) * 0.85));
+      --p1: max(calc(var(--stage) - 5.0 * var(--u)), calc(var(--stage) * 0.80));
+      --p2: max(calc(var(--stage) - 7.0 * var(--u)), calc(var(--stage) * 0.75));
+      --p3: calc(var(--p2) - 3 * var(--u));
     }
   }
 
@@ -407,8 +418,8 @@
 
 .industry-card__logo-img {
   object-fit: contain;
-  max-width: clamp(44px, 5vw, 64px);
-  max-height: clamp(16px, 2.2vw, 30px);
+  max-width: clamp(60px, 7vw, 90px);
+  max-height: clamp(24px, 3.5vw, 45px);
   width: auto;
   height: auto;
 }
@@ -718,6 +729,34 @@
   z-index: 0;
 }
 
+
+/* ─── Tablet ─── */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .footer__content {
+    grid-template-columns: 1fr auto auto auto;
+    gap: 40px 0px;
+    padding: 32px 80px;
+  }
+
+  .footer__description {
+    max-width: 300px;
+  }
+
+  .footer__bottom {
+    height: 170px;
+  }
+
+  .footer__watermark {
+    font-size: clamp(70px, 10vw, 120px);
+    bottom: 0;
+  }
+
+  .footer__glow {
+    width: 400px;
+    height: 120px;
+  }
+}
+
 /* ─── Mobile ─── */
 @media (max-width: 767px) {
   .footer__topbar {
@@ -744,10 +783,17 @@
 
   .footer__bottom {
     padding: 0 24px;
+    height: 140px;
   }
 
   .footer__watermark {
     font-size: clamp(48px, 14vw, 90px);
+    bottom: 10px;
+  }
+
+  .footer__glow {
+    width: 350px;
+    height: 100px;
   }
 }
 
@@ -837,4 +883,4 @@
   font-weight: 600;
   text-shadow: 0 1px 2px rgba(59, 130, 246, 0.4);
   transition: all 0.2s ease-out;
-}
+}
