@@ -184,7 +184,7 @@ export function AboutPage() {
         <header className="text-center">
           <p className="flex items-center justify-center gap-2 text-base text-curtain md:text-lg">
             <img src="/global/SVG-star.svg" width="14" height="14" aria-hidden="true" alt="" />
-            About us
+            Inspired To Impact
           </p>
           <h1
             id="about-title"

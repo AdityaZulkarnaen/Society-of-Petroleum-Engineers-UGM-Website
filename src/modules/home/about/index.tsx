@@ -13,7 +13,7 @@ export function About() {
     <section
       id="about"
       aria-label="About SPE UGM"
-      className="relative -mt-px bg-[linear-gradient(to_bottom,var(--color-curtain)_0%,var(--color-curtain)_50%,#8c8cff_78%,var(--color-ground)_100%)] px-6 pt-[clamp(3.5rem,calc(110*var(--k)),9rem)] pb-[clamp(12rem,calc(340*var(--k)),26rem)]"
+      className="overflow-hidden -mt-40 bg-[linear-gradient(to_bottom,var(--color-curtain)_0%,var(--color-curtain)_50%,#8c8cff_78%,var(--color-ground)_100%)] px-6 pt-[clamp(12rem,calc(106*var(--k)),20rem)] pb-[clamp(12rem,calc(340*var(--k)),26rem)] z-1000"
     >
       <ScrollRevealText
         text={MISSION}

@@ -31,7 +31,7 @@ const COLUMN_3: Collaborator[] = [
   { name: "SLB", logo: "/landing/industry-collaborator/slb.png", width: 90, height: 35, logoBg: "white" },
   { name: "SKK Migas", logo: "/landing/industry-collaborator/skk-migas.png", width: 90, height: 61, logoBg: "white" },
   { name: "tNavigator", logo: "/landing/industry-collaborator/tnavigator.png", width: 90, height: 18, logoBg: "white" },
-  { name: "Java Offshore", logo: "/landing/industry-collaborator/java-offshore.png", width: 90, height: 61, logoBg: "white" },
+  { name: "Java Offshore", logo: "/landing/industry-collaborator/java-offshore.png", width: 90, height: 110, logoBg: "white" },
 ];
 
 /** A single glassmorphic collaborator card */

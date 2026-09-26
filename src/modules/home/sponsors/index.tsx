@@ -60,8 +60,8 @@ export function Sponsors() {
                   />
                 ) : i === 3 ? (
                   <Image
-                    src="/sponsors/skkmigasiog.webp"
-                    alt="SKK Migas IOG petroChina"
+                    src="/sponsors/skkmigas.webp"
+                    alt="SKK Migas petroChina"
                     width={156}
                     height={42}
                     className="h-auto max-h-[50px] w-auto max-w-[150px] object-contain"
@@ -76,27 +76,27 @@ export function Sponsors() {
                   />
                 ) : i === 5 ? (
                   <Image
-                    src="/sponsors/skkmigasiog.webp"
-                    alt="SKK Migas IOG OPT"
+                    src="/sponsors/rsupsardjito.webp"
+                    alt="RSUP Sardjito"
                     width={156}
                     height={42}
-                    className="h-auto max-h-[50px] w-auto max-w-[150px] object-contain"
+                    className="h-auto max-h-[50px] w-auto max-w-[180px] object-contain"
                   />
                 ) : i === 6 ? (
                   <Image
-                    src="/sponsors/rsupsardjito.webp"
-                    alt="RSUP Sardjito"
+                    src="/sponsors/pdsi.webp"
+                    alt="PDSI"
                     width={156}
                     height={42}
                     className="h-auto max-h-[70px] w-auto max-w-[150px] object-contain"
                   />
                 ) : i === 7 ? (
                   <Image
-                    src="/sponsors/pdsi.webp"
-                    alt="PDSI"
+                    src="/sponsors/skkmigasiog.webp"
+                    alt="skkmigasiog pdsi"
                     width={156}
                     height={42}
-                    className="h-auto max-h-[60px] w-auto max-w-[150px] object-contain"
+                    className="h-auto max-h-[50px] w-auto max-w-[150px] object-contain"
                   />
                 ) : (
                   <div className="text-center text-xs text-gray-400">
