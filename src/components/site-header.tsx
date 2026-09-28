@@ -69,7 +69,7 @@ export function SiteHeader() {
           ref={navRef}
           aria-label="Main"
           className={[
-            "mx-auto flex h-(--nav-h) items-center border bg-white/85 backdrop-blur-xl",
+            "mx-auto flex h-(--nav-h) items-center border bg-white backdrop-blur-xl",
             "transition-[width,margin,padding,border-radius,border-color,box-shadow,background-color] duration-500 ease-out-soft",
             /* floating style */
             "mt-[calc(13*var(--k))] w-[min(calc(1270*var(--kw)),calc(100%_-_2rem))] rounded-[clamp(18px,calc(24*var(--k)),30px)] border-white/30 px-[clamp(10px,calc(10*var(--k)),18px)] shadow-nav",

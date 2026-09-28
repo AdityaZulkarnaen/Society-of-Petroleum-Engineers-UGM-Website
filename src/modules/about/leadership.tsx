@@ -7,12 +7,12 @@ const LEADS = [
   {
     role: "President",
     name: "John Oliver Home",
-    photo: { src: "/landing/testimonial/testi1.webp", width: 659, height: 682 },
+    photo: { src: "/landing/testimonial/testi2.webp", width: 659, height: 682 },
   },
   {
     role: "Vice President",
     name: "Muhammad Zidan",
-    photo: { src: "/landing/testimonial/testi2.webp", width: 659, height: 690 },
+    photo: { src: "/landing/testimonial/testi3.webp", width: 659, height: 690 },
   },
 ];
 

@@ -14,10 +14,10 @@ type Testimonial = {
    role and words. Photos are cut-outs, bottom-aligned in the frame. */
 const TESTIMONIALS: Testimonial[] = [
   {
-    name: "Jhon Oliver",
+    name: "Salahuddin Husein",
     role: "Practitioner Lecturer",
     quote:
-      "Ipsum vel nobis doloremque est aut non accusantium vero molestias. Et est minima dolorem eum modi atque sint nobis. Enim quod facere. Reiciendis necessitatibus ipsam non aspernatur voluptate id.",
+      "SPE UGM SC has consistently demonstrated its commitment to developing not only technically capable students, but also future leaders in the energy industry. I am proud to see how the organization continues to create meaningful opportunities for its members to learn, collaborate, and contribute beyond the classroom.",
     photo: { src: "/landing/testimonial/testi1.webp", width: 659, height: 682 },
   },
   {
