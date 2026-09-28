@@ -133,7 +133,7 @@ function StatementCard({
         height={147}
         className="mx-auto h-11 w-auto"
       />
-      <h3 className="mt-4 bg-[linear-gradient(90deg,#3b3bd6_0%,#4e4eff_55%,#7c7cff_100%)] bg-clip-text text-center font-display text-[clamp(34px,calc(56*var(--k)),60px)] leading-tight font-bold tracking-[-0.02em] text-transparent">
+      <h3 className="mt-4 bg-[linear-gradient(90deg,#3b3bd6_0%,#4e4eff_55%,#7c7cff_100%)] bg-clip-text text-center font-display text-[clamp(34px,calc(56*var(--k)),60px)] leading-tight font-bold tracking-[-0.02em] text-black">
         {title}
       </h3>
       <p className="mx-auto mt-4 max-w-[520px] text-center text-sm leading-relaxed text-ink-soft md:text-[15px]">
@@ -195,7 +195,7 @@ export function AboutPage() {
         </header>
 
         {/* same width as the floating header, so the two line up */}
-        <figure className="relative mx-auto mt-[clamp(1.5rem,calc(40*var(--k)),3rem)] w-[min(calc(1270*var(--kw)),100%)] overflow-hidden rounded-[clamp(18px,calc(28*var(--k)),32px)] shadow-[0_30px_60px_-30px_rgba(30,32,110,0.45)]">
+        <figure className="relative mx-auto mt-0 w-[min(calc(1270*var(--kw)),100%)] overflow-hidden rounded-[clamp(18px,calc(28*var(--k)),32px)]">
           <Image
             src="/About/about.webp"
             alt="Members of the SPE UGM Student Chapter together on the campus steps"
@@ -203,13 +203,13 @@ export function AboutPage() {
             height={452}
             priority
             sizes="(min-width: 1320px) 1270px, 100vw"
-            className="aspect-[1280/452] w-full object-cover max-md:aspect-[4/3]"
+            className="w-full"
           />
           {/* the design's navy wash along the bottom */}
-          <div
+          {/* <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,rgb(20_22_70/0)_45%,rgb(24_26_90/0.45)_78%,rgb(30_32_120/0.75)_100%)]"
-          />
+          /> */}
         </figure>
       </section>
 

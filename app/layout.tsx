@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Sora } from "next/font/google";
 
+import { site, siteUrl } from "@/lib/site";
 import "@/styles/globals.css";
 
 const sora = Sora({
@@ -16,9 +17,37 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "SPE UGM Student Chapter — Engineering the future of energy",
-  description:
-    "The SPE UGM Student Chapter is a community of engineering students from all disciplines at Universitas Gadjah Mada, advancing Indonesia's energy industry through research, training, and global collaboration.",
+  metadataBase: new URL(siteUrl),
+  icons: {
+    icon: [{ url: "/favicon.ico", type: "ico" }],
+  },
+  applicationName: site.name,
+  title: `${site.name} — ${site.tagline}`,
+  description: site.description,
+  keywords: [
+    "SPE UGM",
+    "SPE UGM Student Chapter",
+    "Society of Petroleum Engineers",
+    "Universitas Gadjah Mada",
+    "UGM",
+    "energy",
+    "petroleum engineering",
+    "student organization",
+    "Yogyakarta",
+  ],
+  openGraph: {
+    type: "website",
+    siteName: site.name,
+    locale: "en_US",
+    title: `${site.name} — ${site.tagline}`,
+    description: site.description,
+    url: "/",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${site.name} — ${site.tagline}`,
+    description: site.description,
+  },
 };
 
 export const viewport: Viewport = {
