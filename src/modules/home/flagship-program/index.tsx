@@ -35,7 +35,7 @@ export function FlagshipProgram() {
     >
       <div className="mx-auto max-w-[1280px]">
         {/* ── Subtitle / Badge Header ───────────────────────────────── */}
-        <header className="mb-10 text-center md:mb-8">
+        <header data-motion="heading" className="mb-10 text-center md:mb-8">
           <p className="flex items-center justify-center gap-2 text-base text-curtain md:text-lg">
             <img src="/global/SVG-star.svg" width="14" height="14" aria-hidden="true" alt="" />
             Our Flagship Program
@@ -44,10 +44,11 @@ export function FlagshipProgram() {
 
         <div className="flex flex-col gap-6 md:gap-4">
           {/* ── Top Hero Card: APECX ─────────────────────────────────── */}
-          <div className="flagship-glass-card relative overflow-hidden rounded-[24px] border border-black/[0.08] px-6 py-14 sm:px-12 sm:py-20 md:py-24 text-center">
+          <div data-motion="rise" data-sheen className="flagship-glass-card relative overflow-hidden rounded-[24px] border border-black/[0.08] px-6 py-14 sm:px-12 sm:py-20 md:py-24 text-center">
             {/* Ambient bottom purple/blue glow */}
             <div
               aria-hidden="true"
+              data-motion="glow"
               className="pointer-events-none absolute -bottom-16 left-1/2 -translate-x-1/2 w-[1300px] max-w-[160%] select-none"
             >
               <Image
@@ -62,15 +63,15 @@ export function FlagshipProgram() {
 
             {/* Content */}
             <div className="relative z-10 flex flex-col items-center">
-              <h2 className="font-display text-6xl font-bold tracking-[-0.03em] text-[#2c2d3f] sm:text-7xl md:text-8xl lg:text-[116px] leading-[1]">
+              <h2 data-motion="chars" className="font-display text-6xl font-bold tracking-[-0.03em] text-[#2c2d3f] sm:text-7xl md:text-8xl lg:text-[116px] leading-[1]">
                 APECX
               </h2>
-              <p className="mt-3 text-sm text-[#2c2d3f]/70 sm:text-base md:mt-4 md:text-lg">
+              <p data-motion="rise" data-motion-y="16" data-motion-delay="0.35" className="mt-3 text-sm text-[#2c2d3f]/70 sm:text-base md:mt-4 md:text-lg">
                 Asia Pacific Energy Conference &amp; Exhibition
               </p>
 
               {/* CTAs */}
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:mt-9">
+              <div data-motion="rise" data-motion-y="16" data-motion-delay="0.45" className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:mt-9">
                 <a
                   href="#register"
                   className="inline-flex items-center gap-2 rounded-full bg-[#2c2d3f] px-5 py-3 text-sm font-semibold text-[#f2f8fe] shadow-[0_1px_4px_rgba(0,0,0,0.1)] transition-all duration-200 hover:bg-[#1a1b26] hover:shadow-md active:scale-95"
@@ -106,10 +107,11 @@ export function FlagshipProgram() {
           {/* ── Bottom Cards: 2 Columns ──────────────────────────────── */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-4">
             {/* Card 1: Conference Program */}
-            <div className="flagship-glass-card relative flex flex-col justify-between overflow-hidden rounded-[24px] border border-black/[0.08] p-6 sm:p-8 md:p-10">
+            <div data-motion="rise" data-sheen className="flagship-glass-card relative flex flex-col justify-between overflow-hidden rounded-[24px] border border-black/[0.08] p-6 sm:p-8 md:p-10">
               {/* Corner ambient glow */}
               <div
                 aria-hidden="true"
+                data-motion="glow"
                 className="-scale-x-100 pointer-events-none absolute -top-12 -right-12 w-[460px] max-w-[130%] select-none"
               >
                 <Image
@@ -131,7 +133,7 @@ export function FlagshipProgram() {
                   </p>
                 </div>
 
-                <ul className="mt-8 flex flex-col gap-4 sm:gap-5">
+                <ul data-motion="stagger" data-motion-y="16" data-motion-delay="0.2" className="mt-8 flex flex-col gap-4 sm:gap-5">
                   {CONFERENCE_HIGHLIGHTS.map((item) => (
                     <li key={item.title} className="flex items-start gap-3.5">
                       <span
@@ -151,10 +153,11 @@ export function FlagshipProgram() {
             </div>
 
             {/* Card 2: Quick Facts 2026 */}
-            <div className="flagship-glass-card relative flex flex-col justify-between overflow-hidden rounded-[24px] border border-black/[0.08] p-6 sm:p-8 md:p-10">
+            <div data-motion="rise" data-sheen className="flagship-glass-card relative flex flex-col justify-between overflow-hidden rounded-[24px] border border-black/[0.08] p-6 sm:p-8 md:p-10">
               {/* Corner ambient glow */}
               <div
                 aria-hidden="true"
+                data-motion="glow"
                 className="pointer-events-none absolute -top-10 -left-10 w-[440px] max-w-[130%] select-none"
               >
                 <Image
@@ -172,7 +175,7 @@ export function FlagshipProgram() {
                     Quick Facts 2026
                   </p>
 
-                  <div className="mx-auto mt-8 grid max-w-[420px] grid-cols-2 gap-y-7 gap-x-10 sm:gap-y-8 sm:gap-x-16 text-center sm:text-left">
+                  <div data-motion="stagger" data-motion-y="16" data-motion-delay="0.2" className="mx-auto mt-8 grid max-w-[420px] grid-cols-2 gap-y-7 gap-x-10 sm:gap-y-8 sm:gap-x-16 text-center sm:text-left">
                     {QUICK_FACTS.map((fact) => (
                       <div key={fact.label} className="flex flex-col">
                         <span className="font-display text-2xl font-normal text-[#2c2d3f] sm:text-[28px] leading-none">

@@ -31,7 +31,7 @@ export function Leadership() {
       aria-labelledby="leadership-title"
       className="px-4 pb-[clamp(5rem,calc(120*var(--k)),9rem)]"
     >
-      <header className="text-center">
+      <header data-motion="heading" className="text-center">
         <p className="flex items-center justify-center gap-2 text-base text-curtain md:text-lg">
           <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
             <path
@@ -50,10 +50,13 @@ export function Leadership() {
         </h2>
       </header>
 
-      <div className="relative isolate mx-auto mt-[clamp(1.5rem,calc(40*var(--k)),3rem)] w-[min(calc(1270*var(--kw)),100%)] overflow-hidden rounded-[clamp(20px,calc(28*var(--k)),32px)] border border-[#e4e6f5] bg-[linear-gradient(160deg,#fafbff_0%,#f4f5fd_100%)] px-4 pt-6 pb-10 shadow-[0_24px_60px_-34px_rgba(60,48,160,0.35)] sm:px-8 sm:pt-10 sm:pb-14">
+      <div
+        data-motion="rise"
+        className="relative isolate mx-auto mt-[clamp(1.5rem,calc(40*var(--k)),3rem)] w-[min(calc(1270*var(--kw)),100%)] overflow-hidden rounded-[clamp(20px,calc(28*var(--k)),32px)] border border-[#e4e6f5] bg-[linear-gradient(160deg,#fafbff_0%,#f4f5fd_100%)] px-4 pt-6 pb-10 shadow-[0_24px_60px_-34px_rgba(60,48,160,0.35)] sm:px-8 sm:pt-10 sm:pb-14">
         {/* the wash of light along the card's foot, as on the metrics card */}
         <div
           aria-hidden="true"
+          data-motion="glow"
           className="pointer-events-none absolute inset-x-[1%] top-[88%] -z-10 h-[60%] rounded-[50%] bg-[linear-gradient(90deg,#ffffff_0%,#4e4eff_40%,#9999ff_100%)] opacity-85 blur-[51px]"
         />
 
@@ -65,6 +68,7 @@ export function Leadership() {
                   the cut-out stands on the frame's floor. */}
               <div className="flex aspect-22/15 items-end justify-center overflow-hidden rounded-[clamp(16px,calc(22*var(--k)),26px)] border border-white bg-[linear-gradient(180deg,#f4f5fd_0%,#eceefb_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
                 <Image
+                  data-motion="figure"
                   src={lead.photo.src}
                   alt={`${lead.name}, ${lead.role} of SPE UGM Student Chapter`}
                   width={lead.photo.width}
@@ -83,14 +87,25 @@ export function Leadership() {
           ))}
         </ul>
 
-        <h3 className="mt-[clamp(1.75rem,calc(44*var(--k)),3rem)] text-center text-2xl font-bold tracking-[-0.01em] text-ink">
+        <h3
+          data-motion="rise"
+          data-motion-y="16"
+          className="mt-[clamp(1.75rem,calc(44*var(--k)),3rem)] text-center text-2xl font-bold tracking-[-0.01em] text-ink">
           President&rsquo;s Welcome Note
         </h3>
-        <p className="mx-auto mt-3 max-w-[100%] text-center text-lg leading-relaxed text-ink-soft">
+        <p
+          data-motion="rise"
+          data-motion-y="16"
+          className="mx-auto mt-3 max-w-[100%] text-center text-lg leading-relaxed text-ink-soft"
+        >
           {WELCOME_NOTE}
         </p>
 
-        <div className="mt-[clamp(1.5rem,calc(36*var(--k)),2.5rem)] flex justify-center">
+        <div
+          data-motion="rise"
+          data-motion-y="16"
+          className="mt-[clamp(1.5rem,calc(36*var(--k)),2.5rem)] flex justify-center"
+        >
           <Link
             href="/#cabinet"
             className="rounded-full bg-white px-[clamp(1.25rem,calc(28*var(--k)),1.75rem)] py-[clamp(0.55rem,calc(13*var(--k)),0.8rem)] text-lg font-semibold text-ink shadow-[0_10px_24px_-14px_rgba(60,48,160,0.6)] transition-colors hover:bg-[#f2f3ff]"

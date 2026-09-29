@@ -1,3 +1,5 @@
+import { PageMotion } from "@/components/motion/page-motion";
+
 import { About } from "./about";
 import { FlagshipProgram } from "./flagship-program";
 import { Hero } from "./hero";
@@ -16,6 +18,7 @@ export function HomePage() {
       <IndustryCollaborator />
       <FlagshipProgram />
       <Sponsors />
+      <PageMotion />
     </main>
   );
 }

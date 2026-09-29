@@ -1,16 +1,18 @@
 import type { CSSProperties } from "react";
 
+import { PointerLight } from "./pointer-light";
+
 /**
  * The backdrop is a row of twelve glass tiles, each half a curtain pitch wide.
  * Behind them sit a few soft round lights that the glass diffuses, while the
  * middle stays white. Each light is centred at `x` (percent of the hero width)
  * and `y`, is `size` across — both in reference-frame pixels — and peaks at
- * opacity `a`.
+ * opacity `a`. They switch on at `delay`, once the curtain has uncovered them.
  */
 const TILE_COUNT = 12;
 const LIGHTS = [
-  { x: 20.8, y: 330, size: 620, a: 0.62 },
-  { x: 79.2, y: 460, size: 580, a: 0.6 },
+  { x: 20.8, y: 330, size: 620, a: 0.62, delay: 0.55 },
+  { x: 79.2, y: 460, size: 580, a: 0.6, delay: 0.75 },
 ];
 
 export function HeroTiles() {
@@ -19,17 +21,19 @@ export function HeroTiles() {
       {LIGHTS.map((light) => (
         <span
           key={light.x}
-          className="absolute top-[calc(var(--light-y)*var(--k)_+_50px)] left-(--light-x) aspect-square w-[calc(var(--light-size)*var(--k))] -translate-1/2 rounded-full bg-[radial-gradient(circle_closest-side,rgb(108_92_242/var(--light-a))_0%,rgb(128_114_246/calc(var(--light-a)*0.55))_45%,rgb(150_140_250/0)_100%)] blur-[calc(28*var(--k))] max-md:opacity-70"
+          className="absolute top-[calc(var(--light-y)*var(--k)_+_50px)] left-(--light-x) aspect-square w-[calc(var(--light-size)*var(--k))] -translate-1/2 animate-light-on rounded-full bg-[radial-gradient(circle_closest-side,rgb(108_92_242/var(--light-a))_0%,rgb(128_114_246/calc(var(--light-a)*0.55))_45%,rgb(150_140_250/0)_100%)] blur-[calc(28*var(--k))] max-md:opacity-70 motion-reduce:animate-none"
           style={
             {
               "--light-x": `${light.x}%`,
               "--light-y": light.y,
               "--light-size": light.size,
               "--light-a": light.a,
+              "--delay": `${light.delay}s`,
             } as CSSProperties
           }
         />
       ))}
+      <PointerLight />
       <div className="absolute inset-0 grid grid-cols-12">
         {Array.from({ length: TILE_COUNT }, (_, i) => (
           /* Each tile is a pane of glass (Figma: light -45° at 20%, depth

@@ -34,7 +34,16 @@ const SPONSORS = [
   },
 ];
 
-const mascot = "pointer-events-none absolute z-[2] h-auto select-none";
+/* On desktop the mascots rise up from behind the settled curtain. On phones
+   their cut sits too close to the hero's floor to travel without showing
+   below it, so they grow up from their feet instead. */
+const mascot =
+  "pointer-events-none absolute z-[2] h-auto origin-bottom select-none animate-mascot-rise [--rise-scale:0.9] md:[--rise:36%] md:[--rise-scale:1] motion-reduce:animate-none";
+
+/* the headline's lines, each rising out of its own mask; the padding gives
+   descenders room without changing the line spacing */
+const lineMask = "block overflow-clip pb-[0.1em] -mb-[0.1em]";
+const line = "block animate-line-rise motion-reduce:animate-none";
 
 export function Hero() {
   return (
@@ -74,20 +83,27 @@ export function Hero() {
       {/* On tall viewports the copy centres in the room the curtain leaves
           (clearing the mascots' heads) instead of hanging from the top. */}
       <div className="relative z-[2] flex flex-col items-center px-6 pt-[max(calc(302*var(--k)),calc(var(--nav-h)+3.5rem))] text-center tall:flex-auto tall:justify-center tall:pt-[calc(var(--nav-h)+1.5rem)] tall:pb-[calc(var(--stage)_-_var(--mascot-line)_+_6.6*var(--m)_+_0.75rem)]">
+        {/* The copy is timed against the curtain: it rises into place just
+            after the fabric has dropped past it. */}
         <h1 className="font-display text-[clamp(30px,calc(80*var(--k)),96px)] leading-[1.277] font-bold tracking-[-0.02em] text-ink">
-          Engineering
-          <br />
-          the future of energy
+          <span className={lineMask}>
+            <span className={`${line} [--delay:0.28s]`}>Engineering</span>
+          </span>{" "}
+          <span className={lineMask}>
+            <span className={`${line} [--delay:0.38s]`}>
+              the future of energy
+            </span>
+          </span>
         </h1>
 
-        <p className="mt-[calc(6*var(--k))] max-w-[min(calc(760*var(--k)),90vw)] text-[clamp(14px,calc(18*var(--k)),23px)] leading-[1.778] text-ink-soft">
+        <p className="mt-[calc(6*var(--k))] max-w-[min(calc(760*var(--k)),90vw)] animate-fade-rise text-[clamp(14px,calc(18*var(--k)),23px)] leading-[1.778] text-ink-soft [--delay:0.55s] motion-reduce:animate-none">
           The SPE UGM Student Chapter is a vibrant community of engineering
           students from all disciplines at Universitas Gadjah Mada, dedicated to
           advancing Indonesia&rsquo;s energy industry through research, training,
           and global collaboration.
         </p>
 
-        <div className="mt-[max(calc(31*var(--k)),1.1rem)] flex flex-wrap items-center justify-center gap-[calc(12*var(--k))]">
+        <div className="mt-[max(calc(31*var(--k)),1.1rem)] flex animate-fade-rise flex-wrap items-center justify-center gap-[calc(12*var(--k))] [--delay:0.7s] motion-reduce:animate-none">
           <a href="#about" className={pillSolid}>
             Explore SPE UGM
           </a>
@@ -128,7 +144,7 @@ export function Hero() {
         height={1656}
         priority
         sizes="(max-width: 767px) 90vw, 40vw"
-        className={`${mascot} max-md:bottom-[calc(100%_-_var(--mascot-line)_-_10px)] md:top-[calc(100svh_-_7.29*var(--m-female))] left-[calc(-0.5058*var(--m-female))] w-[calc(8.389*var(--m-female))] md:pt-8 xl:pt-0`}
+        className={`${mascot} max-md:bottom-[calc(100%_-_var(--mascot-line)_-_10px)] md:top-[calc(100svh_-_7.29*var(--m-female))] left-[calc(-0.5058*var(--m-female))] w-[calc(8.389*var(--m-female))] [--delay:0.6s] md:pt-8 xl:pt-0`}
       />
       {/* male — source 1375x1522, visible to x1375, cuts at y1320.5 /
           y1520, step at x990.5 */}
@@ -139,7 +155,7 @@ export function Hero() {
         height={1522}
         priority
         sizes="(max-width: 767px) 75vw, 34vw"
-        className={`${mascot} -right-5 max-md:bottom-[calc(100%_-_var(--mascot-line)_-_10px)] md:top-[calc(100svh_-_6.8922*var(--m-male)*1522/1375)] w-[calc(6.8922*var(--m-male))] md:pt-24`}
+        className={`${mascot} -right-5 max-md:bottom-[calc(100%_-_var(--mascot-line)_-_10px)] md:top-[calc(100svh_-_6.8922*var(--m-male)*1522/1375)] w-[calc(6.8922*var(--m-male))] [--delay:0.72s] md:pt-24`}
       />
 
       <Curtain />

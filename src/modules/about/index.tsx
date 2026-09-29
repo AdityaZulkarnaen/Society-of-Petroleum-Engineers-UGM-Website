@@ -1,5 +1,7 @@
 import Image from "next/image";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
+
+import { PageMotion } from "@/components/motion/page-motion";
 
 import { CoreValues } from "./core-values";
 import { CountUp } from "./count-up";
@@ -42,6 +44,14 @@ const METRICS = [
   { value: 15, label: "Corporate Partners" },
 ];
 
+const TITLE = "SPE UGM SC";
+
+/* The photo opens the way the home hero does: a curtain of seven slats in
+   the chapter's blue drops away, the centre slat first, while the photo
+   settles behind it. Each slat's delay grows with its distance from the
+   centre. */
+const SLATS = [3, 2, 1, 0, 1, 2, 3].map((step) => 0.35 + step * 0.07);
+
 function Eyebrow({ children }: { children: ReactNode }) {
   return (
     <p className="flex items-center justify-center gap-2 text-base text-curtain md:text-lg">
@@ -76,6 +86,8 @@ function TopGlow({ id, mirrored = false }: { id: string; mirrored?: boolean }) {
   return (
     <svg
       aria-hidden="true"
+      data-motion="glow"
+      data-glow="sweep"
       viewBox="0 0 524 411"
       preserveAspectRatio="none"
       className={`pointer-events-none absolute inset-x-0 top-0 h-[411px] w-full ${
@@ -123,6 +135,8 @@ function StatementCard({
   const id = `glow-${title.toLowerCase().replace(/\s+/g, "-")}`;
   return (
     <article
+      data-motion="rise"
+      data-sheen
       className={`${glassCard} relative isolate overflow-hidden px-6 pt-10 pb-9 sm:px-9 [&>*:not(svg)]:relative`}
     >
       <TopGlow id={id} mirrored={mirrored} />
@@ -139,7 +153,12 @@ function StatementCard({
       <p className="mx-auto mt-4 max-w-[520px] text-center text-sm leading-relaxed text-ink-soft md:text-[15px]">
         {STATEMENT}
       </p>
-      <ul className="mt-8 space-y-4">
+      <ul
+        data-motion="stagger"
+        data-motion-y="16"
+        data-motion-delay="0.3"
+        className="mt-8 space-y-4"
+      >
         {POINTS.map((point) => (
           <li key={point.title} className="flex gap-3">
             <svg
@@ -182,15 +201,31 @@ export function AboutPage() {
         className="px-4 pt-[calc(3svh+var(--nav-h)+clamp(2.5rem,calc(64*var(--k)),5.5rem))] pb-[clamp(3rem,calc(80*var(--k)),6rem)]"
       >
         <header className="text-center">
-          <p className="flex items-center justify-center gap-2 text-base text-curtain md:text-lg">
+          <p className="flex animate-fade-rise items-center justify-center gap-2 text-base text-curtain [--delay:0.05s] motion-reduce:animate-none md:text-lg">
             <img src="/global/SVG-star.svg" width="14" height="14" aria-hidden="true" alt="" />
             Inspired To Impact
           </p>
+          {/* each letter rises out of one shared mask, left to right */}
           <h1
             id="about-title"
             className="mt-2 font-display text-[clamp(48px,calc(128*var(--k)),150px)] leading-[1.05] font-bold tracking-[-0.03em] whitespace-nowrap text-ink max-md:text-[min(13vw,96px)]"
           >
-            SPE UGM SC
+            <span className="sr-only">{TITLE}</span>
+            <span aria-hidden="true" className="block overflow-clip pb-[0.08em] -mb-[0.08em]">
+              {Array.from(TITLE, (char, i) =>
+                char === " " ? (
+                  " "
+                ) : (
+                  <span
+                    key={i}
+                    className="inline-block animate-line-rise motion-reduce:animate-none"
+                    style={{ "--delay": `${0.12 + i * 0.045}s` } as CSSProperties}
+                  >
+                    {char}
+                  </span>
+                ),
+              )}
+            </span>
           </h1>
         </header>
 
@@ -203,8 +238,20 @@ export function AboutPage() {
             height={452}
             priority
             sizes="(min-width: 1320px) 1270px, 100vw"
-            className="w-full"
+            className="w-full animate-photo-settle [--delay:0.35s] motion-reduce:animate-none"
           />
+          {/* each slat runs 1px into its neighbour so no seam shows, and
+              comes to rest far enough below the frame that its edge glow
+              no longer reaches the photo */}
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 flex">
+            {SLATS.map((delay, i) => (
+              <span
+                key={i}
+                className="-mr-px h-full flex-1 translate-y-[calc(100%+3rem)] animate-slat-drop bg-curtain shadow-[0_-10px_28px_rgba(78,78,255,0.25)] motion-reduce:animate-none"
+                style={{ "--delay": `${delay}s` } as CSSProperties}
+              />
+            ))}
+          </div>
           {/* the design's navy wash along the bottom */}
           {/* <div
             aria-hidden="true"
@@ -217,7 +264,7 @@ export function AboutPage() {
         aria-labelledby="story-title"
         className="px-6 pb-[clamp(3rem,calc(72*var(--k)),5.5rem)] md:px-10"
       >
-        <header className="text-center">
+        <header data-motion="heading" className="text-center">
           <p className="flex items-center justify-center gap-2 text-base text-curtain md:text-lg">
             <img src="/global/SVG-star.svg" width="14" height="14" aria-hidden="true" alt="" />
             SPE UGM SC
@@ -226,7 +273,10 @@ export function AboutPage() {
             Who We Are &amp; What We Stand For
           </h2>
         </header>
-        <div className="mx-auto mt-6 max-w-[1100px] space-y-5 text-center text-[15px] leading-relaxed text-ink-soft md:text-base">
+        <div
+          data-motion="stagger"
+          data-motion-y="24"
+          className="mx-auto mt-6 max-w-[1100px] space-y-5 text-center text-[15px] leading-relaxed text-ink-soft md:text-base">
           {STORY.map((paragraph) => (
             <p key={paragraph.slice(0, 24)}>{paragraph}</p>
           ))}
@@ -248,7 +298,7 @@ export function AboutPage() {
         aria-labelledby="metrics-title"
         className="px-4 pb-[clamp(5rem,calc(120*var(--k)),9rem)]"
       >
-        <header className="text-center">
+        <header data-motion="heading" className="text-center">
           <p className="flex items-center justify-center gap-2 text-base text-curtain md:text-lg">
             <img src="/global/SVG-star.svg" width="14" height="14" aria-hidden="true" alt="" />
             Key Metrics
@@ -258,6 +308,7 @@ export function AboutPage() {
           </h2>
         </header>
         <div
+          data-motion="rise"
           className={`${metricsCard} relative isolate mx-auto mt-[clamp(1.5rem,calc(40*var(--k)),3rem)] w-[min(calc(1270*var(--kw)),100%)] overflow-hidden`}
         >
           {/* After Figma: an ellipse nearly the card's width whose top sits at
@@ -265,9 +316,15 @@ export function AboutPage() {
               layer blur 102.7 (≈ 51px in CSS). */}
           <div
             aria-hidden="true"
+            data-motion="glow"
             className="pointer-events-none absolute inset-x-[1%] top-[85%] -z-10 h-[32%] rounded-[50%] bg-[linear-gradient(90deg,#ffffff_0%,#4e4eff_40%,#9999ff_100%)] opacity-55 blur-[51px]"
           />
-          <dl className="grid grid-cols-1 px-6 py-4 sm:grid-cols-2 sm:px-10 sm:py-8">
+          <dl
+            data-motion="stagger"
+            data-motion-y="0"
+            data-motion-delay="0.2"
+            className="grid grid-cols-1 px-6 py-4 sm:grid-cols-2 sm:px-10 sm:py-8"
+          >
             {METRICS.map((metric, i) => (
               <div
                 key={metric.label}
@@ -294,6 +351,7 @@ export function AboutPage() {
       <CoreValues />
 
       <Leadership />
+      <PageMotion />
     </main>
   );
 }

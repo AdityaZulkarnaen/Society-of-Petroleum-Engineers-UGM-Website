@@ -76,7 +76,7 @@ export function Testimonials() {
       onKeyDown={onKeyDown}
       className="relative overflow-hidden px-6 pt-[clamp(1rem,calc(24*var(--k)),2.5rem)] md:px-10"
     >
-      <header className="relative z-10 text-center">
+      <header data-motion="heading" className="relative z-10 text-center">
         <p className="flex items-center justify-center gap-2 text-base text-curtain md:text-lg">
           <img src="/global/SVG-star.svg" width="14" height="14" aria-hidden="true" alt="" />
           Testimonials
@@ -95,6 +95,7 @@ export function Testimonials() {
             glow, which stays in the quote's stacking context to burn into) */}
         <div
           aria-hidden="true"
+          data-motion="glow"
           className="pointer-events-none absolute top-[4%] left-1/2 h-[125%] w-[min(1180px,135%)] -translate-x-1/2 bg-[radial-gradient(closest-side,rgb(78_78_255/0.9)_0%,rgb(100_100_255/0.6)_32%,rgb(153_153_255/0.28)_62%,rgb(153_153_255/0)_100%)] [mask-image:linear-gradient(to_bottom,black_45%,transparent_78%)] lg:top-[-6%] lg:w-[min(1180px,92%)]"
         />
 
@@ -125,25 +126,31 @@ export function Testimonials() {
           </p>
         </blockquote>
 
-        {/* photo, with the quote mark burned in over its right side */}
+        {/* photo, with the quote mark burned in over its right side. The
+            frame clips at the photo's floor, so on first view the person
+            rises up through it; after that each one settles in as the
+            carousel reaches them. */}
         <div className="relative order-3 mx-auto mt-8 w-[min(420px,82%)] lg:order-2 lg:mt-0 lg:w-full">
-          <div className="relative aspect-[659/700]">
-            {TESTIMONIALS.map((t, i) => (
-              <Image
-                key={t.photo.src}
-                src={t.photo.src}
-                alt={i === index ? `Photo of ${t.name}` : ""}
-                aria-hidden={i !== index}
-                width={t.photo.width}
-                height={t.photo.height}
-                sizes="(min-width: 1024px) 560px, 82vw"
-                className={`absolute bottom-0 left-0 h-auto w-full transition-opacity duration-500 ${
-                  i === index ? "opacity-100" : "opacity-0"
-                }`}
-              />
-            ))}
+          <div className="relative aspect-[659/700] overflow-hidden">
+            <div data-motion="figure" className="absolute inset-0">
+              {TESTIMONIALS.map((t, i) => (
+                <Image
+                  key={t.photo.src}
+                  src={t.photo.src}
+                  alt={i === index ? `Photo of ${t.name}` : ""}
+                  aria-hidden={i !== index}
+                  width={t.photo.width}
+                  height={t.photo.height}
+                  sizes="(min-width: 1024px) 560px, 82vw"
+                  className={`absolute bottom-0 left-0 h-auto w-full transition-[opacity,translate] duration-500 ease-out-soft motion-reduce:transition-opacity ${
+                    i === index ? "opacity-100" : "translate-y-[3%] opacity-0"
+                  }`}
+                />
+              ))}
+            </div>
           </div>
           <Image
+            data-motion="glow"
             src="/landing/testimonial/left-quote.webp"
             alt=""
             width={414}
@@ -165,7 +172,10 @@ export function Testimonials() {
           </button>
           <p aria-live="polite" className="flex items-baseline gap-1 font-display font-bold text-ink">
             <span className="sr-only">Testimonial </span>
-            <span className="text-[clamp(36px,calc(56*var(--k)),64px)] leading-none">
+            <span
+              key={index}
+              className="inline-block text-[clamp(36px,calc(56*var(--k)),64px)] leading-none motion-safe:animate-testimonial-in"
+            >
               {pad(index + 1)}
             </span>
             <span className="text-sm">

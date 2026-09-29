@@ -62,7 +62,12 @@ function SpeMark() {
 
 function Tags({ items }: { items: string[] }) {
   return (
-    <ul className="mx-auto flex max-w-[420px] flex-wrap justify-center gap-2.5">
+    <ul
+      data-motion="stagger"
+      data-motion-y="12"
+      data-motion-delay="0.2"
+      className="mx-auto flex max-w-[420px] flex-wrap justify-center gap-2.5"
+    >
       {items.map((item) => (
         <li
           key={item}
@@ -149,7 +154,7 @@ export function WhatWeDo() {
       aria-labelledby="what-we-do-title"
       className="px-6 pt-[clamp(1rem,calc(24*var(--k)),2.5rem)] pb-[clamp(5rem,calc(120*var(--k)),9rem)] md:px-10"
     >
-      <header className="text-center">
+      <header data-motion="heading" className="text-center">
         <p className="flex items-center justify-center gap-2 text-base text-curtain md:text-lg">
           <img src="/global/SVG-star.svg" width="14" height="14" aria-hidden="true" alt="" />
           What We Do
@@ -163,9 +168,9 @@ export function WhatWeDo() {
       </header>
 
       <div className="mx-auto mt-[clamp(2rem,calc(48*var(--k)),3.5rem)] grid max-w-[1277px] gap-4 lg:relative lg:grid-cols-[52fr_10fr_38fr]">
-        <article className="flagship-glass-card relative isolate flex flex-col items-center rounded-[24px] border border-black/[0.08] px-6 pt-12 pb-9 outline outline-2 -outline-offset-1 outline-ink/10 [clip-path:inset(0_round_24px)] overflow-hidden md:px-10 lg:col-span-2 lg:min-h-[434px]">
+        <article data-motion="rise" data-sheen className="flagship-glass-card relative isolate flex flex-col items-center rounded-[24px] border border-black/[0.08] px-6 pt-12 pb-9 outline outline-2 -outline-offset-1 outline-ink/10 [clip-path:inset(0_round_24px)] overflow-hidden md:px-10 lg:col-span-2 lg:min-h-[434px]">
           {/* Purple gradient ellipse - bottom right */}
-          <div className="pointer-events-none absolute -bottom-12 -right-12 w-[600px] opacity-70">
+          <div data-motion="glow" className="pointer-events-none absolute -bottom-12 -right-12 w-[600px] opacity-70">
             <Image
               src="/landing/what-we-do/Ellipse 1479.svg"
               alt=""
@@ -194,9 +199,9 @@ export function WhatWeDo() {
           </div>
         </article>
 
-        <article className="flagship-glass-card relative isolate rounded-[24px] border border-black/[0.08] px-6 pt-10 pb-9 outline outline-2 -outline-offset-1 outline-ink/10 [clip-path:inset(0_round_24px)] overflow-hidden md:px-8 lg:min-h-[434px]">
+        <article data-motion="rise" data-sheen className="flagship-glass-card relative isolate rounded-[24px] border border-black/[0.08] px-6 pt-10 pb-9 outline outline-2 -outline-offset-1 outline-ink/10 [clip-path:inset(0_round_24px)] overflow-hidden md:px-8 lg:min-h-[434px]">
           {/* Purple gradient ellipse - bottom left */}
-          <div className="pointer-events-none absolute -bottom-12 -left-12 w-[500px] opacity-70">
+          <div data-motion="glow" className="pointer-events-none absolute -bottom-12 -left-12 w-[500px] opacity-70">
             <Image
               src="/landing/what-we-do/Ellipse 1480.svg"
               alt=""
@@ -214,7 +219,12 @@ export function WhatWeDo() {
             <p className="mt-9 text-[11px] font-medium tracking-[0.08em] text-[#9a9db0] uppercase">
               Program Execution Status
             </p>
-            <ol className="mt-3 space-y-3">
+            <ol
+              data-motion="stagger"
+              data-motion-y="16"
+              data-motion-delay="0.2"
+              className="mt-3 space-y-3"
+            >
               {TRACKER.map(({ name, status }, i) => (
                 <li
                   key={name}
@@ -233,9 +243,9 @@ export function WhatWeDo() {
           </div>
         </article>
 
-        <article className="flagship-glass-card relative isolate flex flex-col rounded-[24px] border border-black/[0.08] px-6 pt-8 pb-9 outline outline-2 -outline-offset-1 outline-ink/10 [clip-path:inset(0_round_24px)] overflow-hidden md:px-8 lg:min-h-[421px]">
+        <article data-motion="rise" data-sheen className="flagship-glass-card relative isolate flex flex-col rounded-[24px] border border-black/[0.08] px-6 pt-8 pb-9 outline outline-2 -outline-offset-1 outline-ink/10 [clip-path:inset(0_round_24px)] overflow-hidden md:px-8 lg:min-h-[421px]">
           {/* Purple gradient ellipse - top right */}
-          <div className="pointer-events-none absolute -top-24 -right-32 w-[660px] opacity-70">
+          <div data-motion="glow" className="pointer-events-none absolute -top-24 -right-32 w-[660px] opacity-70">
             <Image
               src="/landing/what-we-do/Ellipse 1478.svg"
               alt=""
@@ -251,7 +261,12 @@ export function WhatWeDo() {
               knowledge to excel in technical roles within the industry.
             </Copy>
 
-            <ul className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <ul
+              data-motion="stagger"
+              data-motion-y="20"
+              data-motion-delay="0.2"
+              className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-3"
+            >
               {SKILLS.map(({ label, icon }) => (
                 <li
                   key={label}
@@ -278,9 +293,9 @@ export function WhatWeDo() {
           </div>
         </article>
 
-        <article className="flagship-glass-card relative isolate flex flex-col rounded-[24px] border border-black/[0.08] px-6 pt-8 pb-0 outline outline-2 -outline-offset-1 outline-ink/10 [clip-path:inset(0_round_24px)] overflow-hidden md:px-8 lg:col-span-2 lg:min-h-[421px]">
+        <article data-motion="rise" data-sheen className="flagship-glass-card relative isolate flex flex-col rounded-[24px] border border-black/[0.08] px-6 pt-8 pb-0 outline outline-2 -outline-offset-1 outline-ink/10 [clip-path:inset(0_round_24px)] overflow-hidden md:px-8 lg:col-span-2 lg:min-h-[421px]">
           {/* Purple gradient ellipse - top left */}
-          <div className="pointer-events-none absolute -top-20 -left-20 w-[950px] opacity-70">
+          <div data-motion="glow" className="pointer-events-none absolute -top-20 -left-20 w-[950px] opacity-70">
             <Image
               src="/landing/what-we-do/Ellipse 1481.svg"
               alt=""

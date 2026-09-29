@@ -10,7 +10,7 @@ export function Sponsors() {
     <section className="bg-[#f2f8fe] px-8 pb-[60px]">
       <div className="mx-auto max-w-[1429px]">
         {/* Header */}
-        <div className="flex flex-col items-center gap-4">
+        <div data-motion="heading" className="flex flex-col items-center gap-4">
           {/* "Our Sponsors" with icon */}
           <div className="flex items-center gap-2">
             <img src="/global/SVG-star.svg" width="14" height="14" aria-hidden="true" alt="" />
@@ -25,9 +25,11 @@ export function Sponsors() {
           </h2>
         </div>
 
-        {/* Logo grid - scrollable on mobile, centered grid on desktop */}
+        {/* Logo grid - scrollable on mobile, centered grid on desktop. The
+            cards' entrance travel stays inside the row's 32px bottom padding,
+            so the scroller never grows a vertical scrollbar mid-animation. */}
         <div className="mt-[75px] overflow-x-auto pb-8">
-          <div className="flex min-w-max justify-center gap-4 md:flex-wrap md:min-w-0">
+          <div data-motion="stagger" data-motion-y="20" className="flex min-w-max justify-center gap-4 md:flex-wrap md:min-w-0">
             {/* Logo card template - repeat 8 times */}
             {Array.from({ length: 8 }).map((_, i) => (
               <div

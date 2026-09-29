@@ -28,6 +28,8 @@ function CornerGlow({ id }: { id: string }) {
   return (
     <svg
       aria-hidden="true"
+      data-motion="glow"
+      data-glow="sweep"
       viewBox="0 0 375 223"
       className="pointer-events-none absolute top-0 right-[-6%] -z-10 aspect-[375/223] w-[72%]"
     >
@@ -77,7 +79,7 @@ export function CoreValues() {
       aria-labelledby="core-values-title"
       className="px-4 pb-[clamp(5rem,calc(120*var(--k)),9rem)]"
     >
-      <header className="text-center">
+      <header data-motion="heading" className="text-center">
         <p className="flex items-center justify-center gap-2 text-base text-curtain md:text-lg">
           <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
             <path
@@ -100,6 +102,8 @@ export function CoreValues() {
         {VALUES.map((value) => (
           <article
             key={value.title}
+            data-motion="rise"
+            data-sheen
             className="relative isolate overflow-hidden rounded-[clamp(20px,calc(28*var(--k)),32px)] border border-white bg-[linear-gradient(160deg,#fbfbff_0%,#f3f4fd_100%)] px-6 pt-7 pb-8 shadow-[0_24px_60px_-34px_rgba(60,48,160,0.35),inset_0_1px_0_rgba(255,255,255,0.9)] sm:px-9 sm:pt-9 sm:pb-10"
           >
             <CornerGlow id={`value-glow-${value.title.toLowerCase()}`} />

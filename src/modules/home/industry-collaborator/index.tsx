@@ -58,7 +58,9 @@ function CollaboratorCard({ item }: { item: Collaborator }) {
   );
 }
 
-/** One scrolling column — duped items for seamless loop */
+/** One scrolling column — duped items for seamless loop. It slides into
+    view the way it scrolls: up-columns from below, the down-column from
+    above. */
 function ScrollColumn({
   items,
   direction = "up",
@@ -70,7 +72,12 @@ function ScrollColumn({
 }) {
   const doubled = [...items, ...items];
   return (
-    <div className="industry-column" aria-hidden={false}>
+    <div
+      className="industry-column"
+      aria-hidden={false}
+      data-motion="rise"
+      data-motion-y={direction === "up" ? 80 : -80}
+    >
       <div
         className={`industry-column__track industry-column__track--${direction}`}
         style={{ "--scroll-duration": `${speed}s` } as React.CSSProperties}
@@ -88,9 +95,13 @@ export function IndustryCollaborator() {
     <section id="industry-collaborator" aria-labelledby="ic-title" className="industry-section">
       <div className="industry-section__inner">
         {/* ── Left: heading ─────────────────────────────────────────── */}
-        <div className="industry-section__heading">
+        <div data-motion="heading" className="industry-section__heading">
           <h2 id="ic-title" className="industry-section__title">
-            Our{"\n"}Industry{"\n"}Collaborator
+            Our
+            <br />
+            Industry
+            <br />
+            Collaborator
           </h2>
         </div>
 
