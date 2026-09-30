@@ -27,25 +27,45 @@ where competency in (
 );
 
 /* ============================================================================
-   3. Add the new CHECK constraint (12 values)
+   3. Add the new CHECK constraint (12 values in exact HRD form order)
    ============================================================================ */
 
 alter table public.rekap_competencies
   add constraint rekap_competencies_competency_check
   check (competency in (
     'Grit / Perseverance',
-    'Agility',
-    'Strive for Excellence',
-    'Innovation',
-    'Caring',
     'Empower Others',
     'Teamwork',
+    'Caring',
+    'Accountability',
+    'Integrity',
+    'Agility',
+    'Innovation',
     'Communication',
     'Self Awareness',
-    'Self Purpose',
-    'Integrity',
-    'Accountability'
+    'Strive for Excellence',
+    'Self Purpose'
   ));
+
+/* Add sort_order column to guarantee exact HRD form order in queries */
+alter table public.rekap_competencies
+  add column if not exists sort_order integer not null default 1;
+
+update public.rekap_competencies set sort_order = case competency
+  when 'Grit / Perseverance'    then 1
+  when 'Empower Others'         then 2
+  when 'Teamwork'               then 3
+  when 'Caring'                 then 4
+  when 'Accountability'         then 5
+  when 'Integrity'              then 6
+  when 'Agility'                then 7
+  when 'Innovation'             then 8
+  when 'Communication'          then 9
+  when 'Self Awareness'         then 10
+  when 'Strive for Excellence'  then 11
+  when 'Self Purpose'           then 12
+  else 1
+end;
 
 /* ============================================================================
    4. Change score columns to allow free decimals (1.00–5.00)
@@ -79,7 +99,7 @@ alter table public.rekap_competencies
   drop column if exists rating;
 
 /* ============================================================================
-   6. Recreate save_rekap() without the rating column
+   6. Recreate save_rekap() without rating and with sort_order
    ============================================================================ */
 
 create or replace function public.save_rekap(
@@ -137,16 +157,32 @@ begin
 
   /* Upsert competencies: initial_score is set only on first insert */
   insert into public.rekap_competencies (
-    profile_id, period, competency, score, initial_score
+    profile_id, period, competency, score, initial_score, sort_order
   )
   select
     p_profile_id, p_period,
     item ->> 'competency',
     (item ->> 'score')::numeric,
-    (item ->> 'score')::numeric
+    (item ->> 'score')::numeric,
+    case item ->> 'competency'
+      when 'Grit / Perseverance'    then 1
+      when 'Empower Others'         then 2
+      when 'Teamwork'               then 3
+      when 'Caring'                 then 4
+      when 'Accountability'         then 5
+      when 'Integrity'              then 6
+      when 'Agility'                then 7
+      when 'Innovation'             then 8
+      when 'Communication'          then 9
+      when 'Self Awareness'         then 10
+      when 'Strive for Excellence'  then 11
+      when 'Self Purpose'           then 12
+      else 1
+    end
   from jsonb_array_elements(p_competencies) item
   on conflict (profile_id, period, competency) do update set
-    score = excluded.score;
+    score = excluded.score,
+    sort_order = excluded.sort_order;
 end;
 $$;
 

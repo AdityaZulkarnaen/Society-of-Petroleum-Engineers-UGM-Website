@@ -36,9 +36,10 @@ export async function loadRekap(
       .maybeSingle(),
     supabase
       .from("rekap_competencies")
-      .select("competency, score, initial_score")
+      .select("competency, score, initial_score, sort_order")
       .eq("profile_id", profileId)
-      .eq("period", period),
+      .eq("period", period)
+      .order("sort_order", { ascending: true }),
   ]);
   if (!rekap) return null;
 

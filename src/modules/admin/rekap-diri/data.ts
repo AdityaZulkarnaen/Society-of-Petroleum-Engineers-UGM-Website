@@ -5,17 +5,17 @@
     (clockwise from the top). */
 export const COMPETENCIES = [
   "Grit / Perseverance",
-  "Agility",
-  "Strive for Excellence",
-  "Innovation",
-  "Caring",
   "Empower Others",
   "Teamwork",
+  "Caring",
+  "Accountability",
+  "Integrity",
+  "Agility",
+  "Innovation",
   "Communication",
   "Self Awareness",
+  "Strive for Excellence",
   "Self Purpose",
-  "Integrity",
-  "Accountability",
 ] as const;
 
 export type Competency = (typeof COMPETENCIES)[number];
