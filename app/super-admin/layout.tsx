@@ -3,7 +3,7 @@ import type { Metadata, Viewport } from "next";
 import { SuperAdminShell } from "@/modules/super-admin/shell";
 
 export const metadata: Metadata = {
-  title: "Dashboard Super Admin — SPE UGM",
+  title: "Super Admin Dashboard — SPE UGM",
   robots: { index: false, follow: false },
 };
 

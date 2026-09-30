@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 
 export const metadata: Metadata = {
-  title: "Dashboard Pengurus — SPE UGM",
+  title: "Officer Dashboard — SPE UGM",
   robots: { index: false, follow: false },
 };
 

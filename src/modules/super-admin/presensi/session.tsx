@@ -39,7 +39,7 @@ const backLink = (
     >
       <path d="M8 3 4 7l4 4" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
-    Semua rapat
+    All Meetings
   </Link>
 );
 
@@ -110,30 +110,30 @@ export async function MeetingSessionPage({ id }: { id: string }) {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Stat
           surface={compactCardSurface}
-          label="Sudah Presensi"
+          label="Present"
           value={`${present}/${rows.length}`}
-          caption={`${percent}% dari peserta`}
+          caption={`${percent}% of attendees`}
         />
         <Stat
           surface={compactCardSurface}
           label={ATTENDANCE.terlambat.label}
           value={late}
-          caption={`lewat ${meeting.lateAfterMinutes} menit`}
+          caption={`over ${meeting.lateAfterMinutes} minutes late`}
         />
         <Stat
           surface={compactCardSurface}
-          label="Izin / Sakit"
+          label="Excused / Sick"
           value={excused}
         />
         <Stat
           surface={compactCardSurface}
-          label="Belum Presensi"
+          label="Not Checked In"
           value={waiting}
-          caption={state === "closed" ? "tercatat alpa" : undefined}
+          caption={state === "closed" ? "marked absent" : undefined}
         />
       </div>
 
-      <ProgressBar percent={percent} label={`Kehadiran ${meeting.title}`} />
+      <ProgressBar percent={percent} label={`Attendance for ${meeting.title}`} />
 
       <div className="grid gap-6 lg:grid-cols-[320px_minmax(0,1fr)] lg:items-start">
         <QrPanel

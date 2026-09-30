@@ -39,10 +39,10 @@ export function RadarChart({ competencies }: { competencies: CompetencyResult[] 
 
   const summary =
     current == null
-      ? "Grafik kompetensi, belum ada penilaian."
-      : "Grafik kompetensi: " +
+      ? "Competency chart, no evaluation recorded yet."
+      : "Competency chart: " +
         competencies
-          .map((c) => `${c.name} ${c.initial ?? "—"} menjadi ${c.current}`)
+          .map((c) => `${c.name} ${c.initial ?? "—"} to ${c.current}`)
           .join(", ");
 
   return (
@@ -50,11 +50,11 @@ export function RadarChart({ competencies }: { competencies: CompetencyResult[] 
       <ul className="flex flex-wrap gap-x-5 gap-y-2 text-[13px] text-[#a3a6b8]">
         <li className="flex items-center gap-2">
           <span className="h-0.5 w-5 rounded-full bg-[#a3a6b8]" />
-          Awal Periode
+          Start of Term
         </li>
         <li className="flex items-center gap-2">
           <span className="h-0.5 w-5 rounded-full bg-[#3b82f6]" />
-          Saat Ini
+          Current
         </li>
       </ul>
 
@@ -163,7 +163,7 @@ export function RadarChart({ competencies }: { competencies: CompetencyResult[] 
 
         {current == null && (
           <p className="mt-2 max-w-xs text-center text-[13px] leading-relaxed text-[#6f7286]">
-            Grafik akan terisi setelah HR mengisi evaluasi awal dan akhir periode.
+            The chart will be populated once HR inputs evaluation scores.
           </p>
         )}
       </div>

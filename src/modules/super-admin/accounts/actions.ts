@@ -39,16 +39,16 @@ function validate(input: AccountInput) {
   ) as AccountInput;
   const errors: FieldErrors = {};
 
-  if (v.fullName.length < 2) errors.fullName = "Isi nama lengkap.";
+  if (v.fullName.length < 2) errors.fullName = "Full name is required.";
   if (v.nim && !NIM_PATTERN.test(v.nim)) errors.nim = NIM_HINT;
-  if (v.email && !EMAIL.test(v.email)) errors.email = "Email tidak valid.";
+  if (v.email && !EMAIL.test(v.email)) errors.email = "Invalid email address.";
   if (v.whatsapp && !PHONE.test(v.whatsapp)) {
-    errors.whatsapp = "Nomor WhatsApp tidak valid.";
+    errors.whatsapp = "Invalid WhatsApp number.";
   }
   if (!POSITIONS.includes(v.position as (typeof POSITIONS)[number])) {
-    errors.position = "Pilih jabatan.";
+    errors.position = "Please select a position.";
   }
-  if (!PERIOD.test(v.period)) errors.period = "Format periode: 2025/2026.";
+  if (!PERIOD.test(v.period)) errors.period = "Period format: 2025/2026.";
 
   const profile = {
     full_name: v.fullName,
@@ -102,7 +102,7 @@ export async function createAccount(
   const { errors, profile, ok } = validate(input);
   if (!ok) return { fieldErrors: errors };
   if (!me.division)
-    return { error: "Akun super admin ini belum terhubung ke divisi." };
+    return { error: "This super admin account is not assigned to a division." };
 
   const base = usernameBase(profile.full_name);
   const password = temporaryPassword();
@@ -153,7 +153,7 @@ export async function createAccount(
   );
   if (authError) {
     console.error("createAccount: auth user", authError.message);
-    return { error: "Akun gagal dibuat. Coba lagi." };
+    return { error: "Failed to create account. Please try again." };
   }
 
   const { error: profileError } = await admin.from("profiles").insert({
@@ -167,7 +167,7 @@ export async function createAccount(
     /* don't leave a login without a profile behind */
     await admin.auth.admin.deleteUser(created.user.id);
     console.error("createAccount: profile", profileError.message);
-    return { error: "Akun gagal dibuat. Coba lagi." };
+    return { error: "Failed to create account. Please try again." };
   }
 
   revalidate();
@@ -192,7 +192,7 @@ async function updateOwnAccount(
   return (data?.length ?? 0) > 0;
 }
 
-const NOT_FOUND = "Akun tidak ditemukan. Muat ulang halaman ini.";
+const NOT_FOUND = "Account not found. Please refresh this page.";
 
 export async function updateAccount(
   id: string,
@@ -276,7 +276,7 @@ export async function deleteAccount(id: string): Promise<ActionResult> {
   const { error } = await admin.auth.admin.deleteUser(id);
   if (error) {
     console.error("deleteAccount", error.message);
-    return { error: "Akun gagal dihapus. Coba lagi." };
+    return { error: "Failed to delete account. Please try again." };
   }
 
   revalidate();

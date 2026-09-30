@@ -54,30 +54,30 @@ export function validateProker(input: ProkerInput) {
   const endsOn = input.endsOn.trim();
 
   if (name.length < 2 || name.length > 120) {
-    errors.name = "Isi nama proker (2–120 karakter).";
+    errors.name = "Enter work program name (2–120 characters).";
   }
   if (description.length > DESCRIPTION_MAX) {
-    errors.description = `Maksimal ${DESCRIPTION_MAX} karakter.`;
+    errors.description = `Maximum ${DESCRIPTION_MAX} characters.`;
   }
-  if (startsOn && !DATE.test(startsOn)) errors.startsOn = "Tanggal tidak valid.";
-  if (endsOn && !DATE.test(endsOn)) errors.endsOn = "Tanggal tidak valid.";
+  if (startsOn && !DATE.test(startsOn)) errors.startsOn = "Invalid date.";
+  if (endsOn && !DATE.test(endsOn)) errors.endsOn = "Invalid date.";
   if (startsOn && endsOn && endsOn < startsOn) {
-    errors.endsOn = "Tanggal selesai harus setelah tanggal mulai.";
+    errors.endsOn = "End date must be after start date.";
   }
   if (!PROKER_STATUSES.includes(input.status as ProkerStatus)) {
-    errors.status = "Pilih status.";
+    errors.status = "Select a status.";
   }
 
   const seen = new Set<string>();
   const members = input.members.map(({ profileId, role }, i) => {
-    if (!profileId) errors[`members.${i}.profileId`] = "Pilih pengurus.";
+    if (!profileId) errors[`members.${i}.profileId`] = "Select an officer.";
     else if (seen.has(profileId)) {
-      errors[`members.${i}.profileId`] = "Pengurus sudah ditambahkan.";
+      errors[`members.${i}.profileId`] = "Officer has already been added.";
     }
     seen.add(profileId);
     const r = role.trim();
-    if (!r) errors[`members.${i}.role`] = "Isi peran.";
-    else if (r.length > 60) errors[`members.${i}.role`] = "Maksimal 60 karakter.";
+    if (!r) errors[`members.${i}.role`] = "Enter a role.";
+    else if (r.length > 60) errors[`members.${i}.role`] = "Maximum 60 characters.";
     return { profileId, role: r };
   });
 

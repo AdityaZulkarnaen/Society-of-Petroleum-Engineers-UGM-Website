@@ -77,7 +77,7 @@ export function ModalHeader({
         type="button"
         onClick={onClose}
         disabled={disabled}
-        aria-label="Tutup"
+        aria-label="Close"
         className="grid size-8 shrink-0 place-items-center rounded-lg border border-white/10 bg-white/[0.04] text-[#a3a6b8] transition-colors hover:border-white/20 hover:text-white disabled:opacity-50"
       >
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">

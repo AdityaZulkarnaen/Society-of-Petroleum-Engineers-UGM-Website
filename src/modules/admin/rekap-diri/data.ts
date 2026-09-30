@@ -23,15 +23,15 @@ export type Competency = (typeof COMPETENCIES)[number];
 /** Scores run from 1 to 5 (decimals allowed). */
 export const MAX_SCORE = 5;
 
-/** Interpretasi nilai berdasarkan rata-rata skor. */
-export type Kategori = "Sangat Baik" | "Baik" | "Cukup" | "Kurang" | "Sangat Kurang";
+/** Score interpretation based on average score. */
+export type Kategori = "Excellent" | "Good" | "Fair" | "Poor" | "Very Poor";
 
 export function getKategori(rataRata: number): Kategori {
-  if (rataRata >= 4.21) return "Sangat Baik";
-  if (rataRata >= 3.41) return "Baik";
-  if (rataRata >= 2.61) return "Cukup";
-  if (rataRata >= 1.81) return "Kurang";
-  return "Sangat Kurang";
+  if (rataRata >= 4.21) return "Excellent";
+  if (rataRata >= 3.41) return "Good";
+  if (rataRata >= 2.61) return "Fair";
+  if (rataRata >= 1.81) return "Poor";
+  return "Very Poor";
 }
 
 /** Achieved out of target, or null when nothing is recorded yet. */

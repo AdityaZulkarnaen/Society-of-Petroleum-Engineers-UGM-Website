@@ -19,7 +19,7 @@ export function ScanScreen({ token }: { token: string | null }) {
       : {
           ok: false,
           error:
-            "Tautan presensi tidak lengkap. Scan ulang QR di layar rapat.",
+            "Incomplete attendance link. Please rescan the QR code on the meeting screen.",
         },
   );
   /* one attempt per token: React may run the effect twice in development */
@@ -40,7 +40,7 @@ export function ScanScreen({ token }: { token: string | null }) {
   return (
     <div className="mx-auto max-w-[420px] space-y-6">
       <h1 className="text-center text-[22px] font-bold tracking-[-0.02em]">
-        Presensi Rapat
+        Meeting Attendance
       </h1>
 
       <Card className="px-6 py-9">
@@ -48,18 +48,18 @@ export function ScanScreen({ token }: { token: string | null }) {
           <CheckInResultCard result={result} />
         ) : (
           <p role="status" className="text-center text-sm text-[#8a8ea3]">
-            Menyimpan presensi…
+            Saving attendance…
           </p>
         )}
       </Card>
 
       <div className="flex justify-center gap-3">
         <Link href="/admin/presensi" className={primaryButton}>
-          Lihat Presensi Saya
+          View My Attendance
         </Link>
         {result && !result.ok && (
           <Link href="/admin/presensi" className={secondaryButton}>
-            Scan Ulang
+            Rescan QR
           </Link>
         )}
       </div>

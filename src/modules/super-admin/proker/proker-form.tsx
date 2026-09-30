@@ -30,7 +30,7 @@ let nextKey = 0;
 function groupByDivision(pengurus: PengurusOption[]) {
   const groups = new Map<string, PengurusOption[]>();
   for (const p of pengurus) {
-    const division = p.division ?? "Tanpa divisi";
+    const division = p.division ?? "No Division";
     groups.set(division, [...(groups.get(division) ?? []), p]);
   }
   return [...groups];
@@ -116,30 +116,30 @@ export function ProkerForm({
     <form onSubmit={submit} noValidate className="px-6 pt-7 pb-7 sm:px-8">
       <ModalHeader
         id={`${prefix}-title`}
-        title={editing ? "Edit Proker" : "Tambah Proker Baru"}
+        title={editing ? "Edit Work Program" : "Add New Work Program"}
         onClose={onClose}
         disabled={pending}
       />
 
       <div className="mt-7 grid gap-x-4 gap-y-4 sm:grid-cols-2">
         <div className="sm:col-span-2">
-          <Field id={`${prefix}-name`} label="Nama Proker / Acara" error={errors.name}>
+          <Field id={`${prefix}-name`} label="Program / Event Name" error={errors.name}>
             <input
               {...fieldProps("name")}
               defaultValue={proker?.name}
-              placeholder="Nama program kerja atau acara"
+              placeholder="Name of work program or event"
               autoComplete="off"
               autoFocus
               className={control}
             />
           </Field>
         </div>
-        <Field id={`${prefix}-division`} label="Divisi Penyelenggara">
+        <Field id={`${prefix}-division`} label="Organizing Division">
           <Select id={`${prefix}-division`} disabled defaultValue={division ?? ""}>
-            <option value={division ?? ""}>{division ? `Divisi ${division}` : "—"}</option>
+            <option value={division ?? ""}>{division ? `${division} Division` : "—"}</option>
           </Select>
         </Field>
-        <Field id={`${prefix}-startsOn`} label="Tanggal Mulai" error={errors.startsOn}>
+        <Field id={`${prefix}-startsOn`} label="Start Date" error={errors.startsOn}>
           <input
             {...fieldProps("startsOn")}
             type="date"
@@ -147,7 +147,7 @@ export function ProkerForm({
             className={control}
           />
         </Field>
-        <Field id={`${prefix}-endsOn`} label="Tanggal Selesai" error={errors.endsOn}>
+        <Field id={`${prefix}-endsOn`} label="End Date" error={errors.endsOn}>
           <input
             {...fieldProps("endsOn")}
             type="date"
@@ -167,16 +167,16 @@ export function ProkerForm({
       </div>
 
       <fieldset className="mt-5 rounded-xl border border-white/[0.08] bg-[#0b0e1f]/50 px-5 py-4">
-        <legend className="sr-only">Pengurus Terlibat</legend>
+        <legend className="sr-only">Participating Officers</legend>
         <div className="flex items-baseline justify-between gap-4">
           <p
             aria-hidden="true"
             className="text-[11px] font-medium tracking-[0.08em] text-[#c7c9d4] uppercase"
           >
-            Pengurus Terlibat
+            Participating Officers
           </p>
           <span className="text-xs text-[#6f7286]">
-            {rows.length} pengurus ditambahkan
+            {rows.length} {rows.length === 1 ? "officer added" : "officers added"}
           </span>
         </div>
 
@@ -189,13 +189,13 @@ export function ProkerForm({
                   <div className="grid grid-cols-[minmax(0,1fr)_32px] gap-2 sm:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)_32px]">
                     <div className="col-span-2 sm:col-span-1">
                       <Select
-                        aria-label={`Pengurus ${i + 1}`}
+                        aria-label={`Officer ${i + 1}`}
                         value={row.profileId}
                         onChange={(ev) => updateRow(row.key, { profileId: ev.target.value })}
                         aria-invalid={Boolean(e("profileId"))}
                       >
                         <option value="" disabled>
-                          Pilih pengurus
+                          Select officer
                         </option>
                         {groups.map(([group, people]) => (
                           <optgroup key={group} label={group}>
@@ -213,10 +213,10 @@ export function ProkerForm({
                       </Select>
                     </div>
                     <input
-                      aria-label={`Peran pengurus ${i + 1}`}
+                      aria-label={`Role of officer ${i + 1}`}
                       value={row.role}
                       onChange={(ev) => updateRow(row.key, { role: ev.target.value })}
-                      placeholder="Peran, mis. Koordinator"
+                      placeholder="Role, e.g. Coordinator"
                       maxLength={60}
                       aria-invalid={Boolean(e("role"))}
                       className={control}
@@ -224,7 +224,7 @@ export function ProkerForm({
                     <button
                       type="button"
                       onClick={() => setRows((r) => r.filter((x) => x.key !== row.key))}
-                      aria-label={`Hapus pengurus ${i + 1}`}
+                      aria-label={`Remove officer ${i + 1}`}
                       className="grid h-[42px] w-8 place-items-center rounded-lg text-[#f87171]/80 transition-colors hover:bg-[#f87171]/10 hover:text-[#f87171]"
                     >
                       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
@@ -252,16 +252,16 @@ export function ProkerForm({
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
             <path d="M7 2.5v9M2.5 7h9" strokeLinecap="round" />
           </svg>
-          Tambah Pengurus
+          Add Officer
         </button>
       </fieldset>
 
       <div className="mt-5">
-        <Field id={`${prefix}-description`} label="Deskripsi Singkat" error={errors.description}>
+        <Field id={`${prefix}-description`} label="Short Description" error={errors.description}>
           <textarea
             {...fieldProps("description")}
             defaultValue={proker?.description ?? ""}
-            placeholder="Deskripsikan tujuan dan gambaran umum proker ini..."
+            placeholder="Describe the objectives and overview of this program..."
             rows={3}
             maxLength={DESCRIPTION_MAX}
             className={`${controlBase} min-h-[88px] resize-y py-3 leading-relaxed`}
@@ -280,14 +280,14 @@ export function ProkerForm({
 
       <div className="mt-6 flex justify-end gap-3">
         <button type="button" onClick={onClose} disabled={pending} className={secondaryButton}>
-          Batal
+          Cancel
         </button>
         <button
           type="submit"
           aria-disabled={pending}
           className={`${primaryButton} aria-disabled:cursor-wait aria-disabled:opacity-70`}
         >
-          {pending ? "Menyimpan…" : editing ? "Simpan Perubahan" : "Buat Proker"}
+          {pending ? "Saving…" : editing ? "Save Changes" : "Create Program"}
         </button>
       </div>
     </form>

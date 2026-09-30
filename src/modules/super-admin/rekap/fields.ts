@@ -6,17 +6,17 @@ import {
 } from "@/modules/admin/rekap-diri/data";
 
 export const STATS = [
-  { key: "proker", label: "Proker Diselesaikan" },
-  { key: "attendance", label: "Kehadiran Rapat" },
-  { key: "points", label: "Poin Kontribusi" },
+  { key: "proker", label: "Programs Completed" },
+  { key: "attendance", label: "Meeting Attendance" },
+  { key: "points", label: "Contribution Points" },
 ] as const;
 
 export type StatKey = (typeof STATS)[number]["key"];
 
 export const NOTES = [
-  { key: "achievements", label: "Kontribusi & Pencapaian Utama" },
-  { key: "strengths", label: "Kekuatan yang Diobservasi" },
-  { key: "improvements", label: "Area yang Perlu Dikembangkan" },
+  { key: "achievements", label: "Key Contributions & Achievements" },
+  { key: "strengths", label: "Observed Strengths" },
+  { key: "improvements", label: "Areas for Development" },
 ] as const;
 
 export type NoteKey = (typeof NOTES)[number]["key"];
@@ -49,12 +49,12 @@ export function validateRekap(input: RekapInput) {
   for (const { key } of STATS) {
     const done = input.stats[key].done.trim();
     const target = input.stats[key].target.trim();
-    if (done && !WHOLE.test(done)) errors[`${key}.done`] = "Angka bulat.";
+    if (done && !WHOLE.test(done)) errors[`${key}.done`] = "Whole number only.";
     if (target && (!WHOLE.test(target) || Number(target) === 0)) {
-      errors[`${key}.target`] = "Angka lebih dari 0.";
+      errors[`${key}.target`] = "Must be greater than 0.";
     }
-    if (done && !target) errors[`${key}.target`] = "Isi target.";
-    if (target && !done) errors[`${key}.done`] = "Isi capaian.";
+    if (done && !target) errors[`${key}.target`] = "Fill in target.";
+    if (target && !done) errors[`${key}.done`] = "Fill in achieved value.";
     stats[key] = {
       done: done ? Number(done) : null,
       target: target ? Number(target) : null,
@@ -67,7 +67,7 @@ export function validateRekap(input: RekapInput) {
     if (!raw) return; // empty = not scored yet, skip
     const value = Number(raw.replace(",", "."));
     if (isNaN(value) || value < 1 || value > 5) {
-      errors[`competency.${i}`] = "Skor harus 1–5.";
+      errors[`competency.${i}`] = "Score must be 1–5.";
     }
     competencies.push({
       competency: name,
@@ -78,7 +78,7 @@ export function validateRekap(input: RekapInput) {
   const notes = {} as RekapValues["notes"];
   for (const { key } of NOTES) {
     const text = input.notes[key].trim();
-    if (text.length > NOTE_MAX) errors[`notes.${key}`] = `Maksimal ${NOTE_MAX} karakter.`;
+    if (text.length > NOTE_MAX) errors[`notes.${key}`] = `Maximum ${NOTE_MAX} characters.`;
     notes[key] = text || null;
   }
 

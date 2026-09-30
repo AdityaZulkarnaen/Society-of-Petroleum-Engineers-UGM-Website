@@ -36,7 +36,7 @@ type Notice = { tone: "success" | "error"; text: string };
 
 const firstName = (name: string) => name.split(" ")[0];
 
-const READ_ONLY = "Hanya divisi penyelenggara yang bisa mengubah proker ini";
+const READ_ONLY = "Only the organizing division can modify this work program";
 
 function Members({ members }: { members: ManagedProker["members"] }) {
   if (members.length === 0) return <span className="text-[#5d6075]">—</span>;
@@ -62,7 +62,7 @@ function Members({ members }: { members: ManagedProker["members"] }) {
             .map((m) => `${m.name} (${m.role})`)
             .join(", ")}
         >
-          +{more} lainnya
+          +{more} more
         </p>
       )}
     </div>
@@ -110,8 +110,8 @@ export function ProkerManager({
         setNotice({
           tone: "success",
           text: existing
-            ? `Proker ${input.name.trim()} diperbarui.`
-            : `Proker ${input.name.trim()} berhasil dibuat.`,
+            ? `Work program ${input.name.trim()} updated.`
+            : `Work program ${input.name.trim()} created successfully.`,
         });
       }
       return result;
@@ -123,7 +123,7 @@ export function ProkerManager({
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-[28px] font-bold tracking-[-0.02em] sm:text-[32px]">
-            Acara &amp; Proker
+            Events &amp; Programs
           </h1>
           <p className="mt-2 text-sm text-[#8a8ea3]">{summary}</p>
         </div>
@@ -134,19 +134,19 @@ export function ProkerManager({
           className={`${primaryButton} gap-2`}
         >
           {icons.plus}
-          Tambah Proker
+          Add Program
         </button>
       </header>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Stat surface={compactCardSurface} label="Total Proker" value={proker.length} />
-        <Stat surface={compactCardSurface} label="Berlangsung" value={count("berlangsung")} />
-        <Stat surface={compactCardSurface} label="Direncanakan" value={count("direncanakan")} />
-        <Stat surface={compactCardSurface} label="Selesai" value={count("selesai")} />
+        <Stat surface={compactCardSurface} label="Total Programs" value={proker.length} />
+        <Stat surface={compactCardSurface} label="In Progress" value={count("berlangsung")} />
+        <Stat surface={compactCardSurface} label="Planned" value={count("direncanakan")} />
+        <Stat surface={compactCardSurface} label="Completed" value={count("selesai")} />
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div role="group" aria-label="Filter status proker" className="flex flex-wrap gap-2">
+        <div role="group" aria-label="Filter program status" className="flex flex-wrap gap-2">
           {(["all", ...PROKER_STATUSES] as const).map((key) => (
             <button
               key={key}
@@ -159,18 +159,18 @@ export function ProkerManager({
                   : "border-white/10 bg-white/[0.03] text-[#a3a6b8] hover:border-white/20 hover:text-white"
               }`}
             >
-              {key === "all" ? "Semua" : STATUS[key].label}
+              {key === "all" ? "All" : STATUS[key].label}
             </button>
           ))}
         </div>
         <label className="relative sm:w-48">
-          <span className="sr-only">Filter divisi</span>
+          <span className="sr-only">Filter division</span>
           <select
             value={divisionFilter}
             onChange={(e) => setDivisionFilter(e.target.value)}
             className="h-9 w-full appearance-none rounded-lg border border-white/[0.12] bg-[#0d1024] pr-9 pl-3.5 text-sm text-white focus-visible:border-[#4f8dff]/60 focus-visible:ring-4 focus-visible:ring-[#4f8dff]/15 focus-visible:outline-none [&>option]:bg-[#151a38]"
           >
-            <option value="all">Semua divisi</option>
+            <option value="all">All divisions</option>
             {divisions.map((d) => (
               <option key={d.id} value={d.id}>
                 {d.name}
@@ -197,7 +197,7 @@ export function ProkerManager({
             <button
               type="button"
               onClick={() => setNotice(null)}
-              aria-label="Tutup pemberitahuan"
+              aria-label="Dismiss notification"
               className="opacity-70 hover:opacity-100"
             >
               ✕
@@ -211,12 +211,12 @@ export function ProkerManager({
           <table className="w-full min-w-[1040px] text-left text-[13px]">
             <thead>
               <tr className="border-b border-white/[0.06] text-[11px] font-medium tracking-[0.08em] text-[#8a8ea3] uppercase">
-                <th scope="col" className="w-[30%] py-4 pr-3 pl-[18px] font-medium">Nama Proker</th>
-                <th scope="col" className="px-3 py-4 font-medium">Divisi</th>
-                <th scope="col" className="px-3 py-4 font-medium">Pengurus Terlibat</th>
-                <th scope="col" className="px-3 py-4 font-medium">Periode</th>
+                <th scope="col" className="w-[30%] py-4 pr-3 pl-[18px] font-medium">Program Name</th>
+                <th scope="col" className="px-3 py-4 font-medium">Division</th>
+                <th scope="col" className="px-3 py-4 font-medium">Participating Officers</th>
+                <th scope="col" className="px-3 py-4 font-medium">Period</th>
                 <th scope="col" className="px-3 py-4 font-medium">Status</th>
-                <th scope="col" className="py-4 pr-[18px] pl-3 font-medium">Aksi</th>
+                <th scope="col" className="py-4 pr-[18px] pl-3 font-medium">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -262,7 +262,7 @@ export function ProkerManager({
                         {icons.edit}
                       </IconButton>
                       <IconButton
-                        label={canEdit(p) ? `Hapus ${p.name}` : READ_ONLY}
+                        label={canEdit(p) ? `Delete ${p.name}` : READ_ONLY}
                         onClick={() => setDialog({ type: "delete", proker: p })}
                         disabled={!canEdit(p)}
                         danger
@@ -277,12 +277,12 @@ export function ProkerManager({
                 <tr>
                   <td colSpan={6} className="px-6 py-12 text-center">
                     <p className="text-sm font-medium text-[#c7c9d4]">
-                      {proker.length === 0 ? "Belum ada proker" : "Tidak ada proker yang cocok"}
+                      {proker.length === 0 ? "No work programs yet" : "No matching work programs found"}
                     </p>
                     <p className="mt-1.5 text-[13px] text-[#6f7286]">
                       {proker.length === 0
-                        ? "Tambahkan proker pertama lewat tombol Tambah Proker."
-                        : "Coba filter status atau divisi lain."}
+                        ? "Add the first work program using the Add Program button."
+                        : "Try selecting a different status or division filter."}
                     </p>
                   </td>
                 </tr>
@@ -330,18 +330,18 @@ export function ProkerManager({
         {dialog?.type === "delete" && (
           <ConfirmDelete
             titleId="delete-proker-title"
-            title="Hapus Proker"
+            title="Delete Work Program"
             onConfirm={() => deleteProker(dialog.proker.id)}
             onClose={close}
             onPendingChange={setBusy}
             onDeleted={() => {
-              setNotice({ tone: "success", text: `Proker ${dialog.proker.name} dihapus.` });
+              setNotice({ tone: "success", text: `Work program ${dialog.proker.name} deleted.` });
               close();
             }}
           >
-            Proker <strong className="font-semibold text-white">{dialog.proker.name}</strong>{" "}
-            beserta daftar pengurusnya akan dihapus permanen. Tindakan ini tidak dapat
-            diurungkan.
+            Work program <strong className="font-semibold text-white">{dialog.proker.name}</strong>{" "}
+            along with its officer assignments will be permanently deleted. This action cannot be
+            undone.
           </ConfirmDelete>
         )}
       </Modal>

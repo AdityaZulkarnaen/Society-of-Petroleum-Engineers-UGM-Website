@@ -25,11 +25,11 @@ function tokenFrom(text: string) {
 }
 
 const PERMISSION_DENIED =
-  "Akses kamera ditolak. Izinkan kamera di pengaturan browser, atau scan QR-nya lewat aplikasi kamera HP.";
+  "Camera access denied. Enable camera access in your browser settings, or scan the QR using your phone's camera app.";
 const NO_CAMERA =
-  "Kamera tidak tersedia di perangkat ini. Scan QR-nya lewat aplikasi kamera HP.";
+  "Camera not available on this device. Scan the QR using your phone's camera app.";
 
-export function ScanButton({ label = "Scan QR Presensi" }: { label?: string }) {
+export function ScanButton({ label = "Scan Meeting QR" }: { label?: string }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -165,7 +165,7 @@ function ScannerModal({
       <div className="px-6 pt-7 pb-7">
         <ModalHeader
           id="scan-presensi-title"
-          title="Scan QR Presensi"
+          title="Scan Meeting QR"
           onClose={close}
           disabled={saving}
         />
@@ -196,10 +196,10 @@ function ScannerModal({
             </div>
             <p className="mt-4 text-center text-[13px] text-[#8a8ea3]">
               {saving
-                ? "Menyimpan presensi…"
+                ? "Saving attendance…"
                 : error
-                  ? "Kamu tetap bisa scan QR-nya lewat aplikasi kamera HP."
-                  : "Arahkan kamera ke QR di layar rapat."}
+                  ? "You can still scan the QR using your phone's camera app."
+                  : "Point your camera at the QR code on the meeting screen."}
             </p>
           </>
         )}
@@ -220,7 +220,7 @@ function ScannerModal({
               }}
               className={secondaryButton}
             >
-              Coba Lagi
+              Try Again
             </button>
           )}
           <button
@@ -229,7 +229,7 @@ function ScannerModal({
             disabled={saving}
             className={result ? primaryButton : secondaryButton}
           >
-            {result ? "Selesai" : "Batal"}
+            {result ? "Done" : "Cancel"}
           </button>
         </div>
       </div>

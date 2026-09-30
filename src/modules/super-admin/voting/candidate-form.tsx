@@ -54,14 +54,14 @@ function PointList({
             <div className="flex items-center gap-2">
               <input
                 id={i === 0 ? id : undefined}
-                aria-label={`${label} poin ${i + 1}`}
+                aria-label={`${label} point ${i + 1}`}
                 value={point.text}
                 onChange={(e) =>
                   onChange(
                     points.map((p) => (p.key === point.key ? { ...p, text: e.target.value } : p)),
                   )
                 }
-                placeholder={`Poin ${i + 1}`}
+                placeholder={`Point ${i + 1}`}
                 maxLength={POINT_MAX}
                 aria-invalid={Boolean(errors[`${errorKey}.${i}`])}
                 className={control}
@@ -75,7 +75,7 @@ function PointList({
                       : [{ key: nextKey++, text: "" }],
                   )
                 }
-                aria-label={`Hapus ${label} poin ${i + 1}`}
+                aria-label={`Remove ${label} point ${i + 1}`}
                 className="grid h-[42px] w-8 shrink-0 place-items-center rounded-lg text-[#f87171]/80 transition-colors hover:bg-[#f87171]/10 hover:text-[#f87171]"
               >
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
@@ -100,7 +100,7 @@ function PointList({
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
             <path d="M7 2.5v9M2.5 7h9" strokeLinecap="round" />
           </svg>
-          Tambah poin
+          Add point
         </button>
       </div>
     </fieldset>
@@ -187,22 +187,22 @@ export function CandidateForm({
     <form onSubmit={submit} noValidate className="px-6 pt-7 pb-7 sm:px-8">
       <ModalHeader
         id={`${prefix}-title`}
-        title={editing ? "Edit Kandidat" : "Tambah Kandidat"}
+        title={editing ? "Edit Candidate" : "Add Candidate"}
         onClose={onClose}
         disabled={pending}
       />
 
       <div className="mt-7 grid gap-x-4 gap-y-4 sm:grid-cols-2">
-        <Field id={`${prefix}-fullName`} label="Nama Lengkap" error={errors.fullName}>
+        <Field id={`${prefix}-fullName`} label="Full Name" error={errors.fullName}>
           <input
             {...fieldProps("fullName")}
             defaultValue={candidate?.fullName}
-            placeholder="Nama kandidat"
+            placeholder="Candidate name"
             autoFocus
             className={control}
           />
         </Field>
-        <Field id={`${prefix}-nim`} label="NIM" error={errors.nim}>
+        <Field id={`${prefix}-nim`} label="Student ID (NIM)" error={errors.nim}>
           <input
             {...fieldProps("nim")}
             defaultValue={candidate?.nim ?? ""}
@@ -210,16 +210,16 @@ export function CandidateForm({
             className={control}
           />
         </Field>
-        <Field id={`${prefix}-position`} label="Jabatan Saat Ini" error={errors.position}>
+        <Field id={`${prefix}-position`} label="Current Position" error={errors.position}>
           <input
             {...fieldProps("position")}
             defaultValue={candidate?.position ?? ""}
-            placeholder="Kepala Bidang Teknik"
+            placeholder="Head of Technical Division"
             maxLength={80}
             className={control}
           />
         </Field>
-        <Field id={`${prefix}-photoUrl`} label="Foto">
+        <Field id={`${prefix}-photoUrl`} label="Photo">
           <PhotoUpload
             id={`${prefix}-photoUrl`}
             value={photoUrl}
@@ -230,11 +230,11 @@ export function CandidateForm({
           />
         </Field>
         <div className="sm:col-span-2">
-          <Field id={`${prefix}-vision`} label="Visi" error={errors.vision}>
+          <Field id={`${prefix}-vision`} label="Vision" error={errors.vision}>
             <textarea
               {...fieldProps("vision")}
               defaultValue={candidate?.vision ?? ""}
-              placeholder="Visi kandidat"
+              placeholder="Candidate's vision"
               rows={3}
               maxLength={VISION_MAX}
               className={`${controlBase} min-h-[84px] resize-y py-3 leading-relaxed`}
@@ -244,7 +244,7 @@ export function CandidateForm({
         <div className="sm:col-span-2">
           <Field
             id={`${prefix}-grandDesignUrl`}
-            label="URL Access Grand Design"
+            label="Grand Design Access URL"
             error={errors.grandDesignUrl}
           >
             <input
@@ -258,7 +258,7 @@ export function CandidateForm({
         </div>
         <PointList
           id={`${prefix}-programs`}
-          label="Program Unggulan"
+          label="Flagship Programs"
           points={programs}
           errors={errors}
           errorKey="programs"
@@ -266,7 +266,7 @@ export function CandidateForm({
         />
         <PointList
           id={`${prefix}-achievements`}
-          label="Pencapaian"
+          label="Achievements"
           points={achievements}
           errors={errors}
           errorKey="achievements"
@@ -285,14 +285,14 @@ export function CandidateForm({
 
       <div className="mt-6 flex justify-end gap-3">
         <button type="button" onClick={onClose} disabled={pending} className={secondaryButton}>
-          Batal
+          Cancel
         </button>
         <button
           type="submit"
           aria-disabled={pending}
           className={`${primaryButton} aria-disabled:cursor-wait aria-disabled:opacity-70`}
         >
-          {pending ? "Menyimpan…" : editing ? "Simpan Perubahan" : "Tambah Kandidat"}
+          {pending ? "Saving…" : editing ? "Save Changes" : "Add Candidate"}
         </button>
       </div>
     </form>

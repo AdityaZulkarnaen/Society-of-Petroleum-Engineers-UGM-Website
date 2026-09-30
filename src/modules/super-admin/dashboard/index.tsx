@@ -23,25 +23,23 @@ import { getSuperAdminSummary } from "./data";
 const jakartaDay = (date: Date) =>
   new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jakarta" }).format(date);
 
-/** 'Hari ini, 09:41', 'Kemarin, 18:02' or '7 Okt 2025, 09:41' (WIB). */
+/** 'Today, 09:41', 'Yesterday, 18:02' or 'Oct 7, 2025, 09:41' (WIB). */
 function formatLastLogin(timestamp: string | null) {
-  if (!timestamp) return "Belum ada";
+  if (!timestamp) return "Never";
   const date = new Date(timestamp);
-  const time = new Intl.DateTimeFormat("id-ID", {
+  const time = new Intl.DateTimeFormat("en-US", {
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
     timeZone: "Asia/Jakarta",
-  })
-    .format(date)
-    .replace(".", ":");
+  }).format(date);
 
   const day = jakartaDay(date);
-  if (day === jakartaDay(new Date())) return `Hari ini, ${time}`;
+  if (day === jakartaDay(new Date())) return `Today, ${time}`;
   if (day === jakartaDay(new Date(Date.now() - 24 * 60 * 60 * 1000))) {
-    return `Kemarin, ${time}`;
+    return `Yesterday, ${time}`;
   }
-  const calendar = new Intl.DateTimeFormat("id-ID", {
+  const calendar = new Intl.DateTimeFormat("en-US", {
     day: "numeric",
     month: "short",
     year: "numeric",
@@ -105,10 +103,10 @@ export async function SuperAdminDashboard() {
     <div className="space-y-8">
       <header>
         <h1 className="text-[28px] font-bold tracking-[-0.02em] sm:text-[32px]">
-          Dashboard Admin
+          Admin Dashboard
         </h1>
         <p className="mt-3 text-[15px] text-[#8a8ea3]">
-          Selamat datang kembali. Kelola pengurus, rekap, dan voting dari sini.
+          Welcome back. Manage officers, reports, and voting from here.
         </p>
       </header>
 
@@ -148,34 +146,34 @@ async function StatsRow() {
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <Stat
         surface={compactCardSurface}
-        label="Total Pengurus"
+        label="Total Officers"
         value={summary.totalAccounts ?? dash}
-        caption="akun terdaftar"
+        caption="registered accounts"
       />
       <Stat
         surface={compactCardSurface}
-        label="Akun Aktif"
+        label="Active Accounts"
         value={summary.activeAccounts ?? dash}
-        caption="dari total pengurus"
+        caption="of total officers"
       />
       <Stat
         surface={compactCardSurface}
-        label="Rekap Terisi"
+        label="Completed Recaps"
         value={summary.rekapFilled ?? dash}
         caption={
           summary.rekapFilled != null && summary.activeAccounts != null
-            ? `dari ${summary.activeAccounts} aktif`
-            : "belum ada rekap"
+            ? `of ${summary.activeAccounts} active`
+            : "no reports yet"
         }
       />
       <Stat
         surface={compactCardSurface}
-        label="Partisipasi Voting"
+        label="Voting Participation"
         value={participation != null ? `${participation}%` : dash}
         caption={
           turnout
-            ? `${turnout.votes} dari ${turnout.eligible} pemilih`
-            : "belum ada pemilihan"
+            ? `${turnout.votes} of ${turnout.eligible} voters`
+            : "no election yet"
         }
       />
     </div>
@@ -191,10 +189,10 @@ async function Panels() {
   return (
     <div className="grid items-start gap-6 lg:grid-cols-2">
       <Card surface={compactCardSurface} className="p-6">
-        <SectionHeading eyebrow="Akses Cepat" title="Tindakan Umum" />
+        <SectionHeading eyebrow="Quick Actions" title="Common Actions" />
         <ul className="mt-6 space-y-2">
           <QuickAction href="/super-admin/akun?tambah=1">
-            Tambah pengurus baru
+            Add new officer
           </QuickAction>
           <QuickAction
             href={
@@ -204,34 +202,34 @@ async function Panels() {
             }
           >
             {summary.pendingRekap
-              ? `Edit rekap ${summary.pendingRekap.name}`
-              : "Isi rekap pengurus"}
+              ? `Edit recap for ${summary.pendingRekap.name}`
+              : "Fill officer recap"}
           </QuickAction>
           <QuickAction href="/super-admin/voting" tone="green">
-            Kelola kandidat voting
+            Manage election candidates
           </QuickAction>
         </ul>
       </Card>
 
       <Card surface={compactCardSurface} className="p-6">
-        <SectionHeading eyebrow="Status Sistem" title="Ringkasan Periode" />
+        <SectionHeading eyebrow="System Status" title="Term Summary" />
         <dl className="mt-4 divide-y divide-white/[0.06] border-b border-white/[0.06] text-sm">
           {(
             [
-              ["Periode aktif", CURRENT_PERIOD.label],
+              ["Active term", CURRENT_PERIOD.label],
               [
-                "Voting dibuka",
+                "Voting period",
                 election
                   ? formatRange(election.opensOn, election.closesOn)
-                  : "Belum dijadwalkan",
+                  : "Not scheduled",
               ],
               [
-                "Total divisi aktif",
+                "Active divisions",
                 summary.divisionCount != null
-                  ? `${summary.divisionCount} divisi`
+                  ? `${summary.divisionCount} divisions`
                   : "—",
               ],
-              ["Admin terakhir login", formatLastLogin(summary.lastSignInAt)],
+              ["Last admin sign-in", formatLastLogin(summary.lastSignInAt)],
             ] as const
           ).map(([term, value]) => (
             <div key={term} className="flex justify-between gap-4 py-3">

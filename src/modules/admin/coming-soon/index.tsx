@@ -5,7 +5,7 @@ import { Card } from "../components/ui";
 export function ComingSoonPage({
   title,
   backHref = "/admin",
-  backLabel = "Kembali ke Overview",
+  backLabel = "Back to Overview",
   surface,
 }: {
   title: string;
@@ -18,9 +18,9 @@ export function ComingSoonPage({
     <div>
       <h1 className="text-[28px] font-bold tracking-[-0.02em]">{title}</h1>
       <Card surface={surface} className="mt-8 px-6 py-14 text-center">
-        <p className="text-base font-semibold">Halaman ini sedang disiapkan</p>
+        <p className="text-base font-semibold">This page is under construction</p>
         <p className="mx-auto mt-2 max-w-sm text-sm text-[#8a8ea3]">
-          Fitur {title} akan tersedia di pembaruan berikutnya.
+          The {title} feature will be available in an upcoming update.
         </p>
         <Link
           href={backHref}

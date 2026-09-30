@@ -22,8 +22,8 @@ import { getDivisionSummary } from "./data";
 import { periodProgress } from "./period";
 
 const ROLE_LABEL = {
-  super_admin: "Koordinator Divisi",
-  admin: "Pengurus",
+  super_admin: "Division Coordinator",
+  admin: "Officer",
 } as const;
 
 function Field({ label, children }: { label: string; children: ReactNode }) {
@@ -104,7 +104,7 @@ export async function OverviewPage() {
       <header>
         <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
           <h1 className="text-[28px] font-bold tracking-[-0.02em] sm:text-[32px]">
-            Halo, {firstName} <span aria-hidden="true">👋</span>
+            Hello, {firstName} <span aria-hidden="true">👋</span>
           </h1>
           <div className="flex flex-wrap gap-2">
             <Badge tone="blue">{title}</Badge>
@@ -112,7 +112,7 @@ export async function OverviewPage() {
           </div>
         </div>
         <p className="mt-3 text-[15px] text-[#8a8ea3]">
-          Selamat datang di dashboard kepengurusan Periode {CURRENT_PERIOD.label}.
+          Welcome to the officer dashboard for Period {CURRENT_PERIOD.label}.
         </p>
       </header>
 
@@ -120,16 +120,16 @@ export async function OverviewPage() {
       <Card className="flex flex-col gap-8 p-6 sm:p-8 md:flex-row">
         <div className="flex shrink-0 items-center gap-4 md:w-24 md:flex-col md:border-r md:border-white/[0.06] md:pr-8">
           <Avatar name={admin.fullName} size="lg" />
-          <Label>Profil</Label>
+          <Label>Profile</Label>
         </div>
 
         <dl className="grid flex-1 gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
-          <Field label="Nama Lengkap">{admin.fullName}</Field>
-          <Field label="NIM">{admin.nim}</Field>
-          <Field label="Departemen / Jurusan">{admin.department}</Field>
-          <Field label="Divisi di SPE">{admin.division?.name}</Field>
-          <Field label="Jabatan">{admin.position}</Field>
-          <Field label="Periode Kepengurusan">{CURRENT_PERIOD.label}</Field>
+          <Field label="Full Name">{admin.fullName}</Field>
+          <Field label="Student ID (NIM)">{admin.nim}</Field>
+          <Field label="Department / Major">{admin.department}</Field>
+          <Field label="Division in SPE">{admin.division?.name}</Field>
+          <Field label="Position">{admin.position}</Field>
+          <Field label="Term Period">{CURRENT_PERIOD.label}</Field>
           <Field label="Email">
             {admin.contactEmail && (
               <a
@@ -147,30 +147,30 @@ export async function OverviewPage() {
       <div className="grid gap-4 sm:grid-cols-3">
         {proker.length > 0 ? (
           <Stat
-            label="Proker Terlibat"
+            label="Involved Programs"
             value={proker.length}
-            caption={`${done} selesai · ${ongoing} berjalan`}
+            caption={`${done} completed · ${ongoing} in progress`}
           />
         ) : (
-          <Stat label="Proker Terlibat" value="—" caption="Belum ada data proker" />
+          <Stat label="Involved Programs" value="—" caption="No program data yet" />
         )}
         {attendance ? (
           <Stat
-            label="Kehadiran Rapat"
+            label="Meeting Attendance"
             value={`${percentOf(attendance)}%`}
-            caption={`${attendance.done} dari ${attendance.total} rapat`}
+            caption={`${attendance.done} of ${attendance.total} meetings`}
           />
         ) : (
-          <Stat label="Kehadiran Rapat" value="—" caption="Belum ada data rapat" />
+          <Stat label="Meeting Attendance" value="—" caption="No meeting data yet" />
         )}
         {points ? (
           <Stat
-            label="Poin Kontribusi"
+            label="Contribution Points"
             value={points.done}
-            caption={`dari target ${points.total} poin`}
+            caption={`out of ${points.total} target points`}
           />
         ) : (
-          <Stat label="Poin Kontribusi" value="—" caption="Belum ada poin periode ini" />
+          <Stat label="Contribution Points" value="—" caption="No points this period" />
         )}
       </div>
 
@@ -178,28 +178,28 @@ export async function OverviewPage() {
         <div className="space-y-6">
           <Card className="p-6 sm:p-7">
             <SectionHeading
-              eyebrow="Keterlibatan Terbaru"
-              title="Riwayat Acara & Proker"
+              eyebrow="Recent Activity"
+              title="Events & Programs History"
             />
             {proker.length > 0 ? (
               <RecentProker proker={proker} />
             ) : (
               <div className="mt-6">
                 <EmptyState
-                  title="Belum ada keterlibatan"
-                  description="Acara dan proker yang kamu ikuti akan muncul di sini beserta statusnya."
+                  title="No activity recorded"
+                  description="Events and work programs you participate in will appear here along with their status."
                 />
               </div>
             )}
             <DetailLink href="/admin/acara">
-              Lihat detail lengkap di Acara/Proker
+              View full details in Events & Programs
             </DetailLink>
           </Card>
 
           <Card className="p-6 sm:p-7">
             <SectionHeading
-              eyebrow="Info Divisi"
-              title={admin.division ? `Divisi ${admin.division.name}` : "Divisi"}
+              eyebrow="Division Info"
+              title={admin.division ? `${admin.division.name} Division` : "Division"}
             />
             {admin.division ? (
               <>
@@ -219,16 +219,16 @@ export async function OverviewPage() {
                 <dl className="mt-5 divide-y divide-white/[0.06] border-b border-white/[0.06] text-sm">
                   {[
                     [
-                      "Total anggota divisi",
-                      summary ? `${summary.memberCount} orang` : "—",
+                      "Total division members",
+                      summary ? `${summary.memberCount} members` : "—",
                     ],
                     [
-                      "Proker aktif",
+                      "Active programs",
                       summary?.activeProker != null
-                        ? `${summary.activeProker} proker`
+                        ? `${summary.activeProker} programs`
                         : "—",
                     ],
-                    ["Kepala divisi", summary?.headName || "—"],
+                    ["Head of division", summary?.headName || "—"],
                   ].map(([term, value]) => (
                     <div key={term} className="flex justify-between gap-4 py-3">
                       <dt className="text-[#8a8ea3]">{term}</dt>
@@ -240,8 +240,8 @@ export async function OverviewPage() {
             ) : (
               <div className="mt-6">
                 <EmptyState
-                  title="Belum terdaftar di divisi"
-                  description="Hubungi koordinator divisimu untuk menambahkan akunmu ke divisi."
+                  title="Not assigned to a division"
+                  description="Contact your division coordinator to assign your account to a division."
                 />
               </div>
             )}
@@ -251,52 +251,52 @@ export async function OverviewPage() {
         <div className="space-y-6">
           <Card className="p-6 sm:p-7">
             <SectionHeading
-              eyebrow="Progres Periode"
-              title={`Tahun Kepengurusan ${CURRENT_PERIOD.label}`}
+              eyebrow="Term Progress"
+              title={`Academic Year ${CURRENT_PERIOD.label}`}
             />
             <div className="mt-6 flex items-baseline justify-between text-[13px]">
               <span className="text-[#8a8ea3]">
-                {period.percent}% dari periode berjalan
+                {period.percent}% of term elapsed
               </span>
               <span className="font-bold text-[#4f8dff]">{period.percent}%</span>
             </div>
             <ProgressBar
               percent={period.percent}
-              label="Progres periode kepengurusan"
+              label="Term progress"
               className="mt-2.5"
             />
             <div className="mt-5 grid grid-cols-2 gap-3">
               <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] px-4 py-3.5">
-                <Label>Bulan Berjalan</Label>
+                <Label>Current Month</Label>
                 <p className="mt-1.5 text-lg font-bold">
                   {period.currentMonth} / {period.totalMonths}
                 </p>
               </div>
               <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] px-4 py-3.5">
-                <Label>Sisa Waktu</Label>
+                <Label>Time Remaining</Label>
                 <p className="mt-1.5 text-lg font-bold">
                   {period.remainingMonths > 0
-                    ? `~${period.remainingMonths} bulan`
-                    : `${period.remainingDays} hari`}
+                    ? `~${period.remainingMonths} months`
+                    : `${period.remainingDays} days`}
                 </p>
               </div>
             </div>
           </Card>
 
           <Card className="p-6 sm:p-7">
-            <SectionHeading eyebrow="Evaluasi Diri" title="Ringkasan Kompetensi" />
+            <SectionHeading eyebrow="Self Evaluation" title="Competency Summary" />
             {rated ? (
               <CompetencyList competencies={report.competencies} compact className="mt-6" />
             ) : (
               <div className="mt-6">
                 <EmptyState
-                  title="Belum ada evaluasi"
-                  description="Hasil evaluasi kompetensi periode ini akan tampil di sini setelah diisi."
+                  title="No evaluation recorded"
+                  description="Your competency evaluation results for this period will appear here once submitted."
                 />
               </div>
             )}
             <DetailLink href="/admin/rekap-diri">
-              Lihat detail lengkap di Rekap Diri
+              View full details in Self Report
             </DetailLink>
           </Card>
         </div>

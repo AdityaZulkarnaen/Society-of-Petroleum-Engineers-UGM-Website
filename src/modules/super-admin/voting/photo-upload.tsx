@@ -60,11 +60,11 @@ export function PhotoUpload({
   function pick(file: File | undefined) {
     if (!file) return;
     if (!PHOTO_TYPES.includes(file.type)) {
-      setUploadError("Format foto harus JPG, PNG, atau WebP.");
+      setUploadError("Photo format must be JPG, PNG, or WebP.");
       return;
     }
     if (file.size > SOURCE_MAX_BYTES) {
-      setUploadError("Ukuran foto maksimal 15 MB.");
+      setUploadError("Maximum photo size is 15 MB.");
       return;
     }
 
@@ -79,10 +79,10 @@ export function PhotoUpload({
           onUploaded(result.url);
           onChange(result.url);
         } else {
-          setUploadError(result.error ?? "Foto gagal diupload. Coba lagi.");
+          setUploadError(result.error ?? "Failed to upload photo. Please try again.");
         }
       } catch {
-        setUploadError("Foto tidak bisa dibaca. Coba file lain.");
+        setUploadError("Unable to read photo. Please try another file.");
       }
     });
   }
@@ -95,7 +95,7 @@ export function PhotoUpload({
         <div className="relative h-[62px] w-12 shrink-0 overflow-hidden rounded-lg border border-white/10 bg-[radial-gradient(circle_at_50%_30%,#1d2a5e_0%,#0d1230_100%)]">
           {value ? (
             /* eslint-disable-next-line @next/next/no-img-element -- a local preview of an arbitrary URL */
-            <img src={value} alt={`Foto ${name || "kandidat"}`} className="size-full object-cover" />
+            <img src={value} alt={`Photo of ${name || "candidate"}`} className="size-full object-cover" />
           ) : (
             <svg
               width="20"
@@ -142,7 +142,7 @@ export function PhotoUpload({
               <path d="M8 10.5V2.75M4.75 6 8 2.75 11.25 6" strokeLinecap="round" strokeLinejoin="round" />
               <path d="M2.75 10.5v1.75a1 1 0 0 0 1 1h8.5a1 1 0 0 0 1-1V10.5" strokeLinecap="round" />
             </svg>
-            {pending ? "Mengupload…" : value ? "Ganti foto" : "Upload foto"}
+            {pending ? "Uploading…" : value ? "Change photo" : "Upload photo"}
           </button>
           {value && !pending && (
             <button
@@ -150,7 +150,7 @@ export function PhotoUpload({
               onClick={() => onChange(null)}
               className="h-10 rounded-xl px-3 text-sm text-[#f87171]/90 transition-colors hover:bg-[#f87171]/10 hover:text-[#f87171]"
             >
-              Hapus
+              Remove
             </button>
           )}
         </div>
@@ -161,7 +161,7 @@ export function PhotoUpload({
         </p>
       ) : (
         <p id={`${id}-hint`} className="mt-1.5 text-xs text-[#6f7286]">
-          JPG, PNG, atau WebP. Foto portrait paling pas; otomatis dikecilkan.
+          JPG, PNG, or WebP. Portrait photos work best; automatically resized.
         </p>
       )}
     </div>

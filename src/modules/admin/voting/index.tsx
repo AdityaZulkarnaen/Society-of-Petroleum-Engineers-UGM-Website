@@ -9,12 +9,13 @@ import { formatRange, longDate, timeLeft } from "./format";
 import { PhasePill } from "./phase-pill";
 
 const castAtLabel = (timestamp: string) =>
-  `${new Intl.DateTimeFormat("id-ID", {
+  `${new Intl.DateTimeFormat("en-US", {
     day: "numeric",
     month: "long",
     year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
+    hour12: false,
     timeZone: "Asia/Jakarta",
   }).format(new Date(timestamp))} WIB`;
 
@@ -65,10 +66,10 @@ function Receipt({ election }: { election: Election }) {
     <Card className="px-6 py-12 text-center sm:px-10">
       <CheckBadge />
       <h2 className="mt-7 text-2xl font-bold tracking-[-0.01em]">
-        Suara kamu telah dicatat
+        Your vote has been recorded
       </h2>
       <p className="mt-3 text-[15px] text-[#8a8ea3]">
-        Kamu memberikan suara untuk kandidat berikut:
+        You cast your vote for the following candidate:
       </p>
       {candidate && (
         <CandidateSummary
@@ -77,12 +78,12 @@ function Receipt({ election }: { election: Election }) {
         />
       )}
       <p className="mt-5 text-xs text-[#6f7286]">
-        Dicatat pada {castAtLabel(vote.castAt)}
+        Recorded on {castAtLabel(vote.castAt)}
       </p>
       <p className="mx-auto mt-8 max-w-md text-[13px] leading-relaxed text-[#5d6075]">
         {election.phase === "closed"
-          ? "Periode pemilihan telah ditutup. Hasil voting akan diumumkan oleh panitia."
-          : `Hasil voting akan diumumkan setelah periode pemilihan ditutup pada ${longDate(election.closesOn)}.`}
+          ? "The voting period has ended. Election results will be announced by the committee."
+          : `Election results will be announced after the voting period closes on ${longDate(election.closesOn)}.`}
       </p>
     </Card>
   );
@@ -99,7 +100,7 @@ function CandidateList({ election }: { election: Election }) {
           selected={candidate.id === election.myVote?.candidateId}
           control={
             candidate.id === election.myVote?.candidateId && (
-              <Badge tone="green">Pilihanmu</Badge>
+              <Badge tone="green">Your Choice</Badge>
             )
           }
         />
@@ -126,8 +127,8 @@ export async function VotingPage() {
         </h1>
         <Card className="p-6 sm:p-7">
           <EmptyState
-            title="Belum ada pemilihan"
-            description="Pemilihan berikutnya akan muncul di sini setelah diumumkan panitia."
+            title="No election available"
+            description="Upcoming elections will appear here once announced by the committee."
           />
         </Card>
       </div>
@@ -146,23 +147,23 @@ export async function VotingPage() {
           <PhasePill phase={phase} />
         </div>
         <p className="mt-3 text-[15px] text-[#8a8ea3]">
-          Satu suara per anggota aktif. Gunakan hak pilihmu dengan bijak.
+          One vote per active member. Cast your vote thoughtfully.
         </p>
       </header>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <InfoTile label="Periode Voting" icon="📅">
+        <InfoTile label="Voting Period" icon="📅">
           {formatRange(election.opensOn, election.closesOn)}
         </InfoTile>
-        <InfoTile label="Total Kandidat" icon="👥">
-          {candidates.length} Kandidat
+        <InfoTile label="Total Candidates" icon="👥">
+          {candidates.length} Candidates
         </InfoTile>
-        <InfoTile label="Partisipasi" icon="🗳️">
+        <InfoTile label="Turnout" icon="🗳️">
           {election.turnout
-            ? `${election.turnout.votes} / ${election.turnout.eligible} suara`
+            ? `${election.turnout.votes} / ${election.turnout.eligible} votes`
             : "—"}
         </InfoTile>
-        <InfoTile label="Sisa Waktu" icon="⏳">
+        <InfoTile label="Time Remaining" icon="⏳">
           {timeLeft(election)}
         </InfoTile>
       </div>
@@ -170,8 +171,8 @@ export async function VotingPage() {
       {candidates.length === 0 ? (
         <Card className="p-6 sm:p-7">
           <EmptyState
-            title="Kandidat belum diumumkan"
-            description="Profil kandidat akan tampil di sini setelah ditetapkan panitia."
+            title="Candidates not yet announced"
+            description="Candidate profiles will appear here once finalized by the committee."
           />
         </Card>
       ) : myVote ? (
@@ -182,7 +183,7 @@ export async function VotingPage() {
               id="candidates-heading"
               className="text-[13px] font-medium tracking-[0.08em] text-[#8a8ea3] uppercase"
             >
-              Profil Kandidat
+              Candidate Profiles
             </h2>
             <CandidateList election={election} />
           </section>
@@ -194,8 +195,8 @@ export async function VotingPage() {
           <CandidateList election={election} />
           <Notice>
             {phase === "upcoming"
-              ? `Voting dibuka pada ${longDate(election.opensOn)}. Kamu bisa mempelajari profil kandidat terlebih dahulu.`
-              : "Periode pemilihan telah ditutup. Kamu tidak memberikan suara pada pemilihan ini."}
+              ? `Voting opens on ${longDate(election.opensOn)}. You can review candidate profiles in advance.`
+              : "The voting period has closed. You did not cast a vote in this election."}
           </Notice>
         </>
       )}

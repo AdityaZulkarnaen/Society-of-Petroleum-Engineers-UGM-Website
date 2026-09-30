@@ -8,7 +8,7 @@ import { MobileNav } from "./mobile-nav";
 import { SidebarNav } from "./nav";
 
 export function Brand({
-  subtitle = "Dashboard Pengurus",
+  subtitle = "Officer Dashboard",
 }: {
   subtitle?: string;
 }) {
@@ -76,7 +76,7 @@ function AccountMenu({
             </svg>
           </>
         )}
-        <span className="sr-only">Menu akun</span>
+        <span className="sr-only">Account menu</span>
       </summary>
 
       <div
@@ -85,7 +85,7 @@ function AccountMenu({
         }`}
       >
         <p className="truncate px-3 pt-2 pb-2.5 text-xs text-[#6f7286]">
-          Masuk sebagai{" "}
+          Signed in as{" "}
           <span className="text-[#c7c9d4]">@{admin.username}</span>
         </p>
         <form action={signOut}>
@@ -93,7 +93,7 @@ function AccountMenu({
             type="submit"
             className="flex h-9 w-full items-center rounded-lg px-3 text-left text-[13px] font-medium text-[#fca5a5] transition-colors hover:bg-white/[0.04]"
           >
-            Keluar
+            Sign out
           </button>
         </form>
       </div>

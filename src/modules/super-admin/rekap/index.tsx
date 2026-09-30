@@ -22,12 +22,12 @@ export async function RekapPage({
     return (
       <div className="space-y-8">
         <h1 className="text-[28px] font-bold tracking-[-0.02em] sm:text-[32px]">
-          Rekap Pengurus
+          Officer Recap
         </h1>
         <Card surface={compactCardSurface} className="p-6">
           <EmptyState
-            title="Belum ada pengurus"
-            description="Buat akun pengurus di Manajemen Akun terlebih dahulu, lalu isi rekapnya di sini."
+            title="No officers yet"
+            description="Create officer accounts in Account Management first, then fill in their recaps here."
           />
         </Card>
       </div>

@@ -21,7 +21,7 @@ export function CandidatePhoto({
       {candidate.photoUrl ? (
         <Image
           src={candidate.photoUrl}
-          alt={`Foto ${candidate.fullName}`}
+          alt={`Photo of ${candidate.fullName}`}
           fill
           sizes={sizes}
           unoptimized
@@ -62,7 +62,7 @@ function List({ title, items }: { title: string; items: string[] }) {
 
 /**
  * A candidate's full profile. `control` sits in the top-right corner (the
- * radio, or a "Pilihanmu" badge); `overlay` lies under the content and above
+ * radio, or a "Your Choice" badge); `overlay` lies under the content and above
  * the surface, for making the whole card a click target.
  */
 export function CandidateCard({
@@ -115,7 +115,7 @@ export function CandidateCard({
                 id={`candidate-${candidate.id}`}
                 className="text-xl font-bold tracking-[-0.01em] text-white"
               >
-                <span className="sr-only">Kandidat {candidate.number}: </span>
+                <span className="sr-only">Candidate {candidate.number}: </span>
                 {candidate.fullName}
               </h2>
               {candidate.nim && (
@@ -136,8 +136,8 @@ export function CandidateCard({
           {(candidate.programs.length > 0 ||
             candidate.achievements.length > 0) && (
             <div className="mt-6 grid gap-6 border-t border-white/[0.06] pt-6 sm:grid-cols-2 sm:gap-8">
-              <List title="Program Unggulan" items={candidate.programs} />
-              <List title="Pencapaian" items={candidate.achievements} />
+              <List title="Key Programs" items={candidate.programs} />
+              <List title="Achievements" items={candidate.achievements} />
             </div>
           )}
 
@@ -149,8 +149,8 @@ export function CandidateCard({
                 rel="noopener noreferrer"
                 className={`${primaryButton} pointer-events-auto relative`}
               >
-                Akses Grand Design
-                <span className="sr-only"> {candidate.fullName} (tab baru)</span>
+                View Grand Design
+                <span className="sr-only"> {candidate.fullName} (opens in new tab)</span>
               </a>
             </div>
           )}

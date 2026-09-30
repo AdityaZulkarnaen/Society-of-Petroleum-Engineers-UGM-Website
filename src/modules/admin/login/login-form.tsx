@@ -61,7 +61,7 @@ export function LoginForm({ contactEmail }: { contactEmail: string }) {
         <button
           type="button"
           onClick={() => setShowPassword((v) => !v)}
-          aria-label={showPassword ? "Sembunyikan password" : "Tampilkan password"}
+          aria-label={showPassword ? "Hide password" : "Show password"}
           aria-pressed={showPassword}
           className="absolute inset-y-0 right-1.5 my-auto grid size-9 place-items-center rounded-lg text-[#7c7f92] transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-curtain"
         >
@@ -85,10 +85,10 @@ export function LoginForm({ contactEmail }: { contactEmail: string }) {
 
       <div className="mt-3 flex justify-end">
         <a
-          href={`mailto:${contactEmail}?subject=${encodeURIComponent("Reset password dashboard SPE UGM")}`}
+          href={`mailto:${contactEmail}?subject=${encodeURIComponent("SPE UGM Dashboard Password Reset")}`}
           className="text-[13px] text-[#3b82f6] transition-colors hover:text-[#60a5fa]"
         >
-          Lupa password?
+          Forgot password?
         </a>
       </div>
 
@@ -107,7 +107,7 @@ export function LoginForm({ contactEmail }: { contactEmail: string }) {
         disabled={!ready || pending}
         className="mt-6 h-[50px] w-full rounded-[10px] bg-curtain text-[15px] font-semibold text-white transition-colors hover:bg-[#6060ff] disabled:cursor-not-allowed disabled:bg-[#2a2c3e] disabled:text-[#5b5e71]"
       >
-        {pending ? "Memproses…" : "Masuk"}
+        {pending ? "Signing in…" : "Sign In"}
       </button>
     </form>
   );

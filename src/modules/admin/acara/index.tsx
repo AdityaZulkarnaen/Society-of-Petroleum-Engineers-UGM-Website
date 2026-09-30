@@ -16,7 +16,7 @@ const COLUMNS = "md:grid md:grid-cols-[32fr_19fr_27fr_22fr] md:items-center md:g
 
 function FilterChips({ active }: { active: ProkerStatus | null }) {
   const chips = [
-    { href: "/admin/acara", label: "Semua", on: active == null },
+    { href: "/admin/acara", label: "All", on: active == null },
     ...PROKER_STATUSES.map((status) => ({
       href: `/admin/acara?status=${status}`,
       label: STATUS[status].label,
@@ -25,7 +25,7 @@ function FilterChips({ active }: { active: ProkerStatus | null }) {
   ];
 
   return (
-    <nav aria-label="Filter status proker">
+    <nav aria-label="Filter program status">
       <ul className="flex flex-wrap gap-2">
         {chips.map(({ href, label, on }) => (
           <li key={href}>
@@ -68,38 +68,37 @@ export async function EventsPage({
     <div className="space-y-8">
       <header>
         <h1 className="text-[28px] font-bold tracking-[-0.02em] sm:text-[32px]">
-          Acara &amp; Proker
+          Events &amp; Programs
         </h1>
         <p className="mt-3 text-[15px] text-[#8a8ea3]">
-          Seluruh acara dan program kerja yang kamu ikuti selama periode
-          kepengurusan.
+          All events and work programs you participate in during the term.
         </p>
       </header>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Stat label="Total Proker" value={proker.length} caption="terlibat langsung" />
-        <Stat label="Sudah Selesai" value={count("selesai")} caption="proker tuntas" />
-        <Stat label="Sedang Berjalan" value={count("berlangsung")} caption="proker aktif" />
-        <Stat label="Direncanakan" value={count("direncanakan")} caption="proker mendatang" />
+        <Stat label="Total Programs" value={proker.length} caption="directly involved" />
+        <Stat label="Completed" value={count("selesai")} caption="finished programs" />
+        <Stat label="In Progress" value={count("berlangsung")} caption="active programs" />
+        <Stat label="Planned" value={count("direncanakan")} caption="upcoming programs" />
       </div>
 
       <FilterChips active={filter} />
 
       <Card className="p-6 sm:p-7">
         <SectionHeading
-          eyebrow={`${shown.length} proker ditampilkan`}
-          title="Daftar Program Kerja"
+          eyebrow={`${shown.length} programs shown`}
+          title="Work Programs List"
         />
 
         {shown.length > 0 ? (
-          <div className="mt-6" role="table" aria-label="Daftar program kerja">
+          <div className="mt-6" role="table" aria-label="Work programs table">
             <div
               role="row"
               className={`hidden px-[15px] pb-3 text-[11px] font-medium tracking-[0.08em] text-[#8a8ea3] uppercase ${COLUMNS}`}
             >
-              <span role="columnheader">Nama Proker</span>
-              <span role="columnheader">Divisi</span>
-              <span role="columnheader">Peran Saya</span>
+              <span role="columnheader">Program Name</span>
+              <span role="columnheader">Division</span>
+              <span role="columnheader">My Role</span>
               <span role="columnheader">Status</span>
             </div>
 
@@ -134,10 +133,10 @@ export async function EventsPage({
             <EmptyState
               title={
                 filter
-                  ? `Tidak ada proker berstatus ${STATUS[filter].label.toLowerCase()}`
-                  : "Belum ada keterlibatan"
+                  ? `No programs with status "${STATUS[filter].label.toLowerCase()}"`
+                  : "No programs involved yet"
               }
-              description="Acara dan proker yang kamu ikuti akan muncul di sini beserta peran dan statusnya."
+              description="Events and work programs you participate in will appear here along with your role and status."
             />
           </div>
         )}

@@ -2,9 +2,9 @@
    time the rapat actually starts, whatever the device is set to. */
 
 const jakarta = (options: Intl.DateTimeFormatOptions) =>
-  new Intl.DateTimeFormat("id-ID", { ...options, timeZone: "Asia/Jakarta" });
+  new Intl.DateTimeFormat("en-US", { ...options, timeZone: "Asia/Jakarta" });
 
-/** 'Sen, 22 Sep 2026 · 16.00'. */
+/** 'Mon, Sep 22, 2026 · 16:00'. */
 export const meetingTime = (iso: string) => {
   const date = new Date(iso);
   const day = jakarta({
@@ -16,9 +16,9 @@ export const meetingTime = (iso: string) => {
   return `${day} · ${clock(iso)}`;
 };
 
-/** '16.00', the local clock time of the rapat. */
+/** '16:00', the local clock time of the rapat. */
 export const clock = (iso: string) =>
-  jakarta({ hour: "2-digit", minute: "2-digit" }).format(new Date(iso));
+  jakarta({ hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date(iso));
 
 /** '22 Sep', for the tight columns. */
 export const shortDate = (iso: string) =>
@@ -43,7 +43,6 @@ export function toJakartaInput(iso: string) {
       (acc, part) => ({ ...acc, [part.type]: part.value }),
       {},
     );
-  /* an Indonesian 24-hour format writes midnight as '24' */
   const hour = parts.hour === "24" ? "00" : parts.hour;
   return `${parts.year}-${parts.month}-${parts.day}T${hour}:${parts.minute}`;
 }
@@ -52,12 +51,12 @@ export function toJakartaInput(iso: string) {
 export const fromJakartaInput = (value: string) =>
   new Date(`${value}:00+07:00`).toISOString();
 
-/** 'baru saja', '3 menit lalu', '2 jam lalu' — how fresh a scan is. */
+/** 'just now', '3m ago', '2h ago' — how fresh a scan is. */
 export function sinceNow(iso: string, now = Date.now()) {
   const minutes = Math.floor((now - new Date(iso).getTime()) / 60_000);
-  if (minutes < 1) return "baru saja";
-  if (minutes < 60) return `${minutes} menit lalu`;
+  if (minutes < 1) return "just now";
+  if (minutes < 60) return `${minutes}m ago`;
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours} jam lalu`;
-  return `${Math.floor(hours / 24)} hari lalu`;
+  if (hours < 24) return `${hours}h ago`;
+  return `${Math.floor(hours / 24)}d ago`;
 }

@@ -38,7 +38,7 @@ function SignOutButton({ compact = false }: { compact?: boolean }) {
         }`}
       >
         {logoutIcon}
-        <span className={compact ? "sr-only" : undefined}>Keluar</span>
+        <span className={compact ? "sr-only" : undefined}>Sign out</span>
       </button>
     </form>
   );
@@ -51,7 +51,7 @@ export async function SuperAdminShell({ children }: { children: ReactNode }) {
     <div className="min-h-svh bg-[#080b1c] text-white lg:flex">
       <aside className="sticky top-0 hidden h-svh w-64 shrink-0 flex-col border-r border-white/[0.06] bg-[#0b0e22] lg:flex">
         <div className="border-b border-white/[0.06] px-5 py-6">
-          <Brand subtitle="Dashboard Super Admin" />
+          <Brand subtitle="Super Admin Dashboard" />
         </div>
 
         <nav
@@ -73,11 +73,11 @@ export async function SuperAdminShell({ children }: { children: ReactNode }) {
         <div className="flex h-16 items-center gap-3">
           <MobileNav
             menu="superAdmin"
-            brand={<Brand subtitle="Dashboard Super Admin" />}
+            brand={<Brand subtitle="Super Admin Dashboard" />}
             footer={<SignOutButton />}
           />
           <div className="min-w-0 flex-1">
-            <Brand subtitle="Dashboard Super Admin" />
+            <Brand subtitle="Super Admin Dashboard" />
           </div>
           <SignOutButton compact />
         </div>

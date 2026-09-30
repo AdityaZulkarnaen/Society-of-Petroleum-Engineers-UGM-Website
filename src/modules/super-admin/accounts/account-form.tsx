@@ -71,23 +71,23 @@ export function AccountForm({
     <form onSubmit={submit} noValidate className="px-6 pt-7 pb-7 sm:px-8">
       <ModalHeader
         id={`${prefix}-account-title`}
-        title={editing ? "Edit Data Pengurus" : "Tambah Pengurus Baru"}
+        title={editing ? "Edit Officer Data" : "Add New Officer"}
         onClose={onClose}
         disabled={pending}
       />
 
       <div className="mt-7 grid gap-x-4 gap-y-4 sm:grid-cols-2">
-        <Field id={`${prefix}-fullName`} label="Nama Lengkap" error={errors.fullName}>
+        <Field id={`${prefix}-fullName`} label="Full Name" error={errors.fullName}>
           <input
             {...fieldProps("fullName")}
             defaultValue={account?.fullName}
-            placeholder="Nama lengkap"
+            placeholder="Full name"
             autoComplete="off"
             autoFocus
             className={control}
           />
         </Field>
-        <Field id={`${prefix}-nim`} label="NIM" error={errors.nim}>
+        <Field id={`${prefix}-nim`} label="Student ID (NIM)" error={errors.nim}>
           <input
             {...fieldProps("nim")}
             defaultValue={account?.nim ?? ""}
@@ -101,12 +101,12 @@ export function AccountForm({
             {...fieldProps("email")}
             type="email"
             defaultValue={account?.email ?? ""}
-            placeholder="nama@mail.ugm.ac.id"
+            placeholder="name@mail.ugm.ac.id"
             autoComplete="off"
             className={control}
           />
         </Field>
-        <Field id={`${prefix}-whatsapp`} label="No. WhatsApp" error={errors.whatsapp}>
+        <Field id={`${prefix}-whatsapp`} label="WhatsApp Number" error={errors.whatsapp}>
           <input
             {...fieldProps("whatsapp")}
             type="tel"
@@ -116,23 +116,23 @@ export function AccountForm({
             className={control}
           />
         </Field>
-        <Field id={`${prefix}-department`} label="Departemen / Jurusan" error={errors.department}>
+        <Field id={`${prefix}-department`} label="Department / Major" error={errors.department}>
           <input
             {...fieldProps("department")}
             defaultValue={account?.department ?? ""}
-            placeholder="Teknik Geologi"
+            placeholder="Petroleum Engineering"
             autoComplete="off"
             className={control}
           />
         </Field>
-        <Field id={`${prefix}-division`} label="Divisi">
+        <Field id={`${prefix}-division`} label="Division">
           <Select id={`${prefix}-division`} disabled defaultValue={division ?? ""}>
             <option value={division ?? ""}>
-              {division ? `Divisi ${division}` : "—"}
+              {division ? `${division} Division` : "—"}
             </option>
           </Select>
         </Field>
-        <Field id={`${prefix}-position`} label="Jabatan" error={errors.position}>
+        <Field id={`${prefix}-position`} label="Position" error={errors.position}>
           <Select {...fieldProps("position")} defaultValue={account?.position ?? "Staff"}>
             {POSITIONS.map((position) => (
               <option key={position} value={position}>
@@ -141,7 +141,7 @@ export function AccountForm({
             ))}
           </Select>
         </Field>
-        <Field id={`${prefix}-period`} label="Periode Kepengurusan" error={errors.period}>
+        <Field id={`${prefix}-period`} label="Term Period" error={errors.period}>
           <input
             {...fieldProps("period")}
             defaultValue={account?.period ?? defaultPeriod}
@@ -154,8 +154,8 @@ export function AccountForm({
 
       {!editing && (
         <p className="mt-5 rounded-xl border border-[#3b82f6]/30 bg-[#0f1f45]/50 px-4 py-3 text-[13px] leading-relaxed text-[#8fb4ff]">
-          Password sementara akan digenerate otomatis setelah akun dibuat.
-          Bagikan kredensial langsung kepada pengurus.
+          A temporary password will be generated automatically once the account is created.
+          Share these credentials directly with the officer.
         </p>
       )}
 
@@ -170,7 +170,7 @@ export function AccountForm({
 
       <div className="mt-6 flex justify-end gap-3">
         <button type="button" onClick={onClose} disabled={pending} className={secondaryButton}>
-          Batal
+          Cancel
         </button>
         <button
           type="submit"
@@ -178,10 +178,10 @@ export function AccountForm({
           className={`${primaryButton} aria-disabled:cursor-wait aria-disabled:opacity-70`}
         >
           {pending
-            ? "Menyimpan…"
+            ? "Saving…"
             : editing
-              ? "Simpan Perubahan"
-              : "Buat Akun"}
+              ? "Save Changes"
+              : "Create Account"}
         </button>
       </div>
     </form>

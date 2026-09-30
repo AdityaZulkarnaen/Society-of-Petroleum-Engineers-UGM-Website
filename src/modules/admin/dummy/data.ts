@@ -16,10 +16,10 @@ export const dummyAdmin: Admin = {
   division: {
     id: "00000000-0000-0000-0000-0000000000d1",
     name: "Media Creative",
-    tags: ["Desain Grafis", "Videografi", "Social Media", "Dokumentasi"],
+    tags: ["Graphic Design", "Videography", "Social Media", "Documentation"],
   },
   nim: "22/498765/TK/54321",
-  department: "Teknik Perminyakan",
+  department: "Petroleum Engineering",
   position: "Vice Head",
   whatsapp: "+62 812-3456-7890",
   contactEmail: "reza.pratama@example.com",
@@ -29,16 +29,16 @@ export const dummyAdmin: Admin = {
 export const dummySuperAdmin: Admin = {
   id: "00000000-0000-0000-0000-000000000002",
   username: "spemedcre",
-  fullName: "Koordinator Media Creative",
+  fullName: "Media Creative Coordinator",
   role: "super_admin",
   division: {
     id: "00000000-0000-0000-0000-0000000000d1",
     name: "Media Creative",
-    tags: ["Desain Grafis", "Videografi", "Social Media", "Dokumentasi"],
+    tags: ["Graphic Design", "Videography", "Social Media", "Documentation"],
   },
   nim: null,
   department: null,
-  position: "Koordinator",
+  position: "Coordinator",
   whatsapp: null,
   contactEmail: null,
 };
@@ -61,14 +61,14 @@ export const dummyDivisionSummary: DivisionSummary = {
 };
 
 export const dummyProker: Proker[] = [
-  { id: "p1", name: "Workshop Reservoir Engineering", division: "Media Creative", role: "Panitia Acara", status: "selesai" },
-  { id: "p2", name: "APECX 2026", division: "Media Creative", role: "Panitia Creative Media", status: "berlangsung" },
-  { id: "p3", name: "Webinar Energi Terbarukan", division: "Media Creative", role: "Moderator", status: "selesai" },
-  { id: "p4", name: "SPE Scholar Fund", division: "Media Creative", role: "Tim Sponsorship", status: "direncanakan" },
-  { id: "p5", name: "Company Visit Pertamina Hulu", division: "Media Creative", role: "Dokumentasi", status: "dibatalkan" },
-  { id: "p6", name: "Kunjungan Industri Lapangan", division: "Media Creative", role: "Koordinator", status: "selesai" },
-  { id: "p7", name: "Seminar Nasional Energi 2025", division: "Media Creative", role: "Panitia", status: "selesai" },
-  { id: "p8", name: "Penggalangan Dana Alumni", division: "Media Creative", role: "Anggota Tim", status: "direncanakan" },
+  { id: "p1", name: "Reservoir Engineering Workshop", division: "Media Creative", role: "Event Committee", status: "selesai" },
+  { id: "p2", name: "APECX 2026", division: "Media Creative", role: "Creative Media Committee", status: "berlangsung" },
+  { id: "p3", name: "Renewable Energy Webinar", division: "Media Creative", role: "Moderator", status: "selesai" },
+  { id: "p4", name: "SPE Scholar Fund", division: "Media Creative", role: "Sponsorship Team", status: "direncanakan" },
+  { id: "p5", name: "Pertamina Hulu Company Visit", division: "Media Creative", role: "Documentation", status: "dibatalkan" },
+  { id: "p6", name: "Field Industrial Visit", division: "Media Creative", role: "Coordinator", status: "selesai" },
+  { id: "p7", name: "National Energy Seminar 2025", division: "Media Creative", role: "Committee", status: "selesai" },
+  { id: "p8", name: "Alumni Fundraising", division: "Media Creative", role: "Team Member", status: "direncanakan" },
 ];
 
 export const dummySelfReport: SelfReport = {
@@ -92,20 +92,20 @@ export const dummySelfReport: SelfReport = {
   ],
   notes: {
     achievements:
-      "Memimpin tim publikasi APECX 2026 hingga menjangkau lebih dari 650 peserta, dan menyusun ulang panduan identitas visual SPE UGM yang kini dipakai seluruh divisi.",
+      "Led the APECX 2026 publication team reaching over 650 participants, and redesigned the SPE UGM visual identity guidelines now adopted across all divisions.",
     strengths:
-      "Konsisten menyelesaikan tugas tepat waktu, cepat tanggap saat ada kebutuhan mendadak, dan aktif membantu anggota baru memahami alur kerja divisi.",
+      "Consistently completes tasks on time, responds promptly to urgent requests, and actively assists new members in understanding division workflows.",
     improvements:
-      "Pembagian waktu antara proker yang berjalan bersamaan. Disarankan mendelegasikan lebih awal dan memakai timeline bersama agar beban kerja lebih merata.",
+      "Time management across concurrent work programs. Recommended to delegate earlier and utilize shared timelines for balanced workloads.",
   },
 };
 
 /* Voting ---------------------------------------------------------------- */
 
 const PROGRAMS = [
-  "Memperluas jaringan kerja sama industri dan penelitian nasional & internasional",
-  "Mendorong setiap divisi menghasilkan karya publikasi atau inovasi teknis per semester",
-  "Membangun sistem mentorship lintas angkatan yang terstruktur dan berkelanjutan",
+  "Expand industry and academic research collaboration networks nationally and internationally",
+  "Encourage each division to produce publications or technical innovations every semester",
+  "Build a structured, sustainable cross-cohort mentorship system",
 ];
 
 const CANDIDATES: Candidate[] = [
@@ -114,15 +114,15 @@ const CANDIDATES: Candidate[] = [
     number: 1,
     fullName: "Bintang Aryadita",
     nim: "24/123456/TK/12345",
-    position: "Kepala Bidang Teknik",
+    position: "Head of Engineering",
     photoUrl: null,
     vision:
-      "Mewujudkan SPE UGM sebagai pusat inovasi energi terbarukan yang relevan secara global, dengan membangun jembatan antara riset akademik dan industri minyak & gas di Indonesia.",
+      "To establish SPE UGM as a globally relevant renewable energy innovation hub by bridging academic research and Indonesia's oil & gas industry.",
     programs: PROGRAMS,
     achievements: [
-      "Koordinator APECX 2025 (650+ peserta)",
-      "Delegasi SPE APOGCE Perth 2024",
-      "Paper finalis SPE Young Professional Essay 2024",
+      "Coordinator of APECX 2025 (650+ participants)",
+      "SPE APOGCE Perth Delegate 2024",
+      "SPE Young Professional Essay Finalist 2024",
     ],
     grandDesignUrl: "https://example.com/grand-design-bintang.pdf",
   },
@@ -131,18 +131,18 @@ const CANDIDATES: Candidate[] = [
     number: 2,
     fullName: "Salsabila Rahmawati",
     nim: "24/234567/TK/23456",
-    position: "Ketua Pelaksana Seminar Nasional",
+    position: "Project Officer of National Seminar",
     photoUrl: null,
     vision:
-      "SPE UGM yang inklusif dan berdampak: setiap anggota punya ruang bertumbuh, dan setiap program memberi manfaat nyata bagi mahasiswa dan masyarakat sekitar.",
+      "An inclusive and impactful SPE UGM: every member has room to grow, and every program delivers tangible value to students and the broader community.",
     programs: [
-      "Program magang bersama mitra industri untuk anggota aktif",
-      "Kelas kompetensi teknis bulanan yang dibawakan alumni",
-      "Evaluasi kinerja divisi yang transparan setiap kuartal",
+      "Joint internship program with industry partners for active members",
+      "Monthly technical competency classes led by alumni",
+      "Transparent quarterly division performance reviews",
     ],
     achievements: [
-      "Ketua Pelaksana Seminar Nasional Energi 2025",
-      "Juara 2 Petrobowl Regional Asia Pasifik 2024",
+      "Project Officer of National Energy Seminar 2025",
+      "2nd Place Petrobowl Asia Pacific Regional 2024",
     ],
     grandDesignUrl: "https://example.com/grand-design-salsabila.pdf",
   },
@@ -154,16 +154,16 @@ const CANDIDATES: Candidate[] = [
     position: "Head of Research & Development",
     photoUrl: null,
     vision:
-      "Menjadikan SPE UGM organisasi yang adaptif terhadap transisi energi, dengan budaya kerja yang profesional, kolaboratif, dan berbasis data.",
+      "To make SPE UGM an organization adaptable to the energy transition, with a professional, collaborative, and data-driven culture.",
     programs: [
-      "Digitalisasi administrasi dan arsip organisasi",
-      "Riset kolaboratif mahasiswa tentang carbon capture",
-      "Forum diskusi rutin bersama SPE chapter kampus lain",
+      "Digitization of organization administration and archives",
+      "Collaborative student research on carbon capture",
+      "Regular discussion forums with other SPE student chapters",
     ],
     achievements: [
       "Head of Research & Development 2025/2026",
-      "Pemakalah SPE Asia Pacific Student Symposium 2025",
-      "Penerima SPE Foundation Scholarship 2024",
+      "Speaker at SPE Asia Pacific Student Symposium 2025",
+      "SPE Foundation Scholarship Recipient 2024",
     ],
     grandDesignUrl: null,
   },
@@ -181,7 +181,7 @@ function jakartaDate(offset: number) {
 /** Always open: started 6 days ago, 8 days to go. */
 const ELECTION = {
   id: "e1",
-  title: "Pemilihan President SPE UGM SC 2027",
+  title: "SPE UGM SC President Election 2027",
   termLabel: "2026/2027",
   opensOn: jakartaDate(-6),
   closesOn: jakartaDate(8),
@@ -236,7 +236,7 @@ const account = (
   nim: "24/123456/TK/12345",
   email: `${username.replace(".", "")}@mail.ugm.ac.id`,
   whatsapp: "+62 812-3456-7890",
-  department: "Teknik Perminyakan",
+  department: "Petroleum Engineering",
   division: "Media Creative",
   position,
   period: "2025/2026",
@@ -290,11 +290,11 @@ const REKAP: Record<string, SelfReport> = {
     ],
     notes: {
       achievements:
-        "Reza menunjukkan kinerja yang konsisten dan dapat diandalkan selama periode 2025/2026. Kontribusi paling menonjol tercatat pada APECX 2026, di mana ia berperan sebagai PIC Logistik dan berhasil mengkoordinasikan persiapan venue dan konsumsi untuk lebih dari 300 peserta secara lintas divisi.",
+        "Reza demonstrated consistent and dependable performance throughout the 2025/2026 term. His most notable contribution was at APECX 2026, where he served as Logistics PIC and successfully coordinated venue and catering preparations across divisions for over 300 participants.",
       strengths:
-        "Kerja tim dan tanggung jawab menjadi dua kompetensi yang paling menonjol. Reza secara konsisten hadir dalam rapat (22 dari 24 pertemuan) dan menyelesaikan tugas tepat waktu. Rekan satu divisi mencatat bahwa ia aktif membantu anggota baru beradaptasi.",
+        "Teamwork and accountability are his strongest competencies. Reza consistently attended meetings (22 out of 24) and completed assignments on time. Division peers noted his active support in helping new members adapt.",
       improvements:
-        "Berdasarkan observasi sepanjang periode, manajemen waktu masih menjadi area yang perlu mendapat perhatian — terutama saat jadwal kegiatan SPE berbenturan dengan kalender akademik.",
+        "Based on observations throughout the term, time management remains an area for improvement — particularly when SPE project timelines overlap with the academic calendar.",
     },
   },
 };

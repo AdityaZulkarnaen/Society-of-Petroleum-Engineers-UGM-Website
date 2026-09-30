@@ -37,7 +37,7 @@ type Dialog =
 
 type Notice = { tone: "success" | "error"; text: string };
 
-const LOCKED = "Kandidat tidak bisa ditambah atau dihapus setelah voting dibuka";
+const LOCKED = "Candidates cannot be added or deleted after voting opens";
 
 /* Solid fields inside the glass cards. */
 const dateInput =
@@ -50,9 +50,9 @@ const label = "mb-2 block text-[11px] font-medium tracking-[0.08em] text-[#8a8ea
 const percent = (part: number, whole: number) =>
   whole > 0 ? Math.round((part / whole) * 1000) / 10 : 0;
 
-const formatPercent = (value: number) => `${value.toLocaleString("id-ID")}%`;
+const formatPercent = (value: number) => `${value.toLocaleString("en-US")}%`;
 
-/* Pengaturan ---------------------------------------------------------------- */
+/* Settings ------------------------------------------------------------------ */
 
 function PeriodSettings({
   election,
@@ -79,7 +79,7 @@ function PeriodSettings({
 
     if (!next.opensOn || !next.closesOn) return;
     if (next.closesOn < next.opensOn) {
-      setDateError("Tanggal selesai harus setelah tanggal mulai.");
+      setDateError("End date must be after start date.");
       return;
     }
     setDateError(null);
@@ -90,7 +90,7 @@ function PeriodSettings({
         ...next,
       });
       if (result.error) setDateError(result.errors?.closesOn ?? result.error);
-      else onNotice({ tone: "success", text: "Periode voting diperbarui." });
+      else onNotice({ tone: "success", text: "Voting period updated." });
     });
   }
 
@@ -102,7 +102,7 @@ function PeriodSettings({
           ? { tone: "error", text: result.error }
           : {
               tone: "success",
-              text: election.isOpen ? "Voting ditutup." : "Voting dibuka kembali.",
+              text: election.isOpen ? "Voting closed." : "Voting reopened.",
             },
       );
     });
@@ -110,22 +110,22 @@ function PeriodSettings({
 
   /* what the switch means today */
   const hint = !election.isOpen
-    ? "Voting ditutup. Pengurus tidak bisa memberikan suara sampai status dibuka lagi."
+    ? "Voting closed. Officers cannot cast votes until the status is reopened."
     : election.phase === "upcoming"
-      ? `Voting akan terbuka otomatis pada ${longDate(election.opensOn)}.`
+      ? `Voting will open automatically on ${longDate(election.opensOn)}.`
       : election.phase === "closed"
-        ? "Periode voting sudah berakhir."
-        : `Pengurus bisa memberikan suara sampai ${longDate(election.closesOn)}.`;
+        ? "Voting period has ended."
+        : `Officers can cast votes until ${longDate(election.closesOn)}.`;
 
   return (
     <Card surface={compactCardSurface} className="p-6">
       <div className="flex items-start justify-between gap-4">
-        <SectionHeading eyebrow="Pengaturan" title="Periode & Status Voting" />
+        <SectionHeading eyebrow="Settings" title="Voting Period & Status" />
         <div className="flex gap-0.5">
-          <IconButton label="Ubah judul dan periode pemilihan" onClick={onEdit}>
+          <IconButton label="Edit election title and period" onClick={onEdit}>
             {icons.edit}
           </IconButton>
-          <IconButton label="Hapus pemilihan" onClick={onDelete} danger>
+          <IconButton label="Delete election" onClick={onDelete} danger>
             {icons.trash}
           </IconButton>
         </div>
@@ -134,7 +134,7 @@ function PeriodSettings({
       <div className="mt-6 grid gap-4 md:grid-cols-[1fr_1fr_auto] md:items-end">
         <div>
           <label htmlFor="voting-opens" className={label}>
-            Tanggal Mulai
+            Start Date
           </label>
           <input
             id="voting-opens"
@@ -147,7 +147,7 @@ function PeriodSettings({
         </div>
         <div>
           <label htmlFor="voting-closes" className={label}>
-            Tanggal Selesai
+            End Date
           </label>
           <input
             id="voting-closes"
@@ -163,7 +163,7 @@ function PeriodSettings({
         </div>
         <div>
           <p id="voting-status-label" className={label}>
-            Status Voting
+            Voting Status
           </p>
           <button
             type="button"
@@ -190,7 +190,7 @@ function PeriodSettings({
                 }`}
               />
             </span>
-            {election.isOpen ? "Voting Dibuka" : "Voting Ditutup"}
+            {election.isOpen ? "Voting Open" : "Voting Closed"}
           </button>
         </div>
       </div>
@@ -200,16 +200,16 @@ function PeriodSettings({
         aria-live="polite"
         className={`mt-3 text-xs ${dateError ? "text-[#fca5a5]" : "text-[#6f7286]"}`}
       >
-        {dateError ?? (saving ? "Menyimpan…" : hint)}
+        {dateError ?? (saving ? "Saving…" : hint)}
       </p>
       <p className="mt-1 text-xs text-[#5d6075]">
-        {election.title} · periode {election.termLabel}
+        {election.title} · term {election.termLabel}
       </p>
     </Card>
   );
 }
 
-/* Hasil Voting Live ---------------------------------------------------------- */
+/* Live Voting Results ------------------------------------------------------- */
 
 function LiveResults({
   election,
@@ -227,7 +227,7 @@ function LiveResults({
   return (
     <Card surface={compactCardSurface} className="p-6">
       <div className="flex items-start justify-between gap-4">
-        <SectionHeading eyebrow="Khusus Admin" title="Hasil Voting Live" />
+        <SectionHeading eyebrow="Admin Only" title="Live Voting Results" />
         <span className="inline-flex h-7 shrink-0 items-center rounded-full border border-[#f59e0b]/40 bg-[#f59e0b]/10 px-3 text-[11px] font-bold tracking-[0.08em] text-[#fbbf24] uppercase">
           Internal Only
         </span>
@@ -255,13 +255,13 @@ function LiveResults({
                     </span>
                   </p>
                   <p className="shrink-0 text-xs text-[#8a8ea3]">
-                    <span className="text-lg font-bold text-white">{votes}</span> suara ·{" "}
-                    {formatPercent(share)}
+                    <span className="text-lg font-bold text-white">{votes}</span>{" "}
+                    {votes === 1 ? "vote" : "votes"} · {formatPercent(share)}
                   </p>
                 </div>
                 <ProgressBar
                   percent={share}
-                  label={`Perolehan ${candidate.fullName}`}
+                  label={`Votes for ${candidate.fullName}`}
                   className="mt-2.5"
                 />
               </li>
@@ -269,19 +269,19 @@ function LiveResults({
           })}
         </ol>
       ) : (
-        <p className="mt-6 text-sm text-[#6f7286]">Belum ada kandidat.</p>
+        <p className="mt-6 text-sm text-[#6f7286]">No candidates yet.</p>
       )}
 
       <div className="mt-7 flex flex-wrap items-baseline justify-between gap-3 rounded-xl border border-white/[0.08] bg-[#0b0e1f]/50 px-4 py-3.5">
-        <span className="text-sm text-[#a3a6b8]">Total suara masuk</span>
+        <span className="text-sm text-[#a3a6b8]">Total votes cast</span>
         <span className="text-xs text-[#8a8ea3]">
-          <span className="text-lg font-bold text-white">{cast}</span> dari {eligible} pemilih
-          aktif ({formatPercent(percent(cast, eligible))})
+          <span className="text-lg font-bold text-white">{cast}</span> of {eligible} eligible
+          voters ({formatPercent(percent(cast, eligible))})
         </span>
       </div>
       <p className="mt-4 text-center text-xs text-[#5d6075]">
-        ↑ Tampilan ini hanya terlihat oleh admin. Halaman voting pengurus hanya
-        menampilkan jumlah partisipasi umum, tanpa rincian per kandidat.
+        ↑ This view is visible only to administrators. The officer voting page only
+        displays overall participation turnout, without individual candidate breakdowns.
       </p>
     </Card>
   );
@@ -315,7 +315,7 @@ export function VotingManager({
       close();
       setNotice({
         tone: "success",
-        text: election ? "Pemilihan diperbarui." : "Pemilihan berhasil dibuat.",
+        text: election ? "Election updated." : "Election created successfully.",
       });
     }
     return result;
@@ -323,15 +323,15 @@ export function VotingManager({
 
   function submitCandidate(existing: Candidate | null) {
     return async (input: CandidateInput) => {
-      if (!election) return { error: "Buat pemilihan terlebih dahulu." };
+      if (!election) return { error: "Create an election first." };
       const result = await saveCandidate(election.id, existing?.id ?? null, input);
       if (!result.error && !result.errors) {
         close();
         setNotice({
           tone: "success",
           text: existing
-            ? `Data ${input.fullName.trim()} diperbarui.`
-            : `${input.fullName.trim()} ditambahkan sebagai kandidat.`,
+            ? `Data for ${input.fullName.trim()} updated.`
+            : `${input.fullName.trim()} added as candidate.`,
         });
       }
       return result;
@@ -342,10 +342,10 @@ export function VotingManager({
     <div className="space-y-6">
       <header>
         <h1 className="text-[28px] font-bold tracking-[-0.02em] sm:text-[32px]">
-          Manajemen Voting
+          Voting Management
         </h1>
         <p className="mt-2 text-sm text-[#8a8ea3]">
-          Atur periode, kandidat, dan pantau hasil pemilihan.
+          Manage periods, candidates, and monitor election results.
         </p>
       </header>
 
@@ -363,7 +363,7 @@ export function VotingManager({
             <button
               type="button"
               onClick={() => setNotice(null)}
-              aria-label="Tutup pemberitahuan"
+              aria-label="Dismiss notification"
               className="opacity-70 hover:opacity-100"
             >
               ✕
@@ -374,17 +374,17 @@ export function VotingManager({
 
       {!election ? (
         <Card surface={compactCardSurface} className="px-6 py-14 text-center">
-          <p className="text-base font-semibold">Belum ada pemilihan</p>
+          <p className="text-base font-semibold">No election yet</p>
           <p className="mx-auto mt-2 max-w-sm text-sm text-[#8a8ea3]">
-            Buat pemilihan dengan menentukan periode yang dipilih dan tanggal
-            voting, lalu tambahkan kandidatnya.
+            Create an election by specifying the elected term and voting dates,
+            then add the candidates.
           </p>
           <button
             type="button"
             onClick={() => setDialog({ type: "election" })}
             className={`${primaryButton} mt-6`}
           >
-            Buat Pemilihan
+            Create Election
           </button>
         </Card>
       ) : (
@@ -399,7 +399,10 @@ export function VotingManager({
 
           <Card surface={compactCardSurface} className="p-6">
             <div className="flex flex-wrap items-start justify-between gap-4">
-              <SectionHeading eyebrow={`${candidates.length} kandidat`} title="Daftar Kandidat" />
+              <SectionHeading
+                eyebrow={`${candidates.length} ${candidates.length === 1 ? "candidate" : "candidates"}`}
+                title="Candidates List"
+              />
               <button
                 type="button"
                 onClick={() => setDialog({ type: "add" })}
@@ -408,7 +411,7 @@ export function VotingManager({
                 className={`${primaryButton} gap-2`}
               >
                 {icons.plus}
-                Tambah Kandidat
+                Add Candidate
               </button>
             </div>
 
@@ -417,10 +420,10 @@ export function VotingManager({
                 <table className="w-full min-w-[720px] text-left text-[13px]">
                   <thead>
                     <tr className="border-b border-white/[0.06] bg-white/[0.02] text-[11px] font-medium tracking-[0.08em] text-[#8a8ea3] uppercase">
-                      <th scope="col" className="w-[72px] py-3.5 pr-2 pl-4 font-medium">Foto</th>
-                      <th scope="col" className="w-[28%] px-3 py-3.5 font-medium">Nama</th>
-                      <th scope="col" className="px-3 py-3.5 font-medium">Visi</th>
-                      <th scope="col" className="w-[96px] py-3.5 pr-4 pl-3 font-medium">Aksi</th>
+                      <th scope="col" className="w-[72px] py-3.5 pr-2 pl-4 font-medium">Photo</th>
+                      <th scope="col" className="w-[28%] px-3 py-3.5 font-medium">Name</th>
+                      <th scope="col" className="px-3 py-3.5 font-medium">Vision</th>
+                      <th scope="col" className="w-[96px] py-3.5 pr-4 pl-3 font-medium">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -438,7 +441,7 @@ export function VotingManager({
                         </td>
                         <td className="px-3">
                           <p className="text-sm font-semibold text-white">
-                            <span className="sr-only">Kandidat {candidate.number}: </span>
+                            <span className="sr-only">Candidate {candidate.number}: </span>
                             {candidate.fullName}
                           </p>
                           {candidate.nim && (
@@ -459,7 +462,7 @@ export function VotingManager({
                               {icons.edit}
                             </IconButton>
                             <IconButton
-                              label={started ? LOCKED : `Hapus ${candidate.fullName}`}
+                              label={started ? LOCKED : `Delete ${candidate.fullName}`}
                               onClick={() => setDialog({ type: "delete", candidate })}
                               disabled={started}
                               danger
@@ -474,8 +477,8 @@ export function VotingManager({
                       <tr>
                         <td colSpan={4} className="px-6 py-10 text-center text-[13px] text-[#6f7286]">
                           {started
-                            ? "Voting sudah dibuka tanpa kandidat. Mundurkan tanggal mulai untuk menambahkan kandidat."
-                            : "Belum ada kandidat. Tambahkan lewat tombol Tambah Kandidat."}
+                            ? "Voting has opened without candidates. Adjust the start date to add candidates."
+                            : "No candidates yet. Add candidates using the Add Candidate button."}
                         </td>
                       </tr>
                     )}
@@ -541,40 +544,40 @@ export function VotingManager({
         {dialog?.type === "delete" && (
           <ConfirmDelete
             titleId="delete-voting-title"
-            title="Hapus Kandidat"
+            title="Delete Candidate"
             onConfirm={() => deleteCandidate(dialog.candidate.id)}
             onClose={close}
             onPendingChange={setBusy}
             onDeleted={() => {
               setNotice({
                 tone: "success",
-                text: `${dialog.candidate.fullName} dihapus dari daftar kandidat.`,
+                text: `${dialog.candidate.fullName} removed from candidate list.`,
               });
               close();
             }}
           >
-            Kandidat{" "}
+            Candidate{" "}
             <strong className="font-semibold text-white">{dialog.candidate.fullName}</strong>{" "}
-            akan dihapus dan nomor urut kandidat setelahnya maju satu. Tindakan ini
-            tidak dapat diurungkan.
+            will be deleted and subsequent candidate numbers will shift up. This action
+            cannot be undone.
           </ConfirmDelete>
         )}
         {dialog?.type === "deleteElection" && election && (
           <ConfirmDelete
             titleId="delete-voting-title"
-            title="Hapus Pemilihan"
+            title="Delete Election"
             onConfirm={() => deleteElection(election.id)}
             onClose={close}
             onPendingChange={setBusy}
             onDeleted={() => {
-              setNotice({ tone: "success", text: `${election.title} dihapus.` });
+              setNotice({ tone: "success", text: `${election.title} deleted.` });
               close();
             }}
           >
-            <strong className="font-semibold text-white">{election.title}</strong> akan
-            dihapus permanen beserta {candidates.length} kandidat
-            {cast > 0 ? ` dan ${cast} suara yang sudah masuk` : ""}. Tindakan ini tidak
-            dapat diurungkan.
+            <strong className="font-semibold text-white">{election.title}</strong> will be
+            permanently deleted along with {candidates.length} candidate{candidates.length === 1 ? "" : "s"}
+            {cast > 0 ? ` and ${cast} vote${cast === 1 ? "" : "s"} already cast` : ""}. This action cannot
+            be undone.
           </ConfirmDelete>
         )}
       </Modal>

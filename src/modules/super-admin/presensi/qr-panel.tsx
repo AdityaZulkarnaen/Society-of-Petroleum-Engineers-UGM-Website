@@ -13,7 +13,7 @@ import { getScanQr, type ScanQr } from "./actions";
 function Countdown({ secondsLeft }: { secondsLeft: number }) {
   return (
     <p className="text-xs text-[#6f7286]" aria-live="off">
-      QR berganti dalam{" "}
+      QR rotates in{" "}
       <span className="font-semibold text-[#c7c9d4] tabular-nums">
         {secondsLeft}s
       </span>
@@ -74,7 +74,7 @@ export function QrPanel({
         timer = setTimeout(load, Math.max(1_000, result.qr.expiresAt - Date.now()));
       } else {
         setQr(null);
-        setError(result.error ?? "QR gagal dibuat. Coba muat ulang halaman.");
+        setError(result.error ?? "Failed to generate QR. Please try reloading the page.");
         timer = setTimeout(load, 10_000);
       }
     }
@@ -116,10 +116,10 @@ export function QrPanel({
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-[11px] font-medium tracking-[0.08em] text-[#8a8ea3] uppercase">
-            QR Presensi
+            Attendance QR
           </p>
           <p className="mt-1.5 text-[13px] text-[#6f7286]">
-            Tampilkan ke pengurus untuk di-scan.
+            Display to officers to scan.
           </p>
         </div>
         {code && (
@@ -142,7 +142,7 @@ export function QrPanel({
                 strokeLinecap="round"
               />
             </svg>
-            Mode Proyektor
+            Projector Mode
           </button>
         )}
       </div>
@@ -151,11 +151,11 @@ export function QrPanel({
         {!isOpen && (
           <div className="rounded-xl border border-dashed border-white/10 px-5 py-10 text-center">
             <p className="text-sm font-medium text-[#c7c9d4]">
-              Presensi belum dibuka
+              Attendance not yet open
             </p>
             <p className="mx-auto mt-1.5 max-w-xs text-[13px] leading-relaxed text-[#6f7286]">
-              QR muncul setelah presensi dibuka, dan berhenti berlaku begitu
-              presensi ditutup.
+              The QR code appears after attendance is opened, and expires once
+              attendance is closed.
             </p>
           </div>
         )}
@@ -163,10 +163,10 @@ export function QrPanel({
         {isOpen && !canManage && (
           <div className="rounded-xl border border-dashed border-white/10 px-5 py-10 text-center">
             <p className="text-sm font-medium text-[#c7c9d4]">
-              QR dipegang divisi penyelenggara
+              QR managed by organizing division
             </p>
             <p className="mx-auto mt-1.5 max-w-xs text-[13px] leading-relaxed text-[#6f7286]">
-              Kamu masih bisa memantau daftar presensi rapat gabungan ini.
+              You can still monitor attendance for this joint meeting.
             </p>
           </div>
         )}
@@ -176,7 +176,7 @@ export function QrPanel({
             role="status"
             className="grid aspect-square place-items-center rounded-2xl bg-white/[0.04]"
           >
-            <span className="text-[13px] text-[#8a8ea3]">Menyiapkan QR…</span>
+            <span className="text-[13px] text-[#8a8ea3]">Preparing QR…</span>
           </div>
         )}
 
@@ -195,7 +195,7 @@ export function QrPanel({
             <div className="flex items-center justify-between gap-3">
               <Countdown secondsLeft={secondsLeft} />
               <p className="text-xs text-[#6f7286]">
-                Scan lewat kamera HP atau menu Presensi
+                Scan with phone camera or via the Attendance menu
               </p>
             </div>
           </div>
@@ -220,7 +220,7 @@ export function QrPanel({
               onClick={leave}
               className={`${secondaryButton} mt-4`}
             >
-              Keluar (Esc)
+              Exit (Esc)
             </button>
           </div>
         </div>

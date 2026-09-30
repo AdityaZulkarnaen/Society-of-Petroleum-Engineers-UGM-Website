@@ -5,15 +5,15 @@ import type { VotingPhase } from "./data";
 
 const PHASE: Record<VotingPhase, { label: string; className: string }> = {
   open: {
-    label: "Voting Dibuka",
+    label: "Voting Open",
     className: "border-[#34d399]/30 bg-[#34d399]/10 text-[#4ade80]",
   },
   upcoming: {
-    label: "Belum Dibuka",
+    label: "Upcoming",
     className: "border-[#f59e0b]/35 bg-[#f59e0b]/10 text-[#fbbf24]",
   },
   closed: {
-    label: "Voting Ditutup",
+    label: "Voting Closed",
     className: "border-white/15 bg-white/[0.03] text-[#c7c9d4]",
   },
 };

@@ -24,13 +24,13 @@ export type CheckInResult =
 /* Raised by record_attendance(). */
 const MESSAGES: Record<string, string> = {
   presensi_closed:
-    "Presensi rapat ini belum dibuka atau sudah ditutup. Hubungi super admin divisimu.",
-  not_participant: "Kamu bukan peserta rapat ini.",
-  meeting_not_found: "Rapat tidak ditemukan. Minta QR terbaru dari layar rapat.",
+    "Attendance for this meeting is either not open yet or has already closed. Contact your division super admin.",
+  not_participant: "You are not a participant in this meeting.",
+  meeting_not_found: "Meeting not found. Please scan the latest QR code from the meeting screen.",
 };
 
 const EXPIRED =
-  "QR sudah kedaluwarsa. Arahkan kamera ke QR terbaru di layar rapat.";
+  "QR code has expired. Point your camera at the latest QR code on the meeting screen.";
 
 /**
  * Records the signed-in account's presensi from a scanned QR.
@@ -42,7 +42,7 @@ const EXPIRED =
 export async function checkIn(token: string): Promise<CheckInResult> {
   const admin = await getAdmin();
   if (!admin) {
-    return { ok: false, error: "Sesi kamu habis. Masuk lagi lalu scan ulang." };
+    return { ok: false, error: "Your session has expired. Please sign in again and rescan." };
   }
   /* Super admins are peserta too, but they hold the QR: they set their own
      status from the live table instead of scanning their own screen. */
@@ -50,13 +50,13 @@ export async function checkIn(token: string): Promise<CheckInResult> {
     return {
       ok: false,
       error:
-        "Akun super admin mencatat kehadirannya sendiri lewat tabel presensi rapat.",
+        "Super admin accounts record their attendance directly from the meeting attendance table.",
     };
   }
   if (DUMMY_DATA) {
     return {
       ok: false,
-      error: "Presensi rapat butuh database; matikan mode data contoh dulu.",
+      error: "Meeting attendance requires a database; disable sample data mode first.",
     };
   }
 
@@ -81,7 +81,7 @@ export async function checkIn(token: string): Promise<CheckInResult> {
     console.error("checkIn", error.message);
     return {
       ok: false,
-      error: MESSAGES[error.message] ?? "Presensi gagal disimpan. Coba lagi.",
+      error: MESSAGES[error.message] ?? "Failed to save attendance. Please try again.",
     };
   }
 
@@ -90,7 +90,7 @@ export async function checkIn(token: string): Promise<CheckInResult> {
       | { status: AttendanceStatus; checked_in_at: string; duplicate: boolean }[]
       | null
   )?.[0];
-  if (!row) return { ok: false, error: "Presensi gagal disimpan. Coba lagi." };
+  if (!row) return { ok: false, error: "Failed to save attendance. Please try again." };
 
   revalidatePath("/admin/presensi");
   revalidatePath(`/super-admin/presensi/${meetingId}`);

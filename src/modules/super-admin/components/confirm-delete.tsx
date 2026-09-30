@@ -58,7 +58,7 @@ export function ConfirmDelete({
           disabled={pending}
           className={secondaryButton}
         >
-          Batal
+          Cancel
         </button>
         <button
           type="button"
@@ -66,7 +66,7 @@ export function ConfirmDelete({
           aria-disabled={pending}
           className="inline-flex h-11 items-center justify-center rounded-xl bg-[#d63a3a] px-5 text-sm font-semibold text-white shadow-[0_8px_22px_-10px_rgba(214,58,58,0.8)] transition-colors hover:bg-[#e04747] aria-disabled:cursor-wait aria-disabled:opacity-70"
         >
-          {pending ? "Menghapus…" : "Ya, Hapus"}
+          {pending ? "Deleting…" : "Yes, Delete"}
         </button>
       </div>
     </div>

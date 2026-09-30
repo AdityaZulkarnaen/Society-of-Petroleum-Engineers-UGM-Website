@@ -44,7 +44,7 @@ export function CheckInResultCard({ result }: { result: CheckInResult }) {
           {cross}
         </span>
         <p className="mt-4 text-base font-semibold text-white">
-          Presensi belum tercatat
+          Attendance not recorded
         </p>
         <p className="mx-auto mt-2 max-w-xs text-[13px] leading-relaxed text-[#a3a6b8]">
           {result.error}
@@ -61,7 +61,7 @@ export function CheckInResultCard({ result }: { result: CheckInResult }) {
         {check}
       </span>
       <p className="mt-4 text-base font-semibold text-white">
-        {result.duplicate ? "Kamu sudah presensi" : "Presensi tercatat"}
+        {result.duplicate ? "You have already checked in" : "Attendance recorded"}
       </p>
       <p className="mt-1.5 text-[13px] text-[#a3a6b8]">
         {result.meeting.title} · {ordinal(result.meeting.sequence)} ·{" "}
@@ -72,7 +72,7 @@ export function CheckInResultCard({ result }: { result: CheckInResult }) {
           {status.label}
         </Badge>
         <span className="text-[13px] text-[#8a8ea3]">
-          pukul {clock(result.checkedInAt)} WIB
+          at {clock(result.checkedInAt)} WIB
         </span>
       </div>
     </div>

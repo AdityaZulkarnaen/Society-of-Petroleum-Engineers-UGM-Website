@@ -21,10 +21,10 @@ import { PHOTO_BUCKET, photoPath, removePhotos } from "./photos";
 
 /* Raised by the election functions in the database. */
 const MESSAGES: Record<string, string> = {
-  not_allowed: "Hanya super admin yang bisa mengatur pemilihan.",
-  not_found: "Data tidak ditemukan. Muat ulang halaman ini.",
+  not_allowed: "Only super admins can manage elections.",
+  not_found: "Data not found. Please reload this page.",
   voting_started:
-    "Voting sudah dibuka, jadi kandidat tidak bisa ditambah atau dihapus lagi.",
+    "Voting has already opened, so candidates can no longer be added or removed.",
 };
 
 const failed = (message: string, fallback: string) => ({
@@ -47,7 +47,7 @@ export async function saveElection(
 ): Promise<ActionResult> {
   await requireSuperAdmin();
   const { ok, errors, values } = validateElection(input);
-  if (!ok) return { errors, error: "Periksa kembali isian yang ditandai." };
+  if (!ok) return { errors, error: "Please review the highlighted fields." };
 
   if (DUMMY_DATA) {
     const state = dummyVoting.get();
@@ -74,7 +74,7 @@ export async function saveElection(
   });
   if (error) {
     console.error("saveElection", error.message);
-    return failed(error.message, "Pemilihan gagal disimpan. Coba lagi.");
+    return failed(error.message, "Failed to save election. Please try again.");
   }
   revalidate();
   return {};
@@ -96,7 +96,7 @@ export async function setVotingOpen(id: string, open: boolean): Promise<ActionRe
   const { error } = await supabase.rpc("set_election_open", { p_id: id, p_open: open });
   if (error) {
     console.error("setVotingOpen", error.message);
-    return failed(error.message, "Status voting gagal diubah. Coba lagi.");
+    return failed(error.message, "Failed to change voting status. Please try again.");
   }
   revalidate();
   return {};
@@ -121,7 +121,7 @@ export async function deleteElection(id: string): Promise<ActionResult> {
   const { error } = await supabase.rpc("delete_election", { p_id: id });
   if (error) {
     console.error("deleteElection", error.message);
-    return failed(error.message, "Pemilihan gagal dihapus. Coba lagi.");
+    return failed(error.message, "Failed to delete election. Please try again.");
   }
   await removePhotos(
     supabase,
@@ -137,11 +137,11 @@ export async function uploadCandidatePhoto(
 ): Promise<{ url?: string; error?: string }> {
   await requireSuperAdmin();
   const file = formData.get("photo");
-  if (!(file instanceof File) || file.size === 0) return { error: "Pilih foto terlebih dahulu." };
+  if (!(file instanceof File) || file.size === 0) return { error: "Please select a photo first." };
   if (!PHOTO_TYPES.includes(file.type)) {
-    return { error: "Format foto harus JPG, PNG, atau WebP." };
+    return { error: "Photo format must be JPG, PNG, or WebP." };
   }
-  if (file.size > PHOTO_MAX_BYTES) return { error: "Ukuran foto terlalu besar." };
+  if (file.size > PHOTO_MAX_BYTES) return { error: "Photo file size is too large." };
 
   /* the preview has no storage, so the photo lives in memory as a data URL */
   if (DUMMY_DATA) {
@@ -158,7 +158,7 @@ export async function uploadCandidatePhoto(
   });
   if (error) {
     console.error("uploadCandidatePhoto", error.message);
-    return { error: "Foto gagal diupload. Coba lagi." };
+    return { error: "Failed to upload photo. Please try again." };
   }
   return { url: supabase.storage.from(PHOTO_BUCKET).getPublicUrl(path).data.publicUrl };
 }
@@ -188,7 +188,7 @@ export async function saveCandidate(
 ): Promise<ActionResult> {
   await requireSuperAdmin();
   const { ok, errors, values } = validateCandidate(input);
-  if (!ok) return { errors, error: "Periksa kembali isian yang ditandai." };
+  if (!ok) return { errors, error: "Please review the highlighted fields." };
 
   if (DUMMY_DATA) {
     const state = dummyVoting.get();
@@ -223,7 +223,7 @@ export async function saveCandidate(
     values.photoUrl !== previous?.photo_url &&
     !photoPath(values.photoUrl)
   ) {
-    return { errors: { photoUrl: "Upload ulang fotonya." }, error: "Foto tidak valid." };
+    return { errors: { photoUrl: "Please upload the photo again." }, error: "Invalid photo." };
   }
 
   const { error } = await supabase.rpc("save_candidate", {
@@ -240,7 +240,7 @@ export async function saveCandidate(
   });
   if (error) {
     console.error("saveCandidate", error.message);
-    return failed(error.message, "Kandidat gagal disimpan. Coba lagi.");
+    return failed(error.message, "Failed to save candidate. Please try again.");
   }
   if (previous?.photo_url && previous.photo_url !== values.photoUrl) {
     await removePhotos(supabase, [previous.photo_url]);
@@ -279,7 +279,7 @@ export async function deleteCandidate(id: string): Promise<ActionResult> {
   const { error } = await supabase.rpc("delete_candidate", { p_id: id });
   if (error) {
     console.error("deleteCandidate", error.message);
-    return failed(error.message, "Kandidat gagal dihapus. Coba lagi.");
+    return failed(error.message, "Failed to delete candidate. Please try again.");
   }
   await removePhotos(supabase, [candidate?.photo_url]);
   revalidate();

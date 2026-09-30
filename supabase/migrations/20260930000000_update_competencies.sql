@@ -1,16 +1,17 @@
--- Migration: Update evaluasi kompetensi to 12 new competency aspects
--- Changes:
---   1. Update competency CHECK constraint to accept 12 new values
---   2. Change score from half-step (0.5) to free decimal (1.00–5.00)
---   3. Drop the required `rating` column (now auto-calculated in frontend)
---   4. Update save_rekap() function accordingly
---   5. Migrate existing data to the closest new competency names
+/* Migration: Update evaluasi kompetensi to 12 new competency aspects */
 
 begin;
 
--- ============================================================================
--- 1. Migrate existing competency data to new names
--- ============================================================================
+/* ============================================================================
+   1. Drop the old CHECK on competency
+   ============================================================================ */
+
+alter table public.rekap_competencies
+  drop constraint if exists rekap_competencies_competency_check;
+
+/* ============================================================================
+   2. Migrate existing competency data to new names
+   ============================================================================ */
 
 update public.rekap_competencies set competency = case competency
   when 'Kepemimpinan'    then 'Grit / Perseverance'
@@ -25,12 +26,9 @@ where competency in (
   'Inisiatif', 'Komunikasi', 'Manajemen Waktu'
 );
 
--- ============================================================================
--- 2. Drop the old CHECK on competency and add the new one (12 values)
--- ============================================================================
-
-alter table public.rekap_competencies
-  drop constraint if exists rekap_competencies_competency_check;
+/* ============================================================================
+   3. Add the new CHECK constraint (12 values)
+   ============================================================================ */
 
 alter table public.rekap_competencies
   add constraint rekap_competencies_competency_check
@@ -49,24 +47,22 @@ alter table public.rekap_competencies
     'Accountability'
   ));
 
--- ============================================================================
--- 3. Change score columns to allow free decimals (1.00–5.00)
---    Old: numeric(2,1) with half-step constraint
---    New: numeric(3,2) with 1–5 range only
--- ============================================================================
+/* ============================================================================
+   4. Change score columns to allow free decimals (1.00–5.00)
+   ============================================================================ */
 
--- Drop old score CHECK constraints
+/* Drop old score CHECK constraints */
 alter table public.rekap_competencies
   drop constraint if exists rekap_competencies_score_check;
 
--- Widen score column: numeric(2,1) -> numeric(3,2) to allow e.g. 4.25
+/* Widen score column: numeric(2,1) -> numeric(3,2) to allow e.g. 4.25 */
 alter table public.rekap_competencies
   alter column score type numeric(3, 2);
 
 alter table public.rekap_competencies
   alter column initial_score type numeric(3, 2);
 
--- Re-add simpler range constraint (no half-step restriction)
+/* Re-add simpler range constraint (no half-step restriction) */
 alter table public.rekap_competencies
   add constraint rekap_competencies_score_check
   check (score >= 1 and score <= 5);
@@ -75,16 +71,16 @@ alter table public.rekap_competencies
   add constraint rekap_competencies_initial_score_check
   check (initial_score >= 1 and initial_score <= 5);
 
--- ============================================================================
--- 4. Drop the `rating` column (auto-calculated in frontend now)
--- ============================================================================
+/* ============================================================================
+   5. Drop the rating column
+   ============================================================================ */
 
 alter table public.rekap_competencies
   drop column if exists rating;
 
--- ============================================================================
--- 5. Recreate save_rekap() without the rating column
--- ============================================================================
+/* ============================================================================
+   6. Recreate save_rekap() without the rating column
+   ============================================================================ */
 
 create or replace function public.save_rekap(
   p_profile_id uuid,
@@ -131,7 +127,7 @@ begin
     updated_at = now(),
     updated_by = excluded.updated_by;
 
-  -- Remove competencies not in the new list
+  /* Remove competencies not in the new list */
   delete from public.rekap_competencies c
   where c.profile_id = p_profile_id
     and c.period = p_period
@@ -139,7 +135,7 @@ begin
       select item ->> 'competency' from jsonb_array_elements(p_competencies) item
     );
 
-  -- Upsert competencies: initial_score is set only on first insert
+  /* Upsert competencies: initial_score is set only on first insert */
   insert into public.rekap_competencies (
     profile_id, period, competency, score, initial_score
   )

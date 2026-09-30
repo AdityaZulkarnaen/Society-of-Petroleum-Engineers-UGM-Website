@@ -30,7 +30,7 @@ function StatusBadge({ meeting }: { meeting: MyMeeting }) {
   const state = meetingState(meeting.openedAt, meeting.closedAt);
   return (
     <Badge tone={state === "open" ? "amber" : "neutral"}>
-      {state === "open" ? "Menunggu scan" : "Belum presensi"}
+      {state === "open" ? "Awaiting scan" : "Not attended"}
     </Badge>
   );
 }
@@ -48,7 +48,7 @@ function OpenMeetingCard({ meeting }: { meeting: MyMeeting }) {
               aria-hidden="true"
               className="size-1.5 animate-pulse rounded-full bg-[#34d399]"
             />
-            Presensi sedang dibuka
+            Attendance is open
           </p>
           <h2 className="mt-2.5 text-xl font-bold tracking-[-0.01em]">
             {meeting.title}
@@ -61,7 +61,7 @@ function OpenMeetingCard({ meeting }: { meeting: MyMeeting }) {
         </div>
         {done ? (
           <div className="text-right">
-            <Label>Status kamu</Label>
+            <Label>Your status</Label>
             <div className="mt-2">
               <StatusBadge meeting={meeting} />
             </div>
@@ -73,9 +73,9 @@ function OpenMeetingCard({ meeting }: { meeting: MyMeeting }) {
 
       {!done && (
         <p className="mt-5 text-[13px] leading-relaxed text-[#6f7286]">
-          Scan QR yang ditampilkan di layar rapat — lewat tombol di atas, atau
-          langsung dari aplikasi kamera HP. QR berganti setiap setengah menit,
-          jadi pastikan kamu mengarahkan kamera ke layar yang aktif.
+          Scan the QR code displayed on the meeting screen — using the button above
+          or directly from your phone's camera app. The QR refreshes every half minute,
+          so ensure your camera is pointed at an active screen.
         </p>
       )}
     </Card>
@@ -102,10 +102,10 @@ export async function PresensiPage() {
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-[28px] font-bold tracking-[-0.02em] sm:text-[32px]">
-            Presensi Rapat
+            Meeting Attendance
           </h1>
           <p className="mt-3 text-[15px] text-[#8a8ea3]">
-            Scan QR saat rapat dimulai. Riwayat presensimu tersimpan di sini.
+            Scan the QR code when a meeting starts. Your attendance history is recorded here.
           </p>
         </div>
         {!open && <ScanButton />}
@@ -115,46 +115,46 @@ export async function PresensiPage() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Stat
-          label="Rapat Diikuti"
+          label="Meetings Called"
           value={meetings.length}
-          caption="dipanggil untukmu"
+          caption="called for you"
         />
         <Stat
-          label="Tingkat Kehadiran"
+          label="Attendance Rate"
           value={rate === null ? "—" : `${rate}%`}
           caption={
             recorded.length > 0
-              ? `${present.length} dari ${recorded.length} rapat`
-              : "belum ada catatan"
+              ? `${present.length} of ${recorded.length} meetings`
+              : "no records yet"
           }
         />
         <Stat
           label={ATTENDANCE.terlambat.label}
           value={count("terlambat")}
-          caption="scan lewat batas"
+          caption="scanned past threshold"
         />
         <Stat
           label={ATTENDANCE.alpa.label}
           value={count("alpa")}
-          caption="tanpa keterangan"
+          caption="unexcused absence"
         />
       </div>
 
       <Card className="p-6 sm:p-7">
         <SectionHeading
-          eyebrow={`${history.length} rapat tercatat`}
-          title="Riwayat Presensi"
+          eyebrow={`${history.length} meetings recorded`}
+          title="Attendance History"
         />
 
         {history.length > 0 ? (
-          <div className="mt-6" role="table" aria-label="Riwayat presensi rapat">
+          <div className="mt-6" role="table" aria-label="Meeting attendance history">
             <div
               role="row"
               className={`hidden px-[15px] pb-3 text-[11px] font-medium tracking-[0.08em] text-[#8a8ea3] uppercase ${COLUMNS}`}
             >
-              <span role="columnheader">Rapat</span>
-              <span role="columnheader">Jenis</span>
-              <span role="columnheader">Jadwal</span>
+              <span role="columnheader">Meeting</span>
+              <span role="columnheader">Scope</span>
+              <span role="columnheader">Schedule</span>
               <span role="columnheader">Status</span>
             </div>
 
@@ -198,8 +198,8 @@ export async function PresensiPage() {
         ) : (
           <div className="mt-6">
             <EmptyState
-              title={open ? "Baru rapat ini" : "Belum ada rapat"}
-              description="Rapat divisi maupun rapat gabungan yang memanggilmu akan muncul di sini beserta status presensinya."
+              title={open ? "Only the active meeting so far" : "No meetings yet"}
+              description="Division and joint meetings you are invited to will appear here along with your attendance status."
             />
           </div>
         )}

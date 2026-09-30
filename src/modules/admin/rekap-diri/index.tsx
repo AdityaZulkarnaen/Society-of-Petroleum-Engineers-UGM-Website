@@ -26,7 +26,7 @@ function TallyCard({ label, tally }: { label: string; tally: Tally }) {
       <ProgressBar percent={percent} label={label} className="mt-4" />
       <p className="mt-2.5 text-right text-[13px] font-bold text-[#4f8dff]">
         {percent == null ? (
-          <span className="font-normal text-[#6f7286]">Belum ada data</span>
+          <span className="font-normal text-[#6f7286]">No data yet</span>
         ) : (
           `${percent}%`
         )}
@@ -38,13 +38,13 @@ function TallyCard({ label, tally }: { label: string; tally: Tally }) {
 const NOTES = [
   {
     key: "achievements",
-    title: "Kontribusi & Pencapaian Utama",
+    title: "Key Contributions & Achievements",
     color: "text-[#4f8dff]",
   },
-  { key: "strengths", title: "Kekuatan yang Diobservasi", color: "text-[#4ade80]" },
+  { key: "strengths", title: "Observed Strengths", color: "text-[#4ade80]" },
   {
     key: "improvements",
-    title: "Area yang Perlu Dikembangkan",
+    title: "Areas for Development",
     color: "text-[#fbbf24]",
   },
 ] as const;
@@ -57,26 +57,25 @@ export async function SelfReportPage() {
     <div className="space-y-8">
       <header>
         <h1 className="text-[28px] font-bold tracking-[-0.02em] sm:text-[32px]">
-          Rekap Diri
+          Self Report
         </h1>
         <p className="mt-3 text-[15px] text-[#8a8ea3]">
-          Ringkasan lengkap capaian, kompetensi, dan refleksi diri selama periode
-          kepengurusan.
+          Comprehensive summary of accomplishments, competencies, and self-reflection throughout the term.
         </p>
       </header>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <TallyCard label="Proker Diselesaikan" tally={report.proker} />
-        <TallyCard label="Jam Kerja Tercatat" tally={report.workHours} />
-        <TallyCard label="Kehadiran Rapat" tally={report.attendance} />
-        <TallyCard label="Poin Kontribusi" tally={report.points} />
+        <TallyCard label="Programs Completed" tally={report.proker} />
+        <TallyCard label="Work Hours Recorded" tally={report.workHours} />
+        <TallyCard label="Meeting Attendance" tally={report.attendance} />
+        <TallyCard label="Contribution Points" tally={report.points} />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card className="flex flex-col p-6 sm:p-7">
           <SectionHeading
-            eyebrow="Tren Perkembangan"
-            title="Perkembangan Kompetensi"
+            eyebrow="Growth Trend"
+            title="Competency Growth"
           />
           <div className="mt-5 flex flex-1 flex-col">
             <RadarChart competencies={report.competencies} />
@@ -84,13 +83,13 @@ export async function SelfReportPage() {
         </Card>
 
         <Card className="p-6 sm:p-7">
-          <SectionHeading eyebrow="Evaluasi HR / Kepala Divisi" title="Detail Kompetensi" />
+          <SectionHeading eyebrow="HR / Head Evaluation" title="Competency Details" />
           <CompetencyList competencies={report.competencies} className="mt-5" />
         </Card>
       </div>
 
       <Card className="p-6 sm:p-7">
-        <SectionHeading eyebrow="Ringkasan Evaluator" title="Catatan & Ringkasan dari HR" />
+        <SectionHeading eyebrow="Evaluator Summary" title="HR Notes & Summary" />
         <div className="mt-5 space-y-4">
           {NOTES.map(({ key, title, color }) => {
             const note = report.notes[key];
@@ -105,7 +104,7 @@ export async function SelfReportPage() {
                     note ? "text-[#c7c9d4]" : "text-[#6f7286]"
                   }`}
                 >
-                  {note ?? "Belum ada catatan dari HR untuk periode ini."}
+                  {note ?? "No notes from HR recorded for this period yet."}
                 </p>
               </section>
             );

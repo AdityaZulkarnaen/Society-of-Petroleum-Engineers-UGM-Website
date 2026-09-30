@@ -29,9 +29,9 @@ const FRESH_MS = 20_000;
 const POLL_MS = 15_000;
 
 const METHOD: Record<NonNullable<AttendanceRow["method"]>, string> = {
-  qr: "Scan QR",
+  qr: "QR Scan",
   manual: "Manual",
-  otomatis: "Otomatis",
+  otomatis: "Automatic",
 };
 
 /** Keeps the page in step with the rows arriving from the pengurus' scans. */
@@ -81,7 +81,7 @@ function useLiveAttendance(meetingId: string, isOpen: boolean) {
 
 function StatusCell({ row, now }: { row: AttendanceRow; now: number }) {
   if (!row.status) {
-    return <span className="text-[13px] text-[#5d6075]">Belum presensi</span>;
+    return <span className="text-[13px] text-[#5d6075]">Not checked in</span>;
   }
   const fresh =
     row.checkedInAt && now - new Date(row.checkedInAt).getTime() < FRESH_MS;
@@ -95,7 +95,7 @@ function StatusCell({ row, now }: { row: AttendanceRow; now: number }) {
         {ATTENDANCE[row.status].label}
       </Badge>
       {fresh && (
-        <span className="text-[11px] font-medium text-[#6ee7b7]">baru</span>
+        <span className="text-[11px] font-medium text-[#6ee7b7]">new</span>
       )}
     </span>
   );
@@ -124,12 +124,12 @@ function RowActions({
   return (
     <div className="space-y-2">
       <Select
-        aria-label={`Status presensi ${row.name}`}
+        aria-label={`Attendance status for ${row.name}`}
         value={row.status ?? ""}
         disabled={pending}
         onChange={(event) => save(event.target.value || null)}
       >
-        <option value="">Belum presensi</option>
+        <option value="">Not checked in</option>
         {ATTENDANCE_STATUSES.map((status) => (
           <option key={status} value={status}>
             {ATTENDANCE[status].label}
@@ -138,13 +138,13 @@ function RowActions({
       </Select>
       {needsNote && (
         <input
-          aria-label={`Keterangan ${row.name}`}
+          aria-label={`Notes for ${row.name}`}
           value={note}
           onChange={(event) => setNote(event.target.value)}
           onBlur={() => {
             if ((row.note ?? "") !== note) save(row.status, note);
           }}
-          placeholder="Keterangan (opsional)"
+          placeholder="Notes (optional)"
           maxLength={200}
           className="h-9 w-full rounded-lg border border-white/10 bg-white/[0.04] px-3 text-xs text-white placeholder:text-[#6f7286] focus-visible:border-[#4f8dff]/60 focus-visible:outline-none"
         />
@@ -199,7 +199,7 @@ export function AttendanceLive({
   const pending = rows.filter((row) => row.status === null).length;
 
   const chips = [
-    { key: "all" as const, label: `Semua (${rows.length})` },
+    { key: "all" as const, label: `All (${rows.length})` },
     ...ATTENDANCE_STATUSES.filter((status) => count(status) > 0).map(
       (status) => ({
         key: status,
@@ -207,7 +207,7 @@ export function AttendanceLive({
       }),
     ),
     ...(pending > 0
-      ? [{ key: "pending" as const, label: `Belum presensi (${pending})` }]
+      ? [{ key: "pending" as const, label: `Not checked in (${pending})` }]
       : []),
   ];
 
@@ -217,7 +217,7 @@ export function AttendanceLive({
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <h2 className="text-[15px] font-bold tracking-[-0.01em]">
-              Daftar Presensi
+              Attendance List
             </h2>
             {isOpen && (
               <span className="inline-flex items-center gap-1.5 rounded-full border border-[#34d399]/25 bg-[#34d399]/[0.08] px-2.5 py-1 text-[11px] font-medium text-[#6ee7b7]">
@@ -227,19 +227,19 @@ export function AttendanceLive({
                   }`}
                   aria-hidden="true"
                 />
-                {connected ? "Live" : "Menyambung…"}
+                {connected ? "Live" : "Connecting…"}
               </span>
             )}
           </div>
           <label className="relative w-full sm:w-64">
-            <span className="sr-only">Cari nama pengurus</span>
+            <span className="sr-only">Search officer name</span>
             <span className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-[#8a8ea3]">
               {icons.search}
             </span>
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Cari nama atau divisi…"
+              placeholder="Search name or division…"
               className="h-9 w-full rounded-lg border border-white/[0.12] bg-[#0d1024] pr-3.5 pl-10 text-sm text-white placeholder:text-[#6f7286] focus-visible:border-[#4f8dff]/60 focus-visible:ring-4 focus-visible:ring-[#4f8dff]/15 focus-visible:outline-none"
             />
           </label>
@@ -247,7 +247,7 @@ export function AttendanceLive({
 
         <div
           role="group"
-          aria-label="Filter status presensi"
+          aria-label="Filter attendance status"
           className="flex flex-wrap gap-2"
         >
           {chips.map((chip) => (
@@ -269,7 +269,7 @@ export function AttendanceLive({
       </div>
 
       <div aria-live="polite" className="sr-only">
-        {`${rows.filter((row) => row.status !== null).length} dari ${rows.length} pengurus sudah presensi`}
+        {`${rows.filter((row) => row.status !== null).length} of ${rows.length} officers checked in`}
       </div>
 
       {error && (
@@ -286,23 +286,23 @@ export function AttendanceLive({
           <thead>
             <tr className="border-b border-white/[0.06] text-[11px] font-medium tracking-[0.08em] text-[#8a8ea3] uppercase">
               <th scope="col" className="py-4 pr-3 pl-[18px] font-medium">
-                Pengurus
+                Officer
               </th>
               <th scope="col" className="px-3 py-4 font-medium">
                 Status
               </th>
               <th scope="col" className="px-3 py-4 font-medium">
-                Waktu
+                Time
               </th>
               <th scope="col" className="px-3 py-4 font-medium">
-                Cara
+                Method
               </th>
               {canManage && (
                 <th
                   scope="col"
                   className="w-[180px] py-4 pr-[18px] pl-3 font-medium"
                 >
-                  Ubah Status
+                  Change Status
                 </th>
               )}
             </tr>
@@ -373,13 +373,13 @@ export function AttendanceLive({
                 >
                   <p className="text-sm font-medium text-[#c7c9d4]">
                     {rows.length === 0
-                      ? "Belum ada peserta"
-                      : "Tidak ada yang cocok"}
+                      ? "No attendees yet"
+                      : "No matching attendees found"}
                   </p>
                   <p className="mt-1.5 text-[13px] text-[#6f7286]">
                     {rows.length === 0
-                      ? "Peserta rapat diambil dari pengurus aktif sesuai jenis rapatnya."
-                      : "Coba kata kunci atau filter status yang lain."}
+                      ? "Meeting attendees are drawn from active officers according to the meeting scope."
+                      : "Try different keywords or filters."}
                   </p>
                 </td>
               </tr>

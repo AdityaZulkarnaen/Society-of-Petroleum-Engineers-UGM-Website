@@ -19,11 +19,11 @@ export async function saveRekap(
 ): Promise<SaveResult> {
   await requireSuperAdmin();
   const { ok, errors, values } = validateRekap(input);
-  if (!ok) return { errors, error: "Periksa kembali isian yang ditandai." };
+  if (!ok) return { errors, error: "Please review the highlighted fields." };
 
   if (DUMMY_DATA) {
     if (!dummyAccounts.list().some((a) => a.id === profileId)) {
-      return { error: "Pengurus tidak ditemukan." };
+      return { error: "Officer not found." };
     }
     const previous = dummyRekap.get(profileId);
     const byName = new Map(values.competencies.map((c) => [c.competency, c]));
@@ -67,8 +67,8 @@ export async function saveRekap(
       return {
         error:
           error.message === "not_allowed"
-            ? "Pengurus ini bukan anggota divisimu."
-            : "Rekap gagal disimpan. Coba lagi.",
+            ? "This officer is not a member of your division."
+            : "Failed to save recap. Please try again.",
       };
     }
   }

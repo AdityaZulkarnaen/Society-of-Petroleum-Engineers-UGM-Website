@@ -6,7 +6,7 @@ export default function Page() {
     <ComingSoonPage
       title="Audit Log"
       backHref="/super-admin"
-      backLabel="Kembali ke Dashboard"
+      backLabel="Back to Dashboard"
       surface={compactCardSurface}
     />
   );

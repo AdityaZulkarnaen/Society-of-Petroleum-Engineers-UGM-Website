@@ -77,27 +77,27 @@ export function validateMeeting(input: MeetingInput) {
   const lateAfterMinutes = Number(input.lateAfterMinutes);
 
   if (title.length < 2 || title.length > TITLE_MAX) {
-    errors.title = "Isi nama rapat.";
+    errors.title = "Enter meeting title.";
   }
   if (!MEETING_SCOPES.includes(input.scope)) {
-    errors.scope = "Pilih jenis rapat.";
+    errors.scope = "Select meeting scope.";
   }
   if (!Number.isInteger(sequence) || sequence < 1 || sequence > SEQUENCE_MAX) {
-    errors.sequence = `Rapat ke- harus angka 1–${SEQUENCE_MAX}.`;
+    errors.sequence = `Meeting sequence must be a number from 1 to ${SEQUENCE_MAX}.`;
   }
   if (!DATETIME.test(input.scheduledAt)) {
-    errors.scheduledAt = "Pilih tanggal dan jam rapat.";
+    errors.scheduledAt = "Select meeting date and time.";
   }
   if (location.length > LOCATION_MAX) {
-    errors.location = `Maksimal ${LOCATION_MAX} karakter.`;
+    errors.location = `Maximum ${LOCATION_MAX} characters.`;
   }
-  if (notes.length > NOTES_MAX) errors.notes = `Maksimal ${NOTES_MAX} karakter.`;
+  if (notes.length > NOTES_MAX) errors.notes = `Maximum ${NOTES_MAX} characters.`;
   if (
     !Number.isInteger(lateAfterMinutes) ||
     lateAfterMinutes < 0 ||
     lateAfterMinutes > LATE_MAX
   ) {
-    errors.lateAfterMinutes = `Toleransi harus 0–${LATE_MAX} menit.`;
+    errors.lateAfterMinutes = `Grace period must be 0–${LATE_MAX} minutes.`;
   }
 
   return {

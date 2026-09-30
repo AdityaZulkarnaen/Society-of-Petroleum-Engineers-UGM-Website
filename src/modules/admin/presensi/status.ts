@@ -18,11 +18,11 @@ export const ATTENDANCE: Record<
   AttendanceStatus,
   { label: string; tone: Tone }
 > = {
-  hadir: { label: "Hadir", tone: "green" },
-  terlambat: { label: "Terlambat", tone: "amber" },
-  izin: { label: "Izin", tone: "blue" },
-  sakit: { label: "Sakit", tone: "blue" },
-  alpa: { label: "Alpa", tone: "red" },
+  hadir: { label: "Present", tone: "green" },
+  terlambat: { label: "Late", tone: "amber" },
+  izin: { label: "Excused", tone: "blue" },
+  sakit: { label: "Sick", tone: "blue" },
+  alpa: { label: "Absent", tone: "red" },
 };
 
 /** Counts towards attendance in the summaries. */
@@ -37,15 +37,15 @@ export const SCOPE: Record<
   { label: string; short: string; hint: string; tone: Tone }
 > = {
   divisi: {
-    label: "Rapat Divisi",
-    short: "Divisi",
-    hint: "Hanya pengurus divisi penyelenggara yang dipanggil.",
+    label: "Division Meeting",
+    short: "Division",
+    hint: "Only officers from the hosting division are invited.",
     tone: "neutral",
   },
   gabungan: {
-    label: "Rapat Gabungan",
-    short: "Gabungan",
-    hint: "Seluruh pengurus aktif dari semua divisi dipanggil.",
+    label: "Joint Meeting",
+    short: "Joint",
+    hint: "All active officers from all divisions are invited.",
     tone: "blue",
   },
 };
@@ -57,9 +57,9 @@ export const MEETING_STATE: Record<
   MeetingState,
   { label: string; tone: Tone }
 > = {
-  draft: { label: "Belum dibuka", tone: "neutral" },
-  open: { label: "Presensi dibuka", tone: "green" },
-  closed: { label: "Selesai", tone: "blue" },
+  draft: { label: "Upcoming", tone: "neutral" },
+  open: { label: "Attendance open", tone: "green" },
+  closed: { label: "Completed", tone: "blue" },
 };
 
 export function meetingState(
@@ -70,5 +70,5 @@ export function meetingState(
   return openedAt ? "open" : "draft";
 }
 
-/** 'Rapat ke-3' — how the rapat is referred to in the UI. */
-export const ordinal = (sequence: number) => `Rapat ke-${sequence}`;
+/** 'Meeting #3' — how the rapat is referred to in the UI. */
+export const ordinal = (sequence: number) => `Meeting #${sequence}`;

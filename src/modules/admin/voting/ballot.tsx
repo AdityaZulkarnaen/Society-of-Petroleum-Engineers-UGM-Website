@@ -65,7 +65,7 @@ export function Ballot({ candidates }: { candidates: Candidate[] }) {
   return (
     <>
       <fieldset className="space-y-6">
-        <legend className="sr-only">Pilih satu kandidat</legend>
+        <legend className="sr-only">Select one candidate</legend>
         {candidates.map((candidate) => {
           const id = `vote-${candidate.id}`;
           return (
@@ -100,14 +100,14 @@ export function Ballot({ candidates }: { candidates: Candidate[] }) {
           <p aria-live="polite" className="text-sm text-[#8a8ea3]">
             {selected ? (
               <>
-                Pilihanmu:{" "}
+                Your choice:{" "}
                 <span className="font-semibold text-white">
                   {selected.fullName}
                 </span>
-                . Periksa sekali lagi sebelum mengirim.
+                . Please review carefully before submitting.
               </>
             ) : (
-              "Pilih salah satu kandidat di atas untuk melanjutkan."
+              "Select a candidate above to proceed."
             )}
           </p>
           <button
@@ -116,7 +116,7 @@ export function Ballot({ candidates }: { candidates: Candidate[] }) {
             onClick={confirm}
             className={`${primaryButton} h-12 shrink-0`}
           >
-            Kirim Suara →
+            Submit Vote →
           </button>
         </Card>
       </div>
@@ -132,13 +132,13 @@ export function Ballot({ candidates }: { candidates: Candidate[] }) {
         {selected && (
           <div className="px-6 pt-8 pb-6 text-center sm:px-9">
             <p className="text-xs tracking-[0.1em] text-[#8a8ea3] uppercase">
-              Konfirmasi Pilihan
+              Confirm Choice
             </p>
             <h2 id="confirm-title" className="mt-3 text-[22px] font-bold tracking-[-0.01em]">
-              Yakin memilih kandidat ini?
+              Confirm your vote for this candidate?
             </h2>
             <p id="confirm-note" className="mt-2 text-sm text-[#8a8ea3]">
-              Suara tidak dapat diubah setelah dikonfirmasi.
+              Your vote cannot be changed once submitted.
             </p>
 
             <CandidateSummary
@@ -163,7 +163,7 @@ export function Ballot({ candidates }: { candidates: Candidate[] }) {
                 disabled={pending}
                 className="h-12 rounded-xl border border-white/10 bg-white/[0.03] text-sm font-medium text-[#c7c9d4] transition-colors hover:border-white/20 hover:text-white disabled:opacity-50"
               >
-                Batal
+                Cancel
               </button>
               <button
                 type="button"
@@ -172,7 +172,7 @@ export function Ballot({ candidates }: { candidates: Candidate[] }) {
                 aria-busy={pending}
                 className={`${primaryButton} h-12 px-4 aria-disabled:cursor-wait aria-disabled:opacity-70`}
               >
-                {pending ? "Mengirim suara…" : "Ya, Kirim Suara Saya"}
+                {pending ? "Submitting vote…" : "Yes, Submit My Vote"}
               </button>
             </div>
           </div>

@@ -189,31 +189,31 @@ const icon = {
 const MENUS = {
   admin: [
     { href: "/admin", label: "Overview", icon: icon.overview },
-    { href: "/admin/rekap-diri", label: "Rekap Diri", icon: icon.profile },
-    { href: "/admin/acara", label: "Acara / Proker", icon: icon.calendar },
-    { href: "/admin/presensi", label: "Presensi Rapat", icon: icon.qr },
+    { href: "/admin/rekap-diri", label: "Self Report", icon: icon.profile },
+    { href: "/admin/acara", label: "Events & Programs", icon: icon.calendar },
+    { href: "/admin/presensi", label: "Meeting Attendance", icon: icon.qr },
     { href: "/admin/voting", label: "Voting", icon: icon.vote },
   ],
   superAdmin: [
     { href: "/super-admin", label: "Dashboard", icon: icon.home },
-    { href: "/super-admin/akun", label: "Manajemen Akun", icon: icon.users },
+    { href: "/super-admin/akun", label: "Account Management", icon: icon.users },
     {
       href: "/super-admin/rekap",
-      label: "Rekap Pengurus",
+      label: "Officer Recap",
       icon: icon.clipboard,
     },
     { href: "/super-admin/voting", label: "Voting", icon: icon.vote },
     {
       href: "/super-admin/acara",
-      label: "Acara / Proker",
+      label: "Events & Programs",
       icon: icon.calendar,
     },
     {
       href: "/super-admin/presensi",
-      label: "Presensi Rapat",
+      label: "Meeting Attendance",
       icon: icon.qr,
     },
-    { href: "/super-admin/divisi", label: "Divisi", icon: icon.layers },
+    { href: "/super-admin/divisi", label: "Divisions", icon: icon.layers },
     { href: "/super-admin/audit-log", label: "Audit Log", icon: icon.log },
   ],
 };

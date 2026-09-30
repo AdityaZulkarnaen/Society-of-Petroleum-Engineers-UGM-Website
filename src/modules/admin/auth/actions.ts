@@ -15,7 +15,7 @@ export type SignInState = {
 
 /* One message for unknown usernames and wrong passwords, so the form doesn't
    reveal which accounts exist. */
-const INVALID = "Username atau password salah.";
+const INVALID = "Invalid username or password.";
 
 const USERNAME = /^[a-z0-9._]{3,32}$/;
 
@@ -29,7 +29,7 @@ export async function signIn(
   const password = String(formData.get("password") ?? "");
 
   if (!username || !password) {
-    return { error: "Isi username dan password.", username };
+    return { error: "Please enter your username and password.", username };
   }
   if (!USERNAME.test(username)) return { error: INVALID, username };
 
@@ -44,13 +44,13 @@ export async function signIn(
     if (isAuthRetryableFetchError(error)) {
       console.error("Sign-in could not reach Supabase Auth:", error.message);
       return {
-        error: "Tidak dapat terhubung ke server. Periksa koneksi internet lalu coba lagi.",
+        error: "Unable to connect to the server. Please check your internet connection and try again.",
         username,
       };
     }
     if (error.code === "over_request_rate_limit") {
       return {
-        error: "Terlalu banyak percobaan. Coba lagi dalam beberapa menit.",
+        error: "Too many attempts. Please try again in a few minutes.",
         username,
       };
     }
@@ -68,8 +68,8 @@ export async function signIn(
     await supabase.auth.signOut();
     return {
       error: profile
-        ? "Akun ini sudah dinonaktifkan. Hubungi koordinator divisimu."
-        : "Akun ini tidak memiliki akses ke dashboard.",
+        ? "This account has been deactivated. Please contact your division coordinator."
+        : "This account does not have access to the dashboard.",
       username,
     };
   }

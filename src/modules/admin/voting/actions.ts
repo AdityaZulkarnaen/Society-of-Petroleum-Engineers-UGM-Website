@@ -12,9 +12,9 @@ export type VoteResult = { error?: string };
 
 /* Raised by public.cast_vote(). */
 const MESSAGES: Record<string, string> = {
-  voting_closed: "Periode pemilihan sedang tidak dibuka.",
-  candidate_not_found: "Kandidat tidak ditemukan. Muat ulang halaman ini.",
-  not_eligible: "Akunmu tidak terdaftar sebagai pemilih.",
+  voting_closed: "The voting period is currently not open.",
+  candidate_not_found: "Candidate not found. Please refresh this page.",
+  not_eligible: "Your account is not registered as an eligible voter.",
 };
 
 export async function castVote(candidateId: string): Promise<VoteResult> {
@@ -40,7 +40,7 @@ export async function castVote(candidateId: string): Promise<VoteResult> {
   /* Already voted, e.g. from another tab: the refreshed page shows that vote. */
   if (error && error.message !== "already_voted") {
     return {
-      error: MESSAGES[error.message] ?? "Suara gagal dikirim. Coba lagi.",
+      error: MESSAGES[error.message] ?? "Failed to cast vote. Please try again.",
     };
   }
 

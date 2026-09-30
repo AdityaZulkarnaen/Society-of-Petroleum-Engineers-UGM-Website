@@ -32,11 +32,11 @@ import {
 } from "./fields";
 
 const KATEGORI_TONE: Record<Kategori, Tone> = {
-  "Sangat Baik": "green",
-  "Baik": "blue",
-  "Cukup": "neutral",
-  "Kurang": "amber",
-  "Sangat Kurang": "amber",
+  Excellent: "green",
+  Good: "blue",
+  Fair: "neutral",
+  Poor: "amber",
+  "Very Poor": "amber",
 };
 
 /* Layout only; colours and height are added per field so they never compete. */
@@ -130,8 +130,8 @@ const optionLabel = (a: Account) =>
   [
     a.fullName,
     a.position,
-    a.division && `Divisi ${a.division}`,
-    !a.isActive && "nonaktif",
+    a.division && `${a.division} Division`,
+    !a.isActive && "inactive",
   ]
     .filter(Boolean)
     .join(" · ");
@@ -189,7 +189,7 @@ export function RekapEditor({
   function choose(id: string) {
     if (
       dirty &&
-      !window.confirm("Perubahan rekap belum disimpan. Pindah pengurus dan buang perubahan?")
+      !window.confirm("Recap changes have not been saved. Switch officer and discard changes?")
     ) {
       return;
     }
@@ -201,7 +201,7 @@ export function RekapEditor({
     const check = validateRekap(input());
     setErrors(check.errors);
     if (!check.ok) {
-      setStatus({ tone: "error", text: "Periksa kembali isian yang ditandai." });
+      setStatus({ tone: "error", text: "Please review the highlighted fields." });
       return;
     }
     startTransition(async () => {
@@ -211,7 +211,7 @@ export function RekapEditor({
         setStatus({ tone: "error", text: result.error });
       } else {
         setDirty(false);
-        setStatus({ tone: "success", text: `Rekap ${selected.fullName} tersimpan.` });
+        setStatus({ tone: "success", text: `Recap for ${selected.fullName} saved.` });
       }
     });
   }
@@ -229,16 +229,16 @@ export function RekapEditor({
     <div className="space-y-6">
       <header>
         <h1 className="text-[28px] font-bold tracking-[-0.02em] sm:text-[32px]">
-          Rekap Pengurus
+          Officer Recap
         </h1>
         <p className="mt-2 text-sm text-[#8a8ea3]">
-          Pilih pengurus untuk melihat dan mengedit data rekap periode aktif ({period}).
+          Select an officer to view and edit recap data for the active period ({period}).
         </p>
       </header>
 
       <div>
         <label htmlFor="rekap-pengurus" className={`${label} mb-2.5`}>
-          Pilih Pengurus
+          Select Officer
         </label>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="flex-1">
@@ -264,14 +264,14 @@ export function RekapEditor({
                 : "border-white/15 bg-[#14172a] text-[#a3a6b8]"
             }`}
           >
-            {saved ? "Data tersedia" : "Belum ada data"}
+            {saved ? "Data available" : "No data yet"}
           </span>
         </div>
       </div>
 
       <div className={`space-y-6 transition-opacity ${switching ? "opacity-50" : ""}`}>
         <Card surface={compactCardSurface} className="p-6">
-          <SectionHeading eyebrow="Input Data" title="Statistik Kontribusi" />
+          <SectionHeading eyebrow="Data Input" title="Contribution Statistics" />
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             {STATS.map(({ key, label: title }) => {
               const { done, target } = stats[key];
@@ -296,7 +296,7 @@ export function RekapEditor({
                     {(["done", "target"] as const).map((field, i) => (
                       <div key={field} className={i === 1 ? "col-start-3" : undefined}>
                         <label htmlFor={`${key}-${field}`} className={`${label} mb-2`}>
-                          {field === "done" ? "Capaian" : "Target"}
+                          {field === "done" ? "Achieved" : "Target"}
                         </label>
                         <input
                           id={`${key}-${field}`}
@@ -333,16 +333,16 @@ export function RekapEditor({
         </Card>
 
         <Card surface={compactCardSurface} className="p-6">
-          <SectionHeading eyebrow="Penilaian HR" title="Evaluasi Kompetensi" />
+          <SectionHeading eyebrow="HR Assessment" title="Competency Evaluation" />
           <p className="mt-2 text-xs text-[#6f7286]">
-            Masukkan skor 1–5 (desimal diperbolehkan) untuk setiap aspek kompetensi.
+            Enter scores 1–5 (decimals allowed) for each competency aspect.
           </p>
 
           {/* Header */}
           <div className="mt-5 hidden grid-cols-[2rem_1fr_100px] gap-2.5 border-b border-white/[0.06] pb-2.5 sm:grid">
             <span className={label}>No</span>
-            <span className={label}>Aspek Kompetensi</span>
-            <span className={label}>Skor</span>
+            <span className={label}>Competency Aspect</span>
+            <span className={label}>Score</span>
           </div>
 
           {/* Rows */}
@@ -356,7 +356,7 @@ export function RekapEditor({
                 <p className="text-sm text-[#e3e5ee]">{name}</p>
                 <div>
                   <input
-                    aria-label={`Skor ${name}`}
+                    aria-label={`Score for ${name}`}
                     inputMode="decimal"
                     placeholder="1–5"
                     value={scores[i]}
@@ -372,7 +372,7 @@ export function RekapEditor({
             ))}
           </ul>
 
-          {/* Summary: Total & Rata-rata */}
+          {/* Summary: Total & Average */}
           <div className="mt-5 space-y-2 rounded-xl border border-white/[0.1] bg-white/[0.03] px-5 py-4">
             <div className="flex items-center justify-between">
               <span className="text-sm font-semibold text-[#a3a6b8]">Total</span>
@@ -383,7 +383,7 @@ export function RekapEditor({
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm font-semibold text-[#a3a6b8]">Rata-rata</span>
+              <span className="text-sm font-semibold text-[#a3a6b8]">Average</span>
               <div className="flex items-center gap-3">
                 <span className="text-lg font-bold tabular-nums text-white">
                   {rataRata != null ? `${rataRata.toFixed(2)} / ${MAX_SCORE}` : "—"}
@@ -395,23 +395,23 @@ export function RekapEditor({
             </div>
           </div>
 
-          {/* Interpretasi Nilai legend */}
+          {/* Score Interpretation legend */}
           <details className="mt-4 text-xs text-[#6f7286]">
             <summary className="cursor-pointer font-medium text-[#8a8ea3] hover:text-white">
-              Interpretasi Nilai
+              Score Interpretation
             </summary>
             <div className="mt-2 space-y-1 pl-1">
-              <p><span className="font-semibold text-[#4ade80]">4.21 – 5.00</span> — Sangat Baik</p>
-              <p><span className="font-semibold text-[#6aa5ff]">3.41 – 4.20</span> — Baik</p>
-              <p><span className="font-semibold text-[#c7c9d4]">2.61 – 3.40</span> — Cukup</p>
-              <p><span className="font-semibold text-[#fbbf24]">1.81 – 2.60</span> — Kurang</p>
-              <p><span className="font-semibold text-[#f87171]">1.00 – 1.80</span> — Sangat Kurang</p>
+              <p><span className="font-semibold text-[#4ade80]">4.21 – 5.00</span> — Excellent</p>
+              <p><span className="font-semibold text-[#6aa5ff]">3.41 – 4.20</span> — Good</p>
+              <p><span className="font-semibold text-[#c7c9d4]">2.61 – 3.40</span> — Fair</p>
+              <p><span className="font-semibold text-[#fbbf24]">1.81 – 2.60</span> — Poor</p>
+              <p><span className="font-semibold text-[#f87171]">1.00 – 1.80</span> — Very Poor</p>
             </div>
           </details>
         </Card>
 
         <Card surface={compactCardSurface} className="p-6">
-          <SectionHeading eyebrow="Narasi Evaluator" title="Catatan & Ringkasan dari HR" />
+          <SectionHeading eyebrow="Evaluator Feedback" title="HR Notes & Summary" />
           <div className="mt-6 space-y-6">
             {NOTES.map(({ key, label: title }) => (
               <div key={key}>
@@ -448,7 +448,7 @@ export function RekapEditor({
                 : "text-[#8a8ea3]"
           }`}
         >
-          {status?.text ?? (dirty ? "Ada perubahan yang belum disimpan." : "")}
+          {status?.text ?? (dirty ? "You have unsaved changes." : "")}
         </p>
         <button
           type="button"
@@ -456,7 +456,7 @@ export function RekapEditor({
           aria-disabled={pending}
           className={`${primaryButton} h-12 px-7 aria-disabled:cursor-wait aria-disabled:opacity-70`}
         >
-          {pending ? "Menyimpan…" : "Simpan Perubahan"}
+          {pending ? "Saving…" : "Save Changes"}
         </button>
       </div>
     </div>

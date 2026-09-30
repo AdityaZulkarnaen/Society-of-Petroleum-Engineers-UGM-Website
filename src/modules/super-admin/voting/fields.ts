@@ -54,26 +54,26 @@ export function validateCandidate(input: CandidateInput) {
   const vision = input.vision.trim();
   const grandDesignUrl = input.grandDesignUrl.trim();
 
-  if (fullName.length < 2 || fullName.length > 100) errors.fullName = "Isi nama kandidat.";
+  if (fullName.length < 2 || fullName.length > 100) errors.fullName = "Enter candidate name.";
   if (nim && !NIM_PATTERN.test(nim)) errors.nim = NIM_HINT;
-  if (position.length > 80) errors.position = "Maksimal 80 karakter.";
+  if (position.length > 80) errors.position = "Maximum 80 characters.";
   /* an uploaded photo's URL (data: only in the dummy preview) */
   if (photoUrl && !URL_PATTERN.test(photoUrl) && !photoUrl.startsWith("data:image/")) {
-    errors.photoUrl = "Foto tidak valid. Upload ulang fotonya.";
+    errors.photoUrl = "Invalid photo. Please upload the photo again.";
   }
-  if (vision.length > VISION_MAX) errors.vision = `Maksimal ${VISION_MAX} karakter.`;
+  if (vision.length > VISION_MAX) errors.vision = `Maximum ${VISION_MAX} characters.`;
   if (grandDesignUrl && !URL_PATTERN.test(grandDesignUrl)) {
-    errors.grandDesignUrl = "URL harus diawali https://";
+    errors.grandDesignUrl = "URL must start with https://";
   }
 
   /* blank points are dropped */
   const points = (key: "programs" | "achievements") => {
     const list = input[key].map((p) => p.trim());
     list.forEach((p, i) => {
-      if (p.length > POINT_MAX) errors[`${key}.${i}`] = `Maksimal ${POINT_MAX} karakter.`;
+      if (p.length > POINT_MAX) errors[`${key}.${i}`] = `Maximum ${POINT_MAX} characters.`;
     });
     const kept = list.filter(Boolean);
-    if (kept.length > POINTS_MAX) errors[key] = `Maksimal ${POINTS_MAX} poin.`;
+    if (kept.length > POINTS_MAX) errors[key] = `Maximum ${POINTS_MAX} items.`;
     return kept;
   };
 
@@ -96,12 +96,12 @@ export function validateElection(input: ElectionInput) {
   const opensOn = input.opensOn.trim();
   const closesOn = input.closesOn.trim();
 
-  if (title.length < 4 || title.length > 120) errors.title = "Isi judul pemilihan.";
-  if (!TERM.test(termLabel)) errors.termLabel = "Format periode: 2026/2027.";
-  if (!DATE.test(opensOn)) errors.opensOn = "Pilih tanggal dibuka.";
-  if (!DATE.test(closesOn)) errors.closesOn = "Pilih tanggal ditutup.";
+  if (title.length < 4 || title.length > 120) errors.title = "Enter election title.";
+  if (!TERM.test(termLabel)) errors.termLabel = "Term format: 2026/2027.";
+  if (!DATE.test(opensOn)) errors.opensOn = "Select start date.";
+  if (!DATE.test(closesOn)) errors.closesOn = "Select closing date.";
   else if (DATE.test(opensOn) && closesOn < opensOn) {
-    errors.closesOn = "Tanggal ditutup harus setelah tanggal dibuka.";
+    errors.closesOn = "Closing date must be after start date.";
   }
 
   return result(errors, { title, termLabel, opensOn, closesOn });

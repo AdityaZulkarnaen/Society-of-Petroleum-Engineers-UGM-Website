@@ -24,22 +24,22 @@ export function ErrorState({
 
   return (
     <div className="mx-auto max-w-[520px] py-16 text-center">
-      <h1 className="text-xl font-bold text-white">Gagal memuat halaman</h1>
+      <h1 className="text-xl font-bold text-white">Failed to load page</h1>
       <p className="mt-2.5 text-sm leading-relaxed text-[#8a8ea3]">
-        Data tidak berhasil diambil. Periksa koneksi internet lalu coba lagi.
+        Could not load data. Please check your internet connection and try again.
         {error.digest ? (
           <>
             {" "}
-            Kode: <span className="text-[#c7c9d4]">{error.digest}</span>
+            Code: <span className="text-[#c7c9d4]">{error.digest}</span>
           </>
         ) : null}
       </p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">
         <button type="button" onClick={reset} className={primaryButton}>
-          Coba lagi
+          Try again
         </button>
         <a href={home} className={secondaryButton}>
-          Kembali ke dashboard
+          Back to Dashboard
         </a>
       </div>
     </div>

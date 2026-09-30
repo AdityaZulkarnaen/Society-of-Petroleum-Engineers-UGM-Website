@@ -87,7 +87,7 @@ export function SkeletonTable({ rows = 6 }: { rows?: number }) {
 export function SkeletonPage({ children }: { children: React.ReactNode }) {
   return (
     <div className="space-y-6" role="status" aria-busy="true">
-      <span className="sr-only">Memuat…</span>
+      <span className="sr-only">Loading…</span>
       {children}
     </div>
   );

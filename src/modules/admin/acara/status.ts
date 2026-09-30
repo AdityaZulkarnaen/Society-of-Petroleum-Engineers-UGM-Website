@@ -12,8 +12,8 @@ export const PROKER_STATUSES = [
 export type ProkerStatus = (typeof PROKER_STATUSES)[number];
 
 export const STATUS: Record<ProkerStatus, { label: string; tone: Tone }> = {
-  direncanakan: { label: "Direncanakan", tone: "neutral" },
-  berlangsung: { label: "Berlangsung", tone: "amber" },
-  selesai: { label: "Selesai", tone: "green" },
-  dibatalkan: { label: "Dibatalkan", tone: "red" },
+  direncanakan: { label: "Planned", tone: "neutral" },
+  berlangsung: { label: "In Progress", tone: "amber" },
+  selesai: { label: "Completed", tone: "green" },
+  dibatalkan: { label: "Cancelled", tone: "red" },
 };

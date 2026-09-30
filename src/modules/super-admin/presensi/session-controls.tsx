@@ -45,10 +45,10 @@ export function SessionControls({
             className={`${primaryButton} gap-2 aria-disabled:cursor-wait aria-disabled:opacity-70`}
           >
             {busy
-              ? "Membuka…"
+              ? "Opening…"
               : state === "closed"
-                ? "Buka Ulang Presensi"
-                : "Buka Presensi"}
+                ? "Reopen Attendance"
+                : "Open Attendance"}
           </button>
         )}
         {state === "open" && (
@@ -57,7 +57,7 @@ export function SessionControls({
             onClick={() => setConfirming(true)}
             className={secondaryButton}
           >
-            Tutup Presensi
+            Close Attendance
           </button>
         )}
       </div>
@@ -77,21 +77,22 @@ export function SessionControls({
         <div className="px-6 pt-7 pb-7 sm:px-8">
           <ModalHeader
             id="close-presensi-title"
-            title="Tutup Presensi"
+            title="Close Attendance"
             onClose={() => setConfirming(false)}
             disabled={busy}
           />
           <p className="mt-6 text-sm leading-relaxed text-[#c7c9d4]">
-            QR langsung berhenti berlaku.{" "}
+            The QR code will immediately stop working.{" "}
             {waiting > 0 ? (
               <>
                 <strong className="font-semibold text-white">{waiting}</strong>{" "}
-                pengurus yang belum presensi akan tercatat{" "}
-                <strong className="font-semibold text-white">Alpa</strong> — bisa
-                kamu ubah lagi ke Izin atau Sakit dari tabel setelahnya.
+                {waiting === 1 ? "officer" : "officers"} not yet checked in will
+                be marked{" "}
+                <strong className="font-semibold text-white">Absent</strong> —
+                you can update this to Excused or Sick from the table afterwards.
               </>
             ) : (
-              "Semua peserta sudah punya status presensi."
+              "All attendees already have an attendance status recorded."
             )}
           </p>
           {error && (
@@ -110,7 +111,7 @@ export function SessionControls({
               disabled={busy}
               className={secondaryButton}
             >
-              Batal
+              Cancel
             </button>
             <button
               type="button"
@@ -118,7 +119,7 @@ export function SessionControls({
               aria-disabled={busy}
               className={`${primaryButton} aria-disabled:cursor-wait aria-disabled:opacity-70`}
             >
-              {busy ? "Menutup…" : "Tutup Presensi"}
+              {busy ? "Closing…" : "Close Attendance"}
             </button>
           </div>
         </div>

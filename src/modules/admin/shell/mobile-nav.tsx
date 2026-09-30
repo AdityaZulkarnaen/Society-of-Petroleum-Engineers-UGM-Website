@@ -82,7 +82,7 @@ export function MobileNav({
         className="flex size-10 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.02] text-[#c7c9d4] transition-colors hover:bg-white/[0.06] hover:text-white"
       >
         {burger}
-        <span className="sr-only">Buka menu</span>
+        <span className="sr-only">Open menu</span>
       </button>
 
       {/* Kept mounted so the panel slides rather than blinks into place. */}
@@ -103,7 +103,7 @@ export function MobileNav({
           ref={panel}
           role="dialog"
           aria-modal={open || undefined}
-          aria-label="Menu dashboard"
+          aria-label="Dashboard menu"
           tabIndex={-1}
           className={`absolute inset-y-0 left-0 flex w-[min(19rem,85vw)] flex-col border-r border-white/[0.06] bg-[#0b0e22] transition-transform duration-200 outline-none ${
             open ? "translate-x-0" : "-translate-x-full"
@@ -117,7 +117,7 @@ export function MobileNav({
               className="flex size-9 shrink-0 items-center justify-center rounded-lg text-[#8a8ea3] transition-colors hover:bg-white/[0.04] hover:text-white"
             >
               {close}
-              <span className="sr-only">Tutup menu</span>
+              <span className="sr-only">Close menu</span>
             </button>
           </div>
 

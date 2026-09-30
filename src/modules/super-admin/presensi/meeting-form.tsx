@@ -116,14 +116,14 @@ export function MeetingForm({
     <form onSubmit={submit} noValidate className="px-6 pt-7 pb-7 sm:px-8">
       <ModalHeader
         id={`${prefix}-title`}
-        title={editing ? "Edit Rapat" : "Buat Rapat Baru"}
+        title={editing ? "Edit Meeting" : "Create New Meeting"}
         onClose={onClose}
         disabled={pending}
       />
 
       <fieldset className="mt-7">
         <legend className="mb-2 text-[11px] font-medium tracking-[0.08em] text-[#8a8ea3] uppercase">
-          Jenis Rapat
+          Meeting Scope
         </legend>
         <div className="grid gap-2.5 sm:grid-cols-2">
           {MEETING_SCOPES.map((option) => {
@@ -165,13 +165,13 @@ export function MeetingForm({
       <div className="mt-5 grid gap-x-4 gap-y-4 sm:grid-cols-[1fr_140px]">
         <Field
           id={`${prefix}-f-title`}
-          label="Nama Rapat"
+          label="Meeting Title"
           error={errors.title}
         >
           <input
             {...fieldProps("title")}
             defaultValue={meeting?.title}
-            placeholder="mis. Rapat Koordinasi Bulanan"
+            placeholder="e.g. Monthly Coordination Meeting"
             autoComplete="off"
             autoFocus
             maxLength={TITLE_MAX}
@@ -180,7 +180,7 @@ export function MeetingForm({
         </Field>
         <Field
           id={`${prefix}-f-sequence`}
-          label="Rapat ke-"
+          label="Meeting No."
           error={errors.sequence}
         >
           <input
@@ -197,16 +197,16 @@ export function MeetingForm({
 
       <p className="mt-2 text-xs text-[#6f7286]">
         {editing
-          ? "Nomor rapat dipakai di daftar dan rekap presensi."
+          ? "Meeting number is displayed in lists and attendance recaps."
           : scope === "gabungan"
-            ? `Nomor urut rapat gabungan seluruh organisasi. Berikutnya: ${sequences.gabungan}.`
-            : `Nomor urut rapat divisi ${division ?? "kamu"}. Berikutnya: ${sequences.divisi}.`}
+            ? `Sequence number for all-hands joint meetings across the organization. Next: ${sequences.gabungan}.`
+            : `Sequence number for ${division ? `${division} Division` : "your division"} meetings. Next: ${sequences.divisi}.`}
       </p>
 
       <div className="mt-5 grid gap-x-4 gap-y-4 sm:grid-cols-2">
         <Field
           id={`${prefix}-f-scheduledAt`}
-          label="Tanggal & Jam (WIB)"
+          label="Date & Time (WIB)"
           error={errors.scheduledAt}
         >
           <input
@@ -220,7 +220,7 @@ export function MeetingForm({
         </Field>
         <Field
           id={`${prefix}-f-lateAfterMinutes`}
-          label="Batas Terlambat (menit)"
+          label="Late Tolerance (minutes)"
           error={errors.lateAfterMinutes}
         >
           <input
@@ -236,13 +236,13 @@ export function MeetingForm({
         <div className="sm:col-span-2">
           <Field
             id={`${prefix}-f-location`}
-            label="Lokasi"
+            label="Location"
             error={errors.location}
           >
             <input
               {...fieldProps("location")}
               defaultValue={meeting?.location ?? ""}
-              placeholder="mis. Ruang Sidang Lantai 2, atau tautan Zoom"
+              placeholder="e.g. 2nd Floor Conference Room, or Zoom link"
               autoComplete="off"
               maxLength={LOCATION_MAX}
               className={control}
@@ -252,13 +252,13 @@ export function MeetingForm({
         <div className="sm:col-span-2">
           <Field
             id={`${prefix}-f-notes`}
-            label="Agenda / Catatan"
+            label="Agenda / Notes"
             error={errors.notes}
           >
             <textarea
               {...fieldProps("notes")}
               defaultValue={meeting?.notes ?? ""}
-              placeholder="Agenda singkat rapat ini…"
+              placeholder="Brief agenda for this meeting…"
               rows={3}
               maxLength={NOTES_MAX}
               className={`${controlBase} min-h-[88px] resize-y py-3 leading-relaxed`}
@@ -268,12 +268,12 @@ export function MeetingForm({
       </div>
 
       <p className="mt-4 text-xs leading-relaxed text-[#6f7286]">
-        Pengurus yang scan setelah{" "}
-        <span className="text-[#c7c9d4]">batas terlambat</span> tercatat
-        Terlambat.{" "}
+        Officers who scan after the{" "}
+        <span className="text-[#c7c9d4]">late tolerance window</span> are marked
+        Late.{" "}
         {editing
-          ? "Presensi dibuka dan ditutup dari halaman rapat."
-          : "Setelah dibuat, kamu dibawa ke halaman rapat. Buka presensinya di sana saat rapat dimulai."}
+          ? "Attendance is opened and closed from the meeting session page."
+          : "After creating, you will be taken to the meeting page. Open attendance there when the meeting starts."}
       </p>
 
       {formError && (
@@ -292,7 +292,7 @@ export function MeetingForm({
           disabled={pending}
           className={secondaryButton}
         >
-          Batal
+          Cancel
         </button>
         <button
           type="submit"
@@ -301,11 +301,11 @@ export function MeetingForm({
         >
           {pending
             ? editing
-              ? "Menyimpan…"
-              : "Membuat…"
+              ? "Saving…"
+              : "Creating…"
             : editing
-              ? "Simpan Perubahan"
-              : "Buat Rapat"}
+              ? "Save Changes"
+              : "Create Meeting"}
         </button>
       </div>
     </form>

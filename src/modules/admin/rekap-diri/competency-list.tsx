@@ -3,11 +3,11 @@ import { Badge } from "../components/ui";
 import { getKategori, MAX_SCORE, type CompetencyResult, type Kategori } from "./data";
 
 const KATEGORI_TONE: Record<Kategori, Tone> = {
-  "Sangat Baik": "green",
-  "Baik": "blue",
-  "Cukup": "neutral",
-  "Kurang": "amber",
-  "Sangat Kurang": "amber",
+  "Excellent": "green",
+  "Good": "blue",
+  "Fair": "neutral",
+  "Poor": "amber",
+  "Very Poor": "amber",
 };
 
 function ScoreBar({ score }: { score: number | null }) {
@@ -84,7 +84,7 @@ export function CompetencyList({
           </span>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-sm font-semibold text-[#a3a6b8]">Rata-rata</span>
+          <span className="text-sm font-semibold text-[#a3a6b8]">Average</span>
           <div className="flex items-center gap-3">
             <span className="text-lg font-bold tabular-nums text-white">
               {rataRata != null ? `${rataRata.toFixed(2)} / ${MAX_SCORE}` : "—"}

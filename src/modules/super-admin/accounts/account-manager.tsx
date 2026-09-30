@@ -30,9 +30,9 @@ import type { Account, AccountInput, Credentials } from "./fields";
 const PAGE_SIZE = 6;
 
 const FILTERS = [
-  { key: "all", label: "Semua" },
-  { key: "active", label: "Aktif" },
-  { key: "inactive", label: "Nonaktif" },
+  { key: "all", label: "All" },
+  { key: "active", label: "Active" },
+  { key: "inactive", label: "Inactive" },
 ] as const;
 
 type Filter = (typeof FILTERS)[number]["key"];
@@ -61,11 +61,11 @@ function CopyButton({ value, label }: { value: string; label: string }) {
           /* clipboard blocked; the value is still selectable */
         }
       }}
-      aria-label={`Salin ${label}`}
+      aria-label={`Copy ${label}`}
       className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.04] px-2.5 text-xs text-[#c7c9d4] transition-colors hover:border-white/20 hover:text-white"
     >
       {icons.copy}
-      <span aria-live="polite">{copied ? "Tersalin" : "Salin"}</span>
+      <span aria-live="polite">{copied ? "Copied" : "Copy"}</span>
     </button>
   );
 }
@@ -81,20 +81,20 @@ function CredentialsDialog({
 }) {
   const rows = [
     ["Username", credentials.username],
-    ["Password sementara", credentials.password],
+    ["Temporary password", credentials.password],
   ] as const;
 
   return (
     <div className="px-6 pt-7 pb-7 sm:px-8">
       <ModalHeader
         id="credentials-title"
-        title="Akun Berhasil Dibuat"
+        title="Account Created Successfully"
         onClose={onClose}
       />
       <p className="mt-5 text-sm leading-relaxed text-[#c7c9d4]">
-        Bagikan kredensial berikut langsung kepada{" "}
-        <strong className="font-semibold text-white">{name}</strong>. Password
-        hanya ditampilkan sekali ini.
+        Share the following credentials directly with{" "}
+        <strong className="font-semibold text-white">{name}</strong>. The password
+        is only shown this once.
       </p>
       <dl className="mt-5 space-y-2.5">
         {rows.map(([label, value]) => (
@@ -115,7 +115,7 @@ function CredentialsDialog({
         ))}
       </dl>
       <p className="mt-4 text-xs leading-relaxed text-[#6f7286]">
-        Pengurus masuk di halaman login dashboard memakai username di atas.
+        Officers sign in on the dashboard login page using the username above.
       </p>
       <div className="mt-6 flex justify-end">
         <button
@@ -124,7 +124,7 @@ function CredentialsDialog({
           onClick={onClose}
           className={primaryButton}
         >
-          Selesai
+          Done
         </button>
       </div>
     </div>
@@ -198,7 +198,7 @@ export function AccountManager({
       });
       setNotice({
         tone: "success",
-        text: `Akun ${input.fullName.trim()} berhasil dibuat.`,
+        text: `Account for ${input.fullName.trim()} created successfully.`,
       });
     }
     return result;
@@ -211,7 +211,7 @@ export function AccountManager({
         close();
         setNotice({
           tone: "success",
-          text: `Data ${input.fullName.trim()} diperbarui.`,
+          text: `Data for ${input.fullName.trim()} updated.`,
         });
       }
       return result;
@@ -229,7 +229,7 @@ export function AccountManager({
           ? { tone: "error", text: result.error }
           : {
               tone: "success",
-              text: `Akun ${account.fullName} ${account.isActive ? "dinonaktifkan" : "diaktifkan kembali"}.`,
+              text: `Account for ${account.fullName} ${account.isActive ? "deactivated" : "reactivated"}.`,
             },
       );
     });
@@ -240,11 +240,11 @@ export function AccountManager({
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-[28px] font-bold tracking-[-0.02em] sm:text-[32px]">
-            Manajemen Akun
+            Account Management
           </h1>
           <p className="mt-2 text-sm text-[#8a8ea3]">
-            {activeCount} pengurus aktif · {optimistic.length - activeCount}{" "}
-            nonaktif
+            {activeCount} active officers · {optimistic.length - activeCount}{" "}
+            inactive
           </p>
         </div>
         <button
@@ -253,13 +253,13 @@ export function AccountManager({
           className={`${primaryButton} gap-2`}
         >
           {icons.plus}
-          Tambah Pengurus
+          Add Officer
         </button>
       </header>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <label className="relative flex-1">
-          <span className="sr-only">Cari pengurus</span>
+          <span className="sr-only">Search officers</span>
           <span className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-[#8a8ea3]">
             {icons.search}
           </span>
@@ -270,13 +270,13 @@ export function AccountManager({
               setQuery(e.target.value);
               setPage(1);
             }}
-            placeholder="Cari nama, NIM, atau email..."
+            placeholder="Search name, NIM, or email..."
             className="h-10 w-full rounded-xl border border-white/10 bg-white/[0.03] pr-4 pl-10 text-sm text-white placeholder:text-[#6f7286] focus-visible:border-[#4f8dff]/60 focus-visible:ring-4 focus-visible:ring-[#4f8dff]/15 focus-visible:outline-none"
           />
         </label>
         <div
           role="group"
-          aria-label="Filter status akun"
+          aria-label="Filter account status"
           className="flex flex-wrap gap-2"
         >
           {FILTERS.map(({ key, label }) => (
@@ -314,7 +314,7 @@ export function AccountManager({
             <button
               type="button"
               onClick={() => setNotice(null)}
-              aria-label="Tutup pemberitahuan"
+              aria-label="Dismiss notification"
               className="opacity-70 hover:opacity-100"
             >
               ✕
@@ -332,22 +332,22 @@ export function AccountManager({
             <thead>
               <tr className="border-b border-white/[0.06] text-[11px] font-medium tracking-[0.08em] text-[#8a8ea3] uppercase">
                 <th scope="col" className="py-4 pr-3 pl-[18px] font-medium">
-                  Nama Lengkap
+                  Full Name
                 </th>
                 <th scope="col" className="px-3 py-4 font-medium">
-                  NIM
+                  Student ID (NIM)
                 </th>
                 <th scope="col" className="px-3 py-4 font-medium">
                   Email
                 </th>
                 <th scope="col" className="px-3 py-4 font-medium">
-                  Divisi
+                  Division
                 </th>
                 <th scope="col" className="px-3 py-4 font-medium">
-                  Jabatan
+                  Position
                 </th>
                 <th scope="col" className="px-3 py-4 font-medium">
-                  Periode
+                  Period
                 </th>
                 <th scope="col" className="px-3 py-4 text-center font-medium">
                   Status
@@ -356,7 +356,7 @@ export function AccountManager({
                   scope="col"
                   className="py-4 pr-[18px] pl-3 text-right font-medium"
                 >
-                  Aksi
+                  Actions
                 </th>
               </tr>
             </thead>
@@ -392,7 +392,7 @@ export function AccountManager({
                       tone={account.isActive ? "green" : "neutral"}
                       className="px-2.5 py-1 text-xs font-semibold"
                     >
-                      {account.isActive ? "Aktif" : "Nonaktif"}
+                      {account.isActive ? "Active" : "Inactive"}
                     </Badge>
                   </td>
                   <td className="py-2 pr-[18px] pl-3">
@@ -404,14 +404,14 @@ export function AccountManager({
                         {icons.edit}
                       </IconButton>
                       <IconButton
-                        label={`${account.isActive ? "Nonaktifkan" : "Aktifkan"} ${account.fullName}`}
+                        label={`${account.isActive ? "Deactivate" : "Activate"} ${account.fullName}`}
                         onClick={() => toggle(account)}
                         disabled={togglingId === account.id}
                       >
                         {icons.toggle}
                       </IconButton>
                       <IconButton
-                        label={`Hapus ${account.fullName}`}
+                        label={`Delete ${account.fullName}`}
                         onClick={() => setDialog({ type: "delete", account })}
                         danger
                       >
@@ -426,13 +426,13 @@ export function AccountManager({
                   <td colSpan={8} className="px-6 py-12 text-center">
                     <p className="text-sm font-medium text-[#c7c9d4]">
                       {accounts.length === 0
-                        ? "Belum ada akun pengurus"
-                        : "Tidak ada pengurus yang cocok"}
+                        ? "No officer accounts yet"
+                        : "No matching officers found"}
                     </p>
                     <p className="mt-1.5 text-[13px] text-[#6f7286]">
                       {accounts.length === 0
-                        ? "Tambahkan pengurus pertama divisimu lewat tombol Tambah Pengurus."
-                        : "Coba kata kunci atau filter lain."}
+                        ? "Add your division's first officer using the Add Officer button."
+                        : "Try different keywords or filters."}
                     </p>
                   </td>
                 </tr>
@@ -444,11 +444,11 @@ export function AccountManager({
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.06] px-5 py-4">
           <p className="text-[13px] text-[#6f7286]">
             {shown.length > 0
-              ? `Menampilkan ${start + 1}-${start + rows.length} dari ${shown.length} pengurus`
-              : "Tidak ada data"}
+              ? `Showing ${start + 1}-${start + rows.length} of ${shown.length} officers`
+              : "No data"}
           </p>
           {pageCount > 1 && (
-            <nav aria-label="Halaman" className="flex flex-wrap gap-1.5">
+            <nav aria-label="Pagination" className="flex flex-wrap gap-1.5">
               {Array.from({ length: pageCount }, (_, i) => i + 1).map((n) => (
                 <button
                   key={n}
@@ -509,23 +509,23 @@ export function AccountManager({
         {dialog?.type === "delete" && (
           <ConfirmDelete
             titleId="delete-account-title"
-            title="Hapus Akun Pengurus"
+            title="Delete Officer Account"
             onConfirm={() => deleteAccount(dialog.account.id)}
             onClose={close}
             onPendingChange={setBusy}
             onDeleted={() => {
               setNotice({
                 tone: "success",
-                text: `Akun ${dialog.account.fullName} dihapus.`,
+                text: `Account for ${dialog.account.fullName} deleted.`,
               });
               close();
             }}
           >
-            Akun{" "}
+            Account{" "}
             <strong className="font-semibold text-white">
               {dialog.account.fullName}
             </strong>{" "}
-            akan dihapus permanen. Tindakan ini tidak dapat diurungkan.
+            will be permanently deleted. This action cannot be undone.
           </ConfirmDelete>
         )}
       </Modal>

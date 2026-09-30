@@ -73,25 +73,25 @@ export function ElectionForm({
     <form onSubmit={submit} noValidate className="px-6 pt-7 pb-7 sm:px-8">
       <ModalHeader
         id="election-dialog-title"
-        title={election ? "Pengaturan Pemilihan" : "Buat Pemilihan"}
+        title={election ? "Election Settings" : "Create Election"}
         onClose={onClose}
         disabled={pending}
       />
 
       <div className="mt-7 grid gap-x-4 gap-y-4 sm:grid-cols-2">
         <div className="sm:col-span-2">
-          <Field id="election-title" label="Judul Pemilihan" error={errors.title}>
+          <Field id="election-title" label="Election Title" error={errors.title}>
             <input
               {...fieldProps("title")}
               defaultValue={election?.title}
-              placeholder="Pemilihan President SPE UGM SC 2027"
+              placeholder="SPE UGM SC 2027 Presidential Election"
               autoFocus
               className={control}
             />
           </Field>
         </div>
         <div className="sm:col-span-2">
-          <Field id="election-termLabel" label="Periode yang Dipilih" error={errors.termLabel}>
+          <Field id="election-termLabel" label="Elected Term" error={errors.termLabel}>
             <input
               {...fieldProps("termLabel")}
               defaultValue={election?.termLabel ?? defaultTerm}
@@ -100,7 +100,7 @@ export function ElectionForm({
             />
           </Field>
         </div>
-        <Field id="election-opensOn" label="Voting Dibuka" error={errors.opensOn}>
+        <Field id="election-opensOn" label="Voting Opens" error={errors.opensOn}>
           <input
             {...fieldProps("opensOn")}
             type="date"
@@ -108,7 +108,7 @@ export function ElectionForm({
             className={control}
           />
         </Field>
-        <Field id="election-closesOn" label="Voting Ditutup" error={errors.closesOn}>
+        <Field id="election-closesOn" label="Voting Closes" error={errors.closesOn}>
           <input
             {...fieldProps("closesOn")}
             type="date"
@@ -119,9 +119,8 @@ export function ElectionForm({
       </div>
 
       <p className="mt-5 rounded-xl border border-[#3b82f6]/30 bg-[#0f1f45]/50 px-4 py-3 text-[13px] leading-relaxed text-[#8fb4ff]">
-        Voting berjalan dari pukul 00.00 WIB tanggal dibuka sampai 23.59 WIB
-        tanggal ditutup. Kandidat hanya bisa ditambah atau dihapus sebelum voting
-        dibuka.
+        Voting runs from 00:00 WIB on the opening date until 23:59 WIB on the closing
+        date. Candidates can only be added or deleted before voting opens.
       </p>
 
       {formError && (
@@ -135,14 +134,14 @@ export function ElectionForm({
 
       <div className="mt-6 flex justify-end gap-3">
         <button type="button" onClick={onClose} disabled={pending} className={secondaryButton}>
-          Batal
+          Cancel
         </button>
         <button
           type="submit"
           aria-disabled={pending}
           className={`${primaryButton} aria-disabled:cursor-wait aria-disabled:opacity-70`}
         >
-          {pending ? "Menyimpan…" : election ? "Simpan Perubahan" : "Buat Pemilihan"}
+          {pending ? "Saving…" : election ? "Save Changes" : "Create Election"}
         </button>
       </div>
     </form>

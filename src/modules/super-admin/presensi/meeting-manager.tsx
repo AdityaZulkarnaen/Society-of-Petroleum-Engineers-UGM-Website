@@ -35,7 +35,7 @@ type Dialog =
 
 type Notice = { tone: "success" | "error"; text: string };
 
-const READ_ONLY = "Hanya divisi penyelenggara yang bisa mengubah rapat ini";
+const READ_ONLY = "Only the organizing division can modify this meeting";
 
 const STATES: MeetingState[] = ["draft", "open", "closed"];
 
@@ -87,7 +87,7 @@ export function MeetingManager({
         /* a new rapat redirects to its session page, so this is an edit */
         setNotice({
           tone: "success",
-          text: `${input.title.trim()} diperbarui.`,
+          text: `${input.title.trim()} updated.`,
         });
       }
       return result;
@@ -99,11 +99,11 @@ export function MeetingManager({
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-[28px] font-bold tracking-[-0.02em] sm:text-[32px]">
-            Presensi Rapat
+            Meeting Attendance
           </h1>
           <p className="mt-2 text-sm text-[#8a8ea3]">
-            Buat rapat, buka presensi, lalu tampilkan QR-nya. Pengurus scan dan
-            namanya masuk ke tabel secara langsung.
+            Create meetings, open attendance, and display the QR code. Officers scan the
+            code and their names appear in the live table.
           </p>
         </div>
         <button
@@ -113,33 +113,35 @@ export function MeetingManager({
           className={`${primaryButton} gap-2`}
         >
           {icons.plus}
-          Buat Rapat
+          Create Meeting
         </button>
       </header>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Stat
           surface={compactCardSurface}
-          label="Total Rapat"
+          label="Total Meetings"
           value={meetings.length}
         />
         <Stat
           surface={compactCardSurface}
-          label="Presensi Dibuka"
+          label="Attendance Open"
           value={open}
-          caption={open > 0 ? "sedang berlangsung" : undefined}
+          caption={open > 0 ? "in progress" : undefined}
         />
         <Stat
           surface={compactCardSurface}
-          label="Rapat Gabungan"
+          label="Joint Meetings"
           value={meetings.filter((m) => m.scope === "gabungan").length}
         />
         <Stat
           surface={compactCardSurface}
-          label="Rata-rata Kehadiran"
+          label="Average Attendance"
           value={average === null ? "—" : `${average}%`}
           caption={
-            closed.length > 0 ? `dari ${closed.length} rapat selesai` : undefined
+            closed.length > 0
+              ? `from ${closed.length} completed ${closed.length === 1 ? "meeting" : "meetings"}`
+              : undefined
           }
         />
       </div>
@@ -147,7 +149,7 @@ export function MeetingManager({
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div
           role="group"
-          aria-label="Filter status rapat"
+          aria-label="Filter meeting status"
           className="flex flex-wrap gap-2"
         >
           {(["all", ...STATES] as const).map((key) => (
@@ -162,13 +164,13 @@ export function MeetingManager({
                   : "border-white/10 bg-white/[0.03] text-[#a3a6b8] hover:border-white/20 hover:text-white"
               }`}
             >
-              {key === "all" ? "Semua" : MEETING_STATE[key].label}
+              {key === "all" ? "All" : MEETING_STATE[key].label}
             </button>
           ))}
         </div>
         <div
           role="group"
-          aria-label="Filter jenis rapat"
+          aria-label="Filter meeting scope"
           className="flex flex-wrap gap-2"
         >
           {(["all", "divisi", "gabungan"] as const).map((key) => (
@@ -183,7 +185,7 @@ export function MeetingManager({
                   : "border-white/10 bg-white/[0.03] text-[#a3a6b8] hover:border-white/20 hover:text-white"
               }`}
             >
-              {key === "all" ? "Semua jenis" : SCOPE[key].short}
+              {key === "all" ? "All scopes" : SCOPE[key].short}
             </button>
           ))}
         </div>
@@ -203,7 +205,7 @@ export function MeetingManager({
             <button
               type="button"
               onClick={() => setNotice(null)}
-              aria-label="Tutup pemberitahuan"
+              aria-label="Dismiss notification"
               className="opacity-70 hover:opacity-100"
             >
               ✕
@@ -218,22 +220,22 @@ export function MeetingManager({
             <thead>
               <tr className="border-b border-white/[0.06] text-[11px] font-medium tracking-[0.08em] text-[#8a8ea3] uppercase">
                 <th scope="col" className="w-[30%] py-4 pr-3 pl-[18px] font-medium">
-                  Rapat
+                  Meeting
                 </th>
                 <th scope="col" className="px-3 py-4 font-medium">
-                  Jenis
+                  Scope
                 </th>
                 <th scope="col" className="px-3 py-4 font-medium">
-                  Jadwal
+                  Schedule
                 </th>
                 <th scope="col" className="px-3 py-4 font-medium">
-                  Kehadiran
+                  Attendance
                 </th>
                 <th scope="col" className="px-3 py-4 font-medium">
                   Status
                 </th>
                 <th scope="col" className="py-4 pr-[18px] pl-3 font-medium">
-                  Aksi
+                  Actions
                 </th>
               </tr>
             </thead>
@@ -274,7 +276,7 @@ export function MeetingManager({
                       </p>
                       <ProgressBar
                         percent={percent(m)}
-                        label={`Kehadiran ${m.title}`}
+                        label={`Attendance for ${m.title}`}
                         className="mt-2"
                       />
                     </td>
@@ -292,7 +294,7 @@ export function MeetingManager({
                           href={`/super-admin/presensi/${m.id}`}
                           className="mr-1 inline-flex h-8 items-center rounded-lg border border-white/10 bg-white/[0.03] px-3 text-xs font-medium text-[#c7c9d4] transition-colors hover:border-white/20 hover:text-white"
                         >
-                          {current === "open" ? "Lihat QR" : "Kelola"}
+                          {current === "open" ? "View QR" : "Manage"}
                         </Link>
                         <IconButton
                           label={canEdit(m) ? `Edit ${m.title}` : READ_ONLY}
@@ -302,7 +304,7 @@ export function MeetingManager({
                           {icons.edit}
                         </IconButton>
                         <IconButton
-                          label={canEdit(m) ? `Hapus ${m.title}` : READ_ONLY}
+                          label={canEdit(m) ? `Delete ${m.title}` : READ_ONLY}
                           onClick={() =>
                             setDialog({ type: "delete", meeting: m })
                           }
@@ -321,13 +323,13 @@ export function MeetingManager({
                   <td colSpan={6} className="px-6 py-12 text-center">
                     <p className="text-sm font-medium text-[#c7c9d4]">
                       {meetings.length === 0
-                        ? "Belum ada rapat"
-                        : "Tidak ada rapat yang cocok"}
+                        ? "No meetings yet"
+                        : "No matching meetings found"}
                     </p>
                     <p className="mt-1.5 text-[13px] text-[#6f7286]">
                       {meetings.length === 0
-                        ? "Buat rapat pertama lewat tombol Buat Rapat, lalu buka presensinya saat rapat dimulai."
-                        : "Coba filter status atau jenis rapat yang lain."}
+                        ? "Create the first meeting with the Create Meeting button, then open attendance when the meeting starts."
+                        : "Try selecting a different status or scope filter."}
                     </p>
                   </td>
                 </tr>
@@ -377,24 +379,24 @@ export function MeetingManager({
         {dialog?.type === "delete" && (
           <ConfirmDelete
             titleId="delete-meeting-title"
-            title="Hapus Rapat"
+            title="Delete Meeting"
             onConfirm={() => deleteMeeting(dialog.meeting.id)}
             onClose={close}
             onPendingChange={setBusy}
             onDeleted={() => {
               setNotice({
                 tone: "success",
-                text: `Rapat ${dialog.meeting.title} dihapus.`,
+                text: `Meeting ${dialog.meeting.title} deleted.`,
               });
               close();
             }}
           >
-            Rapat{" "}
+            Meeting{" "}
             <strong className="font-semibold text-white">
               {dialog.meeting.title}
             </strong>{" "}
-            beserta seluruh data presensinya akan dihapus permanen. Tindakan ini
-            tidak dapat diurungkan.
+            along with all recorded attendance data will be permanently deleted.
+            This action cannot be undone.
           </ConfirmDelete>
         )}
       </Modal>

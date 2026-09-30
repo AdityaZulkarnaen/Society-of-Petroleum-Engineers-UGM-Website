@@ -22,12 +22,12 @@ import {
 /* Raised by the rapat functions in the database. */
 const MESSAGES: Record<string, string> = {
   not_allowed:
-    "Hanya super admin divisi penyelenggara yang bisa mengubah rapat ini.",
+    "Only the super admin of the organizing division can modify this meeting.",
   sequence_taken:
-    "Nomor rapat itu sudah dipakai. Ganti angka pada 'Rapat ke-'.",
-  not_participant: "Pengurus itu tidak termasuk peserta rapat ini.",
-  presensi_closed: "Presensi rapat ini sudah ditutup.",
-  meeting_not_found: "Rapat tidak ditemukan. Muat ulang halaman ini.",
+    "That meeting sequence number is already taken. Please change the sequence number.",
+  not_participant: "That officer is not registered as an attendee for this meeting.",
+  presensi_closed: "Attendance for this meeting is already closed.",
+  meeting_not_found: "Meeting not found. Please reload this page.",
 };
 
 const failed = (message: string, fallback: string) => ({
@@ -35,7 +35,7 @@ const failed = (message: string, fallback: string) => ({
 });
 
 const PREVIEW_ONLY = {
-  error: "Presensi rapat butuh database; matikan mode data contoh dulu.",
+  error: "Meeting attendance requires a database connection; disable sample data mode first.",
 };
 
 function revalidate(id?: string) {
@@ -55,7 +55,7 @@ export async function saveMeeting(
 ): Promise<ActionResult> {
   await requireSuperAdmin();
   const { ok, errors, values } = validateMeeting(input);
-  if (!ok) return { errors, error: "Periksa kembali isian yang ditandai." };
+  if (!ok) return { errors, error: "Please review the highlighted fields." };
   if (DUMMY_DATA) return PREVIEW_ONLY;
 
   const supabase = await createClient();
@@ -71,10 +71,10 @@ export async function saveMeeting(
   });
   if (error) {
     console.error("saveMeeting", error.message);
-    const failure = failed(error.message, "Rapat gagal disimpan. Coba lagi.");
+    const failure = failed(error.message, "Failed to save meeting. Please try again.");
     /* the clash is on a field, so mark it */
     return error.message === "sequence_taken"
-      ? { ...failure, errors: { sequence: "Nomor ini sudah dipakai." } }
+      ? { ...failure, errors: { sequence: "This sequence number is already taken." } }
       : failure;
   }
   if (id) {
@@ -108,8 +108,8 @@ export async function setMeetingOpen(
     return failed(
       error.message,
       open
-        ? "Presensi gagal dibuka. Coba lagi."
-        : "Presensi gagal ditutup. Coba lagi.",
+        ? "Failed to open attendance. Please try again."
+        : "Failed to close attendance. Please try again.",
     );
   }
   revalidate(id);
@@ -125,7 +125,7 @@ export async function deleteMeeting(id: string): Promise<ActionResult> {
   const { error } = await supabase.rpc("delete_meeting", { p_id: id });
   if (error) {
     console.error("deleteMeeting", error.message);
-    return failed(error.message, "Rapat gagal dihapus. Coba lagi.");
+    return failed(error.message, "Failed to delete meeting. Please try again.");
   }
   revalidate(id);
   return {};
@@ -143,7 +143,7 @@ export async function setAttendance(
 ): Promise<ActionResult> {
   await requireSuperAdmin();
   if (status !== null && !isAttendanceStatus(status)) {
-    return { error: "Status presensi tidak dikenal." };
+    return { error: "Unknown attendance status." };
   }
   const trimmed = note.trim().slice(0, NOTE_MAX);
   if (DUMMY_DATA) return PREVIEW_ONLY;
@@ -157,7 +157,7 @@ export async function setAttendance(
   });
   if (error) {
     console.error("setAttendance", error.message);
-    return failed(error.message, "Status presensi gagal disimpan. Coba lagi.");
+    return failed(error.message, "Failed to save attendance status. Please try again.");
   }
   revalidate(meetingId);
   return {};

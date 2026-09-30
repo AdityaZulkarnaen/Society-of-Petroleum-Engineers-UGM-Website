@@ -16,8 +16,8 @@ import { validateProker, type ActionResult, type ProkerInput } from "./fields";
 
 /* Raised by public.save_proker() / delete_proker(). */
 const MESSAGES: Record<string, string> = {
-  not_allowed: "Hanya divisi penyelenggara yang bisa mengubah proker ini.",
-  invalid_member: "Ada pengurus yang tidak valid. Muat ulang halaman ini.",
+  not_allowed: "Only the organizing division can modify this work program.",
+  invalid_member: "Invalid officer selected. Please reload this page.",
 };
 
 function revalidate() {
@@ -34,7 +34,7 @@ export async function saveProker(
 ): Promise<ActionResult> {
   const me = await requireSuperAdmin();
   const { ok, errors, values } = validateProker(input);
-  if (!ok) return { errors, error: "Periksa kembali isian yang ditandai." };
+  if (!ok) return { errors, error: "Please review the highlighted fields." };
 
   if (DUMMY_DATA) {
     if (!me.division) return { error: MESSAGES.not_allowed };
@@ -57,7 +57,7 @@ export async function saveProker(
       status: values.status,
       members: values.members.map((m) => ({
         ...m,
-        name: names.get(m.profileId) ?? "Pengurus",
+        name: names.get(m.profileId) ?? "Officer",
       })),
     };
     dummyManagedProker.save(
@@ -83,7 +83,7 @@ export async function saveProker(
   if (error) {
     console.error("saveProker", error.message);
     return {
-      error: MESSAGES[error.message] ?? "Proker gagal disimpan. Coba lagi.",
+      error: MESSAGES[error.message] ?? "Failed to save work program. Please try again.",
     };
   }
 
@@ -109,7 +109,7 @@ export async function deleteProker(id: string): Promise<ActionResult> {
   if (error) {
     console.error("deleteProker", error.message);
     return {
-      error: MESSAGES[error.message] ?? "Proker gagal dihapus. Coba lagi.",
+      error: MESSAGES[error.message] ?? "Failed to delete work program. Please try again.",
     };
   }
 

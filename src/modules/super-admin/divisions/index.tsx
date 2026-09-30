@@ -28,18 +28,22 @@ function DivisionCard({ division }: { division: DivisionOverview }) {
     <Card surface={compactCardSurface} className="p-6">
       <div className="flex items-center justify-between gap-3">
         <h2 className="min-w-0 text-[17px] font-bold tracking-[-0.01em] text-white">
-          Divisi {division.name}
+          {division.name} Division
         </h2>
         <Badge tone={active ? "blue" : "neutral"} className="px-2.5 py-1 text-xs font-semibold">
-          {active ? "Aktif" : "Belum ada anggota"}
+          {active ? "Active" : "No members yet"}
         </Badge>
       </div>
       <dl className="mt-3.5 grid grid-cols-1 gap-2.5 sm:grid-cols-3">
-        <Fact label="Ketua Divisi">
-          {division.headName ?? <span className="text-[#5d6075]">Belum ditentukan</span>}
+        <Fact label="Division Head">
+          {division.headName ?? <span className="text-[#5d6075]">Not assigned</span>}
         </Fact>
-        <Fact label="Total Anggota">{division.memberCount} orang</Fact>
-        <Fact label="Proker Aktif">{division.activeProker} proker</Fact>
+        <Fact label="Total Members">
+          {division.memberCount} {division.memberCount === 1 ? "member" : "members"}
+        </Fact>
+        <Fact label="Active Programs">
+          {division.activeProker} {division.activeProker === 1 ? "program" : "programs"}
+        </Fact>
       </dl>
     </Card>
   );
@@ -52,9 +56,9 @@ export async function DivisionsPage() {
   return (
     <div className="space-y-8">
       <header>
-        <h1 className="text-[28px] font-bold tracking-[-0.02em] sm:text-[32px]">Divisi</h1>
+        <h1 className="text-[28px] font-bold tracking-[-0.02em] sm:text-[32px]">Divisions</h1>
         <p className="mt-2 text-sm text-[#8a8ea3]">
-          Ringkasan struktur divisi aktif dalam periode kepengurusan {CURRENT_PERIOD.label}.
+          Overview of active division structures for the {CURRENT_PERIOD.label} leadership term.
         </p>
       </header>
 
@@ -70,8 +74,8 @@ export async function DivisionsPage() {
       ) : (
         <Card surface={compactCardSurface} className="p-6">
           <EmptyState
-            title="Belum ada divisi"
-            description="Divisi dibuat lewat skrip seed divisi (pnpm seed:divisions)."
+            title="No divisions yet"
+            description="Divisions are created via the division seed script (pnpm seed:divisions)."
           />
         </Card>
       )}
