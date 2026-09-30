@@ -9,7 +9,6 @@ import { dummySelfReport } from "../dummy/data";
 import {
   COMPETENCIES,
   emptyReport,
-  type Rating,
   type SelfReport,
   type Tally,
 } from "./data";
@@ -37,7 +36,7 @@ export async function loadRekap(
       .maybeSingle(),
     supabase
       .from("rekap_competencies")
-      .select("competency, score, initial_score, rating")
+      .select("competency, score, initial_score")
       .eq("profile_id", profileId)
       .eq("period", period),
   ]);
@@ -56,7 +55,6 @@ export async function loadRekap(
         name,
         initial: c ? Number(c.initial_score) : null,
         current: c ? Number(c.score) : null,
-        rating: (c?.rating as Rating | undefined) ?? null,
       };
     }),
     notes: {

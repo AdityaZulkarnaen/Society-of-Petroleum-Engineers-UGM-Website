@@ -9,14 +9,16 @@ import {
   primaryButton,
   ProgressBar,
   SectionHeading,
+  Badge,
 } from "@/modules/admin/components/ui";
-import { RATING } from "@/modules/admin/rekap-diri/competency-list";
 import {
   COMPETENCIES,
-  RATINGS,
-  type Rating,
+  MAX_SCORE,
+  getKategori,
+  type Kategori,
   type SelfReport,
 } from "@/modules/admin/rekap-diri/data";
+import type { Tone } from "@/modules/admin/components/ui";
 import type { Account } from "@/modules/super-admin/accounts/fields";
 
 import { saveRekap } from "./actions";
@@ -29,6 +31,14 @@ import {
   type RekapInput,
 } from "./fields";
 
+const KATEGORI_TONE: Record<Kategori, Tone> = {
+  "Sangat Baik": "green",
+  "Baik": "blue",
+  "Cukup": "neutral",
+  "Kurang": "amber",
+  "Sangat Kurang": "amber",
+};
+
 /* Layout only; colours and height are added per field so they never compete. */
 const controlBase =
   "w-full rounded-lg border px-3.5 text-sm " +
@@ -36,21 +46,11 @@ const controlBase =
   "focus-visible:border-[#4f8dff]/60 focus-visible:ring-4 focus-visible:ring-[#4f8dff]/15 focus-visible:outline-none " +
   "aria-invalid:border-[#f87171]/60";
 
-/* Inside the glass cards everything is solid, so only the outer containers
-   read as glass. */
 const neutral = "border-white/[0.09] bg-[#1a1d2f] text-white";
 const control = `${controlBase} h-[42px] ${neutral}`;
 
 const label =
   "block text-[11px] font-medium tracking-[0.08em] text-[#8a8ea3] uppercase";
-
-/* The level select takes the colour of the chosen rating. */
-const RATING_SELECT: Record<Rating, string> = {
-  sangat_baik: "border-[#34d399]/35 bg-[#0d2724] text-[#4ade80]",
-  baik: "border-[#3b82f6]/40 bg-[#111e44] text-[#6aa5ff]",
-  cukup: "border-white/15 bg-[#1a1d2f] text-[#c7c9d4]",
-  perlu_ditingkatkan: "border-[#f59e0b]/40 bg-[#282010] text-[#fbbf24]",
-};
 
 function Chevron() {
   return (
@@ -95,30 +95,29 @@ function FieldError({ id, message }: { id: string; message?: string }) {
   );
 }
 
-type Row = { key: number; competency: string; score: string; rating: string };
-
-let nextKey = 0;
-
 /** The editor's starting values: the saved rekap, or blanks. */
 function initialState(report: SelfReport | null) {
   const pair = (t: { done: number; total: number } | null | undefined) => ({
     done: t ? String(t.done) : "",
     target: t ? String(t.total) : "",
   });
+
+  // Build scores array indexed by COMPETENCIES order
+  const scoresByName = new Map(
+    (report?.competencies ?? []).map((c) => [c.name, c.current]),
+  );
+  const scores = COMPETENCIES.map((name) => {
+    const val = scoresByName.get(name);
+    return val != null ? String(val) : "";
+  });
+
   return {
     stats: {
       proker: pair(report?.proker),
       attendance: pair(report?.attendance),
       points: pair(report?.points),
     },
-    rows: (report?.competencies ?? [])
-      .filter((c) => c.current != null)
-      .map((c) => ({
-        key: nextKey++,
-        competency: c.name,
-        score: String(c.current),
-        rating: c.rating ?? "",
-      })),
+    scores,
     notes: {
       achievements: report?.notes.achievements ?? "",
       strengths: report?.notes.strengths ?? "",
@@ -154,7 +153,7 @@ export function RekapEditor({
   const router = useRouter();
   const [initial] = useState(() => initialState(report));
   const [stats, setStats] = useState(initial.stats);
-  const [rows, setRows] = useState<Row[]>(initial.rows);
+  const [scores, setScores] = useState<string[]>(initial.scores);
   const [notes, setNotes] = useState(initial.notes);
   const [errors, setErrors] = useState<RekapErrors>({});
   const [status, setStatus] = useState<{ tone: "success" | "error"; text: string } | null>(null);
@@ -163,7 +162,16 @@ export function RekapEditor({
   const [switching, startSwitch] = useTransition();
 
   const saved = hasRekap.includes(selected.id);
-  const used = new Set(rows.map((r) => r.competency));
+
+  // Compute total and rata-rata from current scores
+  const parsedScores = scores.map((s) => {
+    const v = Number(s.replace(",", "."));
+    return s.trim() && !isNaN(v) && v >= 1 && v <= 5 ? v : null;
+  });
+  const scoredValues = parsedScores.filter((v): v is number => v != null);
+  const totalScore = scoredValues.reduce((sum, v) => sum + v, 0);
+  const rataRata = scoredValues.length > 0 ? totalScore / scoredValues.length : null;
+  const kategori = rataRata != null ? getKategori(rataRata) : null;
 
   function touch() {
     setDirty(true);
@@ -173,11 +181,7 @@ export function RekapEditor({
   function input(): RekapInput {
     return {
       stats,
-      competencies: rows.map(({ competency, score, rating }) => ({
-        competency,
-        score,
-        rating,
-      })),
+      competencyScores: scores,
       notes,
     };
   }
@@ -212,15 +216,12 @@ export function RekapEditor({
     });
   }
 
-  function addRow() {
-    const free = COMPETENCIES.find((c) => !used.has(c));
-    if (!free) return;
-    setRows((r) => [...r, { key: nextKey++, competency: free, score: "", rating: "" }]);
-    touch();
-  }
-
-  function updateRow(key: number, patch: Partial<Row>) {
-    setRows((r) => r.map((row) => (row.key === key ? { ...row, ...patch } : row)));
+  function updateScore(index: number, value: string) {
+    setScores((s) => {
+      const next = [...s];
+      next[index] = value;
+      return next;
+    });
     touch();
   }
 
@@ -333,107 +334,80 @@ export function RekapEditor({
 
         <Card surface={compactCardSurface} className="p-6">
           <SectionHeading eyebrow="Penilaian HR" title="Evaluasi Kompetensi" />
+          <p className="mt-2 text-xs text-[#6f7286]">
+            Masukkan skor 1–5 (desimal diperbolehkan) untuk setiap aspek kompetensi.
+          </p>
 
-          <div className="mt-6 hidden grid-cols-[minmax(0,1fr)_120px_160px_32px] gap-2.5 border-b border-white/[0.06] pb-2.5 sm:grid">
-            <span className={label}>Kompetensi</span>
-            <span className={label}>Skor (1–5)</span>
-            <span className={`${label} col-span-2`}>Level Kualitatif</span>
+          {/* Header */}
+          <div className="mt-5 hidden grid-cols-[2rem_1fr_100px] gap-2.5 border-b border-white/[0.06] pb-2.5 sm:grid">
+            <span className={label}>No</span>
+            <span className={label}>Aspek Kompetensi</span>
+            <span className={label}>Skor</span>
           </div>
 
-          {rows.length === 0 ? (
-            <p className="mt-5 rounded-xl border border-dashed border-white/10 px-5 py-6 text-center text-[13px] text-[#6f7286]">
-              Belum ada kompetensi yang dinilai. Tambahkan lewat tombol di bawah.
-            </p>
-          ) : (
-            <ul className="mt-3 space-y-2.5">
-              {rows.map((row, i) => {
-                const e = (f: string) => errors[`competency.${i}.${f}`];
-                const message = e("competency") ?? e("score") ?? e("rating");
-                return (
-                  <li key={row.key}>
-                    <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_32px] gap-2.5 sm:grid-cols-[minmax(0,1fr)_120px_160px_32px]">
-                      <div className="col-span-3 sm:col-span-1">
-                        <Select
-                          aria-label={`Kompetensi baris ${i + 1}`}
-                          value={row.competency}
-                          onChange={(ev) => updateRow(row.key, { competency: ev.target.value })}
-                          aria-invalid={Boolean(e("competency"))}
-                        >
-                          {COMPETENCIES.map((c) => (
-                            <option
-                              key={c}
-                              value={c}
-                              disabled={c !== row.competency && used.has(c)}
-                            >
-                              {c}
-                            </option>
-                          ))}
-                        </Select>
-                      </div>
-                      <input
-                        aria-label={`Skor ${row.competency}`}
-                        inputMode="decimal"
-                        placeholder="1–5"
-                        value={row.score}
-                        onChange={(ev) => updateRow(row.key, { score: ev.target.value })}
-                        aria-invalid={Boolean(e("score"))}
-                        className={control}
-                      />
-                      <Select
-                        aria-label={`Level ${row.competency}`}
-                        value={row.rating}
-                        onChange={(ev) => updateRow(row.key, { rating: ev.target.value })}
-                        aria-invalid={Boolean(e("rating"))}
-                        colors={
-                          row.rating
-                            ? RATING_SELECT[row.rating as Rating]
-                            : "border-white/[0.09] bg-[#1a1d2f] text-[#6f7286]"
-                        }
-                        className="font-medium"
-                      >
-                        <option value="" disabled>
-                          Pilih level
-                        </option>
-                        {RATINGS.map((r) => (
-                          <option key={r} value={r}>
-                            {RATING[r].label}
-                          </option>
-                        ))}
-                      </Select>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setRows((r) => r.filter((x) => x.key !== row.key));
-                          touch();
-                        }}
-                        aria-label={`Hapus ${row.competency}`}
-                        className="grid h-[42px] w-8 place-items-center rounded-lg text-[#f87171]/80 transition-colors hover:bg-[#f87171]/10 hover:text-[#f87171]"
-                      >
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-                          <path d="m3 3 8 8M11 3l-8 8" strokeLinecap="round" />
-                        </svg>
-                      </button>
-                    </div>
-                    {message && <p className="mt-1.5 text-xs text-[#fca5a5]">{message}</p>}
-                  </li>
-                );
-              })}
-            </ul>
-          )}
+          {/* Rows */}
+          <ul className="mt-3 space-y-2">
+            {COMPETENCIES.map((name, i) => (
+              <li
+                key={name}
+                className="grid grid-cols-[2rem_1fr_100px] items-center gap-2.5 rounded-lg border border-white/[0.06] bg-[#0b0e1f]/30 px-3 py-2.5"
+              >
+                <span className="text-xs font-medium text-[#6f7286]">{i + 1}</span>
+                <p className="text-sm text-[#e3e5ee]">{name}</p>
+                <div>
+                  <input
+                    aria-label={`Skor ${name}`}
+                    inputMode="decimal"
+                    placeholder="1–5"
+                    value={scores[i]}
+                    onChange={(e) => updateScore(i, e.target.value)}
+                    aria-invalid={Boolean(errors[`competency.${i}`])}
+                    className={`${control} text-center`}
+                  />
+                  {errors[`competency.${i}`] && (
+                    <p className="mt-1 text-[11px] text-[#fca5a5]">{errors[`competency.${i}`]}</p>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
 
-          <div className="mt-4 flex justify-center">
-            <button
-              type="button"
-              onClick={addRow}
-              disabled={used.size >= COMPETENCIES.length}
-              className="inline-flex h-10 items-center gap-2 rounded-lg border border-dashed border-white/15 bg-[#14172a] px-4 text-sm text-[#a3a6b8] transition-colors hover:border-white/30 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-                <path d="M7 2.5v9M2.5 7h9" strokeLinecap="round" />
-              </svg>
-              Tambah Kompetensi
-            </button>
+          {/* Summary: Total & Rata-rata */}
+          <div className="mt-5 space-y-2 rounded-xl border border-white/[0.1] bg-white/[0.03] px-5 py-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-semibold text-[#a3a6b8]">Total</span>
+              <span className="text-lg font-bold tabular-nums text-white">
+                {scoredValues.length > 0
+                  ? `${totalScore.toFixed(1)} / ${COMPETENCIES.length * MAX_SCORE}`
+                  : "—"}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-semibold text-[#a3a6b8]">Rata-rata</span>
+              <div className="flex items-center gap-3">
+                <span className="text-lg font-bold tabular-nums text-white">
+                  {rataRata != null ? `${rataRata.toFixed(2)} / ${MAX_SCORE}` : "—"}
+                </span>
+                {kategori && (
+                  <Badge tone={KATEGORI_TONE[kategori]}>{kategori}</Badge>
+                )}
+              </div>
+            </div>
           </div>
+
+          {/* Interpretasi Nilai legend */}
+          <details className="mt-4 text-xs text-[#6f7286]">
+            <summary className="cursor-pointer font-medium text-[#8a8ea3] hover:text-white">
+              Interpretasi Nilai
+            </summary>
+            <div className="mt-2 space-y-1 pl-1">
+              <p><span className="font-semibold text-[#4ade80]">4.21 – 5.00</span> — Sangat Baik</p>
+              <p><span className="font-semibold text-[#6aa5ff]">3.41 – 4.20</span> — Baik</p>
+              <p><span className="font-semibold text-[#c7c9d4]">2.61 – 3.40</span> — Cukup</p>
+              <p><span className="font-semibold text-[#fbbf24]">1.81 – 2.60</span> — Kurang</p>
+              <p><span className="font-semibold text-[#f87171]">1.00 – 1.80</span> — Sangat Kurang</p>
+            </div>
+          </details>
         </Card>
 
         <Card surface={compactCardSurface} className="p-6">

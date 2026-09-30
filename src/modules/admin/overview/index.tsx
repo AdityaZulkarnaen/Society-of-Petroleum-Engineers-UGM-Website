@@ -90,7 +90,7 @@ export async function OverviewPage() {
   const { attendance, points } = report;
   const done = proker.filter((p) => p.status === "selesai").length;
   const ongoing = proker.filter((p) => p.status === "berlangsung").length;
-  const rated = report.competencies.some((c) => c.rating != null);
+  const rated = report.competencies.some((c) => c.current != null);
 
   const period = periodProgress(CURRENT_PERIOD);
   const firstName = admin.fullName.split(" ")[0];

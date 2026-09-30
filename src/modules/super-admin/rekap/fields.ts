@@ -2,9 +2,7 @@
 
 import {
   COMPETENCIES,
-  RATINGS,
   type Competency,
-  type Rating,
 } from "@/modules/admin/rekap-diri/data";
 
 export const STATS = [
@@ -28,16 +26,17 @@ export const NOTE_MAX = 2000;
 /** Form values as typed; numbers are validated on the way in. */
 export type RekapInput = {
   stats: Record<StatKey, { done: string; target: string }>;
-  competencies: { competency: string; score: string; rating: string }[];
+  /** Fixed array of 12 scores, indexed same as COMPETENCIES. */
+  competencyScores: string[];
   notes: Record<NoteKey, string>;
 };
 
-/** Error messages keyed 'proker.done', 'competency.2.score', 'notes.strengths', ... */
+/** Error messages keyed 'proker.done', 'competency.2', 'notes.strengths', ... */
 export type RekapErrors = Record<string, string>;
 
 export type RekapValues = {
   stats: Record<StatKey, { done: number | null; target: number | null }>;
-  competencies: { competency: Competency; score: number; rating: Rating }[];
+  competencies: { competency: Competency; score: number }[];
   notes: Record<NoteKey, string | null>;
 };
 
@@ -62,27 +61,17 @@ export function validateRekap(input: RekapInput) {
     };
   }
 
-  const seen = new Set<string>();
   const competencies: RekapValues["competencies"] = [];
-  input.competencies.forEach(({ competency, score, rating }, i) => {
-    if (!COMPETENCIES.includes(competency as Competency)) {
-      errors[`competency.${i}.competency`] = "Pilih kompetensi.";
-    } else if (seen.has(competency)) {
-      errors[`competency.${i}.competency`] = "Kompetensi sudah dipilih.";
-    }
-    seen.add(competency);
-
-    const value = Number(score.replace(",", "."));
-    if (!score.trim() || !(value >= 1 && value <= 5) || (value * 2) % 1 !== 0) {
-      errors[`competency.${i}.score`] = "1–5, kelipatan 0,5.";
-    }
-    if (!RATINGS.includes(rating as Rating)) {
-      errors[`competency.${i}.rating`] = "Pilih level.";
+  COMPETENCIES.forEach((name, i) => {
+    const raw = (input.competencyScores[i] ?? "").trim();
+    if (!raw) return; // empty = not scored yet, skip
+    const value = Number(raw.replace(",", "."));
+    if (isNaN(value) || value < 1 || value > 5) {
+      errors[`competency.${i}`] = "Skor harus 1–5.";
     }
     competencies.push({
-      competency: competency as Competency,
+      competency: name,
       score: value,
-      rating: rating as Rating,
     });
   });
 

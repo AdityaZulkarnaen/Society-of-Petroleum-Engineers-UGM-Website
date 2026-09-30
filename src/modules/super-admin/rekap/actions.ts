@@ -42,7 +42,6 @@ export async function saveRekap(
           name,
           current: c?.score ?? null,
           initial: c ? (before?.initial ?? c.score) : null,
-          rating: c?.rating ?? null,
         };
       }),
       notes: values.notes,
