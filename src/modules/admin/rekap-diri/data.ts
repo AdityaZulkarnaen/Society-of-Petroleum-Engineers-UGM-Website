@@ -20,6 +20,80 @@ export const COMPETENCIES = [
 
 export type Competency = (typeof COMPETENCIES)[number];
 
+/**
+ * 6 broad categories displayed on the radar diagram, each calculated
+ * as the average of 2 corresponding HRD assessment aspects:
+ * - Leadership: (Grit / Perseverance + Empower Others) / 2
+ * - Teamwork: (Teamwork + Caring) / 2
+ * - Responsibility: (Accountability + Integrity) / 2
+ * - Initiative: (Agility + Innovation) / 2
+ * - Communication: (Communication + Self Awareness) / 2
+ * - Time Management: (Strive for Excellence + Self Purpose) / 2
+ */
+export const RADAR_CATEGORIES = [
+  {
+    name: "Leadership",
+    aspects: ["Grit / Perseverance", "Empower Others"] as const,
+  },
+  {
+    name: "Teamwork",
+    aspects: ["Teamwork", "Caring"] as const,
+  },
+  {
+    name: "Responsibility",
+    aspects: ["Accountability", "Integrity"] as const,
+  },
+  {
+    name: "Initiative",
+    aspects: ["Agility", "Innovation"] as const,
+  },
+  {
+    name: "Communication",
+    aspects: ["Communication", "Self Awareness"] as const,
+  },
+  {
+    name: "Time Management",
+    aspects: ["Strive for Excellence", "Self Purpose"] as const,
+  },
+] as const;
+
+export type RadarCategory = (typeof RADAR_CATEGORIES)[number];
+export type RadarCategoryName = RadarCategory["name"];
+
+export type RadarCategoryResult = {
+  name: RadarCategoryName;
+  initial: number | null;
+  current: number | null;
+};
+
+/**
+ * Calculates the 6 radar category scores by averaging the 2 underlying HRD aspects.
+ */
+export function getRadarCategories(
+  competencies: CompetencyResult[],
+): RadarCategoryResult[] {
+  const byName = new Map(competencies.map((c) => [c.name, c]));
+
+  const calc = (
+    aspects: readonly [Competency, Competency],
+    field: "initial" | "current",
+  ): number | null => {
+    const s1 = byName.get(aspects[0])?.[field];
+    const s2 = byName.get(aspects[1])?.[field];
+
+    if (s1 != null && s2 != null) return (s1 + s2) / 2;
+    if (s1 != null) return s1;
+    if (s2 != null) return s2;
+    return null;
+  };
+
+  return RADAR_CATEGORIES.map(({ name, aspects }) => ({
+    name,
+    initial: calc(aspects, "initial"),
+    current: calc(aspects, "current"),
+  }));
+}
+
 /** Scores run from 1 to 5 (decimals allowed). */
 export const MAX_SCORE = 5;
 

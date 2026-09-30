@@ -1,11 +1,16 @@
-import { MAX_SCORE, type CompetencyResult } from "./data";
+import {
+  MAX_SCORE,
+  getRadarCategories,
+  type CompetencyResult,
+  type RadarCategoryResult,
+} from "./data";
 
 const WIDTH = 440;
 const HEIGHT = 340;
 const CX = WIDTH / 2;
 const CY = HEIGHT / 2;
 const RADIUS = 120;
-const LABEL_RADIUS = RADIUS + 30;
+const LABEL_RADIUS = RADIUS + 26;
 
 /** Point for axis `i` of `count`, clockwise from the top, at `r` from the centre. */
 function point(i: number, count: number, r: number) {
@@ -16,7 +21,7 @@ function point(i: number, count: number, r: number) {
 const toPoints = (points: { x: number; y: number }[]) =>
   points.map(({ x, y }) => `${x.toFixed(1)},${y.toFixed(1)}`).join(" ");
 
-/** A series is drawn only once every competency has a score. */
+/** A series is drawn only once every category has a score. */
 function series(scores: (number | null)[]) {
   if (scores.some((s) => s == null)) return null;
   return (scores as number[]).map((score, i) =>
@@ -25,13 +30,14 @@ function series(scores: (number | null)[]) {
 }
 
 export function RadarChart({ competencies }: { competencies: CompetencyResult[] }) {
-  const count = competencies.length;
-  const initial = series(competencies.map((c) => c.initial));
-  const current = series(competencies.map((c) => c.current));
+  const categories: RadarCategoryResult[] = getRadarCategories(competencies);
+  const count = categories.length;
+  const initial = series(categories.map((c) => c.initial));
+  const current = series(categories.map((c) => c.current));
 
   const rings = Array.from({ length: MAX_SCORE }, (_, i) =>
     toPoints(
-      competencies.map((_, axis) =>
+      categories.map((_, axis) =>
         point(axis, count, (RADIUS * (i + 1)) / MAX_SCORE),
       ),
     ),
@@ -41,8 +47,13 @@ export function RadarChart({ competencies }: { competencies: CompetencyResult[] 
     current == null
       ? "Competency chart, no evaluation recorded yet."
       : "Competency chart: " +
-        competencies
-          .map((c) => `${c.name} ${c.initial ?? "—"} to ${c.current}`)
+        categories
+          .map(
+            (c) =>
+              `${c.name} ${c.initial != null ? c.initial.toFixed(1) : "—"} to ${
+                c.current != null ? c.current.toFixed(1) : "—"
+              }`,
+          )
           .join(", ");
 
   return (
@@ -79,7 +90,7 @@ export function RadarChart({ competencies }: { competencies: CompetencyResult[] 
               }
             />
           ))}
-          {competencies.map((_, i) => {
+          {categories.map((_, i) => {
             const end = point(i, count, RADIUS);
             return (
               <line
@@ -133,14 +144,14 @@ export function RadarChart({ competencies }: { competencies: CompetencyResult[] 
             </g>
           )}
 
-          {competencies.map(({ name }, i) => {
+          {categories.map(({ name }, i) => {
             const { x, y } = point(i, count, LABEL_RADIUS);
             const side = x - CX;
             const anchor =
               Math.abs(side) < 1 ? "middle" : side > 0 ? "start" : "end";
-            /* long names on the sides wrap to two lines */
+            /* wrap long names on the sides */
             const lines =
-              anchor !== "middle" && name.length > 12 ? name.split(" ") : [name];
+              anchor !== "middle" && name.length > 10 ? name.split(" ") : [name];
             return (
               <text
                 key={name}
@@ -160,6 +171,22 @@ export function RadarChart({ competencies }: { competencies: CompetencyResult[] 
             );
           })}
         </svg>
+
+        {current && (
+          <div className="mt-4 grid w-full max-w-[420px] grid-cols-2 gap-2 sm:grid-cols-3">
+            {categories.map((cat) => (
+              <div
+                key={cat.name}
+                className="flex items-center justify-between rounded-lg border border-white/[0.08] bg-white/[0.02] px-3 py-2 text-xs"
+              >
+                <span className="truncate text-[#8a8ea3]">{cat.name}</span>
+                <span className="ml-2 font-semibold tabular-nums text-white">
+                  {cat.current != null ? cat.current.toFixed(1) : "—"}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
 
         {current == null && (
           <p className="mt-2 max-w-xs text-center text-[13px] leading-relaxed text-[#6f7286]">
