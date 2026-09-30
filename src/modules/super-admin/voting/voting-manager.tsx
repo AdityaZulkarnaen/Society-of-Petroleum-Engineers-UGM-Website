@@ -345,7 +345,7 @@ export function VotingManager({
           Manajemen Voting
         </h1>
         <p className="mt-2 text-sm text-[#8a8ea3]">
-          Atur periode, kandidat, dan pantau hasil pemilihan Ketua Umum.
+          Atur periode, kandidat, dan pantau hasil pemilihan.
         </p>
       </header>
 

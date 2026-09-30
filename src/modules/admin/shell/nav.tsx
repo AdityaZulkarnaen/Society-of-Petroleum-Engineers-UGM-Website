@@ -192,7 +192,7 @@ const MENUS = {
     { href: "/admin/rekap-diri", label: "Rekap Diri", icon: icon.profile },
     { href: "/admin/acara", label: "Acara / Proker", icon: icon.calendar },
     { href: "/admin/presensi", label: "Presensi Rapat", icon: icon.qr },
-    { href: "/admin/voting", label: "Voting Ketua", icon: icon.vote },
+    { href: "/admin/voting", label: "Voting", icon: icon.vote },
   ],
   superAdmin: [
     { href: "/super-admin", label: "Dashboard", icon: icon.home },

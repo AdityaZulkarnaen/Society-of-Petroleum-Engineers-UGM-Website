@@ -122,12 +122,12 @@ export async function VotingPage() {
     return (
       <div className="space-y-8">
         <h1 className="text-[28px] font-bold tracking-[-0.02em] sm:text-[32px]">
-          Voting Ketua
+          Voting
         </h1>
         <Card className="p-6 sm:p-7">
           <EmptyState
             title="Belum ada pemilihan"
-            description="Pemilihan ketua berikutnya akan muncul di sini setelah diumumkan panitia."
+            description="Pemilihan berikutnya akan muncul di sini setelah diumumkan panitia."
           />
         </Card>
       </div>
@@ -146,8 +146,7 @@ export async function VotingPage() {
           <PhasePill phase={phase} />
         </div>
         <p className="mt-3 text-[15px] text-[#8a8ea3]">
-          Pilih Ketua Umum SPE UGM periode {election.termLabel}. Satu suara per
-          anggota aktif. Gunakan hak pilihmu dengan bijak.
+          Satu suara per anggota aktif. Gunakan hak pilihmu dengan bijak.
         </p>
       </header>
 

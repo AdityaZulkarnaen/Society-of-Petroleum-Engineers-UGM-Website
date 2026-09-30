@@ -234,7 +234,7 @@ export function CandidateForm({
             <textarea
               {...fieldProps("vision")}
               defaultValue={candidate?.vision ?? ""}
-              placeholder="Visi sebagai Ketua Umum..."
+              placeholder="Visi kandidat"
               rows={3}
               maxLength={VISION_MAX}
               className={`${controlBase} min-h-[84px] resize-y py-3 leading-relaxed`}
