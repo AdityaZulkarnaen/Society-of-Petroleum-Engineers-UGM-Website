@@ -15,26 +15,14 @@ const STORY = [
   "SPE UGM SC is composed of students from diverse academic backgrounds across the Faculty of Engineering and Faculty of Science at Universitas Gadjah Mada. This multidisciplinary composition creates an environment where students with different expertise, perspectives, and interests can collaborate towards common goals. The diversity of its members reflects the increasingly interconnected nature of the energy industry, where collaboration between disciplines is essential in addressing complex technical and societal challenges.",
 ];
 
-const STATEMENT =
-  "To transform SPE UGM SC into a dynamic, future-ready energy community that empowers its members academically, professionally, and socially — bridging campus, industry, and society to create meaningful and sustainable impact.";
+const VISION =
+  "To transform SPE UGM SC into a dynamic, future-ready energy community that empowers its members academically, professionally, and socially—bridging campus, industry, and society to create meaningful and sustainable impact.";
 
-const POINTS = [
-  {
-    title: "Keynote Speeches",
-    body: "Multi-class speakers from leading energy companies and research institutions.",
-  },
-  {
-    title: "Technical Paper Sessions",
-    body: "40+ expert presentations covering reservoir, drilling, production, and sustainability.",
-  },
-  {
-    title: "Exhibition Hall",
-    body: "Cutting-edge technology showcased by 30+ energy sector exhibitors.",
-  },
-  {
-    title: "Student Competition",
-    body: "Inter-university paper competition with prizes totaling Rp 50 million.",
-  },
+const MISSIONS = [
+  "Build an inclusive, supportive, and growth-oriented environment that ensures every member receives structured mentorship, soft-skills training, and leadership opportunities",
+  "Elevate Academic Excellence & Technical Competence with impactful programs: research labs, technical workshops, software mastery, and certification preparation",
+  "Strengthen Communication, Branding & Public Engagement through a cohesive visual identity, data-driven content strategy, and educational outreach to broaden SPE UGM’s visibility on campus and beyond.",
+  "Establish long-term partnerships with energy companies, research institutions, and professional bodies to create pipelines for internships, field trips, workshops, and career development.",
 ];
 
 const METRICS = [
@@ -125,21 +113,14 @@ function TopGlow({ id, mirrored = false }: { id: string; mirrored?: boolean }) {
 const metricsCard =
   "rounded-[clamp(20px,calc(28*var(--k)),32px)] border border-white bg-[linear-gradient(160deg,#f8f8ff_0%,#f1f2fd_100%)] shadow-[0_24px_60px_-34px_rgba(60,48,160,0.35),inset_0_1px_0_rgba(255,255,255,0.9)]";
 
-function StatementCard({
-  title,
-  mirrored = false,
-}: {
-  title: string;
-  mirrored?: boolean;
-}) {
-  const id = `glow-${title.toLowerCase().replace(/\s+/g, "-")}`;
+function VisionCard() {
   return (
     <article
       data-motion="rise"
       data-sheen
       className={`${glassCard} relative isolate overflow-hidden px-6 pt-10 pb-9 sm:px-9 [&>*:not(svg)]:relative`}
     >
-      <TopGlow id={id} mirrored={mirrored} />
+      <TopGlow id="glow-our-vision" />
       <Image
         src="/global/logo.webp"
         alt=""
@@ -148,38 +129,48 @@ function StatementCard({
         className="mx-auto h-11 w-auto"
       />
       <h3 className="mt-4 bg-[linear-gradient(90deg,#3b3bd6_0%,#4e4eff_55%,#7c7cff_100%)] bg-clip-text text-center font-display text-[clamp(34px,calc(56*var(--k)),60px)] leading-tight font-bold tracking-[-0.02em] text-black">
-        {title}
+        Our Vision
       </h3>
-      <p className="mx-auto mt-4 max-w-[520px] text-center text-sm leading-relaxed text-ink-soft md:text-[15px]">
-        {STATEMENT}
+      <p className="mt-8 text-left text-sm leading-relaxed text-ink-soft sm:text-[15px]">
+        {VISION}
       </p>
+    </article>
+  );
+}
+
+function MissionCard() {
+  return (
+    <article
+      data-motion="rise"
+      data-sheen
+      className={`${glassCard} relative isolate overflow-hidden px-6 pt-10 pb-9 sm:px-9 [&>*:not(svg)]:relative`}
+    >
+      <TopGlow id="glow-our-mission" mirrored />
+      <Image
+        src="/global/logo.webp"
+        alt=""
+        width={169}
+        height={147}
+        className="mx-auto h-11 w-auto"
+      />
+      <h3 className="mt-4 bg-[linear-gradient(90deg,#3b3bd6_0%,#4e4eff_55%,#7c7cff_100%)] bg-clip-text text-center font-display text-[clamp(34px,calc(56*var(--k)),60px)] leading-tight font-bold tracking-[-0.02em] text-black">
+        Our Mission
+      </h3>
       <ul
         data-motion="stagger"
         data-motion-y="16"
         data-motion-delay="0.3"
         className="mt-8 space-y-4"
       >
-        {POINTS.map((point) => (
-          <li key={point.title} className="flex gap-3">
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 16 16"
+        {MISSIONS.map((mission, index) => (
+          <li key={index} className="flex items-start gap-3">
+            <span
+              className="mt-2 h-2 w-2 shrink-0 rounded-full bg-curtain"
               aria-hidden="true"
-              className="mt-1 shrink-0 text-curtain"
-            >
-              <path
-                fill="currentColor"
-                d="M8 0c.5 3.9 2.1 5.5 6 6-3.9.5-5.5 2.1-6 6-.5-3.9-2.1-5.5-6-6 3.9-.5 5.5-2.1 6-6Z"
-                transform="translate(0 2)"
-              />
-            </svg>
-            <div>
-              <p className="text-sm font-semibold text-ink">{point.title}</p>
-              <p className="mt-0.5 text-[13px] leading-relaxed text-ink-soft">
-                {point.body}
-              </p>
-            </div>
+            />
+            <p className="text-left text-xs leading-relaxed text-ink-soft sm:text-[13px] md:text-sm">
+              {mission}
+            </p>
           </li>
         ))}
       </ul>
@@ -288,8 +279,8 @@ export function AboutPage() {
         className="px-4 pb-[clamp(5rem,calc(120*var(--k)),9rem)]"
       >
         <div className="mx-auto grid w-[min(calc(1270*var(--kw)),100%)] gap-4 md:grid-cols-2 md:gap-5">
-          <StatementCard title="Our Vision" />
-          <StatementCard title="Our Mission" mirrored />
+          <VisionCard />
+          <MissionCard />
         </div>
       </section>
 
