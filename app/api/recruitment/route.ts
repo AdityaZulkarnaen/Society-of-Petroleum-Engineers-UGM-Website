@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { settings, client, loadCatalog, submit } from "@/modules/recruitment/server/backend";
 import { publicPeriod, assertOpen } from "@/modules/recruitment/server/configuration";
 import { validatePayload } from "@/modules/recruitment/server/payload";
-import { SubmissionError, requireOrigin, issueSession, verifySession, limit, boundedForm, singleSubmission } from "@/modules/recruitment/server/security";
+import { SubmissionError, getRequestOrigin, requireOrigin, issueSession, verifySession, limit, boundedForm, singleSubmission } from "@/modules/recruitment/server/security";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -15,7 +15,9 @@ function failure(error: unknown) {
 export async function GET(request: Request) {
   try {
     const s=settings();
-    if (new URL(request.url).origin!==s.origin || request.headers.get("sec-fetch-site")==="cross-site") throw new SubmissionError(403,"Permintaan tidak diizinkan.");
+    if (getRequestOrigin(request) !== s.origin || request.headers.get("sec-fetch-site") === "cross-site") {
+      throw new SubmissionError(403, "Permintaan tidak diizinkan.");
+    }
     limit("global-config",60);
     const db=client(s.key);const catalog=await loadCatalog(db,s.period);assertOpen(catalog);
     const jar=await cookies();let token=jar.get(cookieName)?.value;

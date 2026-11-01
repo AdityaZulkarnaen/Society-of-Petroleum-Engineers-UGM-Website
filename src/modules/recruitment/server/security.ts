@@ -4,8 +4,24 @@ import { createHmac, randomUUID, timingSafeEqual } from "node:crypto";
 export class SubmissionError extends Error {
   constructor(public status: number, message: string, public fields?: Record<string, string>) { super(message); }
 }
+export function getRequestOrigin(request: Request): string {
+  const url = new URL(request.url);
+  if (["localhost", "127.0.0.1"].includes(url.hostname)) {
+    const rawHost = request.headers.get("host") ?? request.headers.get("x-forwarded-host")?.split(",")[0]?.trim();
+    if (rawHost) {
+      const [hostname] = rawHost.split(":");
+      if (["localhost", "127.0.0.1"].includes(hostname)) {
+        const proto = request.headers.get("x-forwarded-proto")?.split(",")[0]?.trim() ?? url.protocol.replace(":", "");
+        if (proto === "http" || proto === "https") {
+          return `${proto}://${rawHost}`;
+        }
+      }
+    }
+  }
+  return url.origin;
+}
 export function requireOrigin(request: Request, origin: string) {
-  if (request.headers.get("origin") !== origin || new URL(request.url).origin !== origin)
+  if (request.headers.get("origin") !== origin || getRequestOrigin(request) !== origin)
     throw new SubmissionError(403, "Permintaan tidak diizinkan.");
 }
 export function issueSession(secret: string, now = Date.now()) {
