@@ -1,0 +1,89 @@
+{
+  "source_path": "D:\\SPE UGM SC\\staging-certs\\prod-ca-2021.crt",
+  "source_provenance": "Owner attests download from staging lavxddhrrwsjcshmnwvu Dashboard",
+  "certificate": {
+    "subject": [
+      [
+        [
+          "countryName",
+          "US"
+        ]
+      ],
+      [
+        [
+          "stateOrProvinceName",
+          "Delware"
+        ]
+      ],
+      [
+        [
+          "localityName",
+          "New Castle"
+        ]
+      ],
+      [
+        [
+          "organizationName",
+          "Supabase Inc"
+        ]
+      ],
+      [
+        [
+          "commonName",
+          "Supabase Root 2021 CA"
+        ]
+      ]
+    ],
+    "issuer": [
+      [
+        [
+          "countryName",
+          "US"
+        ]
+      ],
+      [
+        [
+          "stateOrProvinceName",
+          "Delware"
+        ]
+      ],
+      [
+        [
+          "localityName",
+          "New Castle"
+        ]
+      ],
+      [
+        [
+          "organizationName",
+          "Supabase Inc"
+        ]
+      ],
+      [
+        [
+          "commonName",
+          "Supabase Root 2021 CA"
+        ]
+      ]
+    ],
+    "version": 3,
+    "serialNumber": "6CBC4CA1DEB63F692D0A2024C67289C2D13D54F6",
+    "notBefore": "Apr 28 10:56:53 2021 GMT",
+    "notAfter": "Apr 26 10:56:53 2031 GMT"
+  },
+  "certificate_der_sha256": "807025ad50d4ed219d2c9c7d299c004f824eb00cf7f65afef607d07b72e6cafa",
+  "file_sha256": "700723581420dd1ac98fd7e9ac529f0ef210eadcaf87fc868a3ad7d114c2f3b7",
+  "format": "PEM; single X.509 CA certificate",
+  "ca_parsing": "PASS",
+  "currently_valid": true,
+  "self_signature_check": "PASS via local openssl verify -check_ss_sig",
+  "installed_ca_path": "D:\\SPE UGM SC\\spe-ugm-oprec-staging\\.env.staging.private\\root-ca-bundle.pem",
+  "imported_bytes_match_source": true,
+  "private_acl_check": "PASS: intended Lenovo account and SYSTEM only",
+  "profile_verify_full_and_ca_path": "PASS",
+  "endpoint": "aws-0-ap-south-1.pooler.supabase.com",
+  "password_file_present": false,
+  "password_contents_read": false,
+  "live_chain_or_hostname_verified": false,
+  "network_or_database_connection_attempted": false
+}

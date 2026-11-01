@@ -1,0 +1,96 @@
+{
+  "date": "2026-11-02",
+  "target_consistent_with_owner_evidence": true,
+  "target": {
+    "project_reference": "lavxddhrrwsjcshmnwvu",
+    "organization_id": "abnfnzzearslinsxnjcb",
+    "expected_api_origin": "https://lavxddhrrwsjcshmnwvu.supabase.co",
+    "database_transport": "session_pooler",
+    "database_hostname": "aws-0-ap-south-1.pooler.supabase.com",
+    "database_port": 5432,
+    "database_name": "postgres",
+    "database_username": "postgres.lavxddhrrwsjcshmnwvu"
+  },
+  "migration_hashes": [
+    {
+      "file": "supabase/migrations/20260917000000_admin_profiles.sql",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20260917010000_divisions.sql",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20260917020000_profile_details.sql",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20260918000000_elections.sql",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20260919000000_super_admin_dashboard.sql",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20260919010000_account_period.sql",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20260919020000_rekap.sql",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20260919030000_proker.sql",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20260919040000_division_overview.sql",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20260919050000_election_admin.sql",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20260919060000_voting_controls.sql",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20260919070000_candidate_photos.sql",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20260922000000_meetings.sql",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20260922010000_division_overview_service_role.sql",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20260930000000_update_competencies.sql",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20261101000000_recruitment_schema.sql",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20261101010000_recruitment_security.sql",
+      "matches": true
+    }
+  ],
+  "credential_checks": {
+    ".env.staging.private\\pg_service.conf": false,
+    ".env.staging.private\\pgpass.conf": false,
+    ".env.staging.private\\root.crt": false
+  },
+  "psql_on_path": false,
+  "python_psycopg_available": false,
+  "python_psycopg2_available": false,
+  "inherited_pg_variable_names_only": [],
+  "cloud_connection_attempted": false,
+  "tls_verified": false,
+  "metadata_inspected": false
+}

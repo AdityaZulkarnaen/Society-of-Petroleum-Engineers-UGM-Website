@@ -1,0 +1,289 @@
+{
+  "date": "2026-11-02",
+  "branch": "feat/oprec-backend-staging",
+  "password_file_exists": true,
+  "password_contents_read": false,
+  "password_correctness": "NOT TESTED; owner attests reset and entry",
+  "private_permissions": {
+    "private_items_checked": 29,
+    "password_exists": true,
+    "acl_and_git_ignore": "PASS",
+    "items": [
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      },
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private\\client",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      },
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private\\ca-provenance.json",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      },
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private\\enter-staging-password.ps1",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      },
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private\\import-ca-offline.py",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      },
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private\\pgpass.conf",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      },
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private\\pg_service.conf",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      },
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private\\pg_service.conf.example",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      },
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private\\root-ca-bundle.pem",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      },
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private\\SETUP-BOUNDARY.txt",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      },
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private\\client\\postgresql-17.11-5",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      },
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private\\client\\postgresql-17.11-5\\icudt67.dll",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      },
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private\\client\\postgresql-17.11-5\\icuin67.dll",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      },
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private\\client\\postgresql-17.11-5\\icuio67.dll",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      },
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private\\client\\postgresql-17.11-5\\icutu67.dll",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      },
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private\\client\\postgresql-17.11-5\\icuuc67.dll",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      },
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private\\client\\postgresql-17.11-5\\libcrypto-3-x64.dll",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      },
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private\\client\\postgresql-17.11-5\\libcurl.dll",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      },
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private\\client\\postgresql-17.11-5\\libiconv-2.dll",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      },
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private\\client\\postgresql-17.11-5\\libintl-9.dll",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      },
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private\\client\\postgresql-17.11-5\\liblz4.dll",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      },
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private\\client\\postgresql-17.11-5\\libpq.dll",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      },
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private\\client\\postgresql-17.11-5\\libssl-3-x64.dll",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      },
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private\\client\\postgresql-17.11-5\\libwinpthread-1.dll",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      },
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private\\client\\postgresql-17.11-5\\libxml2.dll",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      },
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private\\client\\postgresql-17.11-5\\libxslt.dll",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      },
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private\\client\\postgresql-17.11-5\\libzstd.dll",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      },
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private\\client\\postgresql-17.11-5\\psql.exe",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      },
+      {
+        "access": "Lenovo,SYSTEM only",
+        "file": ".env.staging.private\\client\\postgresql-17.11-5\\zlib1.dll",
+        "owner": "RIZKI-LAPTOP/Lenovo",
+        "ignored": true
+      }
+    ],
+    "password_contents_read": false
+  },
+  "client_path": "D:\\SPE UGM SC\\spe-ugm-oprec-staging\\.env.staging.private\\client\\postgresql-17.11-5\\psql.exe",
+  "client_version": "psql (PostgreSQL) 17.11",
+  "client_and_libpq_hashes_match": true,
+  "ca_der_sha256": "807025ad50d4ed219d2c9c7d299c004f824eb00cf7f65afef607d07b72e6cafa",
+  "ca_matches_previous_report": true,
+  "ca_currently_valid": true,
+  "profile_matches_approved_session_pooler": true,
+  "sslmode": "verify-full",
+  "startup_read_only_configured": true,
+  "source_hashes": [
+    {
+      "file": "supabase/migrations/20260917000000_admin_profiles.sql",
+      "sha256": "9215103d7c95934e0ca36031132a04ee4c0c8ca18997721ff70f76b2ed244f02",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20260917010000_divisions.sql",
+      "sha256": "5010ced0b60bbebe4e90caca6616df32905979fba0625cc47858231229f324d5",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20260917020000_profile_details.sql",
+      "sha256": "7a023a83cf3e05c7ff4d07792b9520c40b75aa170babfaaa9bf0e733d850c29c",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20260918000000_elections.sql",
+      "sha256": "fc6a86a09012984b857f0cc17afe0a33bb07464bd46427e8c05b39501f95f267",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20260919000000_super_admin_dashboard.sql",
+      "sha256": "ad07f38d7a6c1a0026cb4f4c0bb457cfabf9c776be945801c09620812508e002",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20260919010000_account_period.sql",
+      "sha256": "0b0e89cbf7b8a620dfd8fb3ff6e93600fe0eac2d00e33b066f26983992f9f69f",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20260919020000_rekap.sql",
+      "sha256": "1dc20a3db61b8fe0ce39452c7b2891d1363137d767f4364844fa608384c43dd7",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20260919030000_proker.sql",
+      "sha256": "c270893aed3f25dd62cf99a5d600f9830e29fea565b60f968e4200fce20ef4bd",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20260919040000_division_overview.sql",
+      "sha256": "16273a484d708b12bcad1976bfc6c4b9cf7815968bd0e54ea5205db7a59e2278",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20260919050000_election_admin.sql",
+      "sha256": "6c42bbbd49e8f2a6615948b8e0f2d2e0f44023a3a34988101d9e78bfe54693cd",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20260919060000_voting_controls.sql",
+      "sha256": "d24673afe9bd956cd3b235cf290522ff976c6ffc29fbbcad2817b11834b23c3f",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20260919070000_candidate_photos.sql",
+      "sha256": "8c6d37c9b5238fa20d98952d57e9c78f20aa3f972698636ea280b58df472e623",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20260922000000_meetings.sql",
+      "sha256": "f3692f3d71749110078ef0d018d6d55ccc8815942c9f27c94cddc716b220af49",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20260922010000_division_overview_service_role.sql",
+      "sha256": "7a61ed34380c3dd79a2747734cfb14a75a3fabfcaec3433ee08b274f41772eff",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20260930000000_update_competencies.sql",
+      "sha256": "c204470e0c8d5b3e68d9b13185b1ae30f864f8455d053c5a4edd162814696e84",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20261101000000_recruitment_schema.sql",
+      "sha256": "132063eae3b54e196753092404ede8bfc6d0f2538956c2c5ca631b949bca287d",
+      "matches": true
+    },
+    {
+      "file": "supabase/migrations/20261101010000_recruitment_security.sql",
+      "sha256": "f4ac72d19c1e8de12a6c7382f57ee0b35a77f43cb2056e0b8c060c0cbe503765",
+      "matches": true
+    }
+  ],
+  "local_readiness": "GO for separately authorized first read-only inspection",
+  "database_connection_attempted": false,
+  "live_tls_or_database_identity_verified": false,
+  "sql_executed": false
+}

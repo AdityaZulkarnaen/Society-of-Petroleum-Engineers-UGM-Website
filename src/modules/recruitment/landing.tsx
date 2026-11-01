@@ -1,16 +1,16 @@
 import { ApplicationEntry, MockNotice, RecruitmentFrame, StatusBadge } from "./components";
 import { documentSlots, recruitmentConfig } from "./config";
 
-export function RecruitmentLanding() {
+export function RecruitmentLanding({ backend = false }: { backend?: boolean } = {}) {
   return <RecruitmentFrame>
-    <MockNotice />
+    {!backend && <MockNotice />}
     <section className="grid gap-10 pt-10 pb-14 lg:grid-cols-[1.35fr_0.85fr] lg:items-center lg:gap-16">
       <div>
-        <StatusBadge />
+        {backend ? <span className="text-xs font-semibold text-iris">Recruitment staging</span> : <StatusBadge />}
         <p className="mt-7 text-xs font-semibold tracking-[0.2em] text-iris uppercase">SPE UGM Student Chapter</p>
         <h1 className="mt-4 font-display text-[clamp(2.5rem,6vw,4.6rem)] leading-[1.1] font-semibold tracking-[-0.05em] text-ink-deep">Your next chapter<br /><span className="text-iris">starts here.</span></h1>
         <p className="mt-6 text-lg font-semibold">Staff Recruitment {recruitmentConfig.period}</p>
-        <p className="mt-3 max-w-xl text-base leading-7 text-ink-soft">Kenali alur Open Recruitment Staff SPE UGM SC, siapkan dokumen, lalu coba formulir empat langkah. Informasi pada halaman ini masih berupa preview.</p>
+        <p className="mt-3 max-w-xl text-base leading-7 text-ink-soft">{backend ? "Siapkan dokumen dan lengkapi formulir empat langkah. Periode dan ketentuan resmi diperiksa saat formulir dibuka. Lingkungan staging ini hanya untuk pengujian terotorisasi." : "Kenali alur Open Recruitment Staff SPE UGM SC, siapkan dokumen, lalu coba formulir empat langkah. Informasi pada halaman ini masih berupa preview."}</p>
         <div className="mt-7 flex flex-wrap items-center gap-4"><ApplicationEntry /><a href="#application-guide" className="rounded-lg px-2 py-3 text-sm font-semibold text-ink-deep underline decoration-iris/40 underline-offset-4 focus-visible:outline-2 focus-visible:outline-iris">Lihat panduan</a></div>
       </div>
       <div className="relative overflow-hidden rounded-[2rem] bg-[#eeebff] p-8 sm:p-10">
@@ -27,8 +27,8 @@ export function RecruitmentLanding() {
       <h2 id="guide-title" className="mt-3 font-display text-3xl font-semibold tracking-tight">Siapkan langkahmu.</h2>
       <ol className="mt-7 grid gap-4 md:grid-cols-3">{[
         ["01", "Baca informasi", "Daftar divisi, jadwal, dan petunjuk assignment resmi masih menunggu konfirmasi organisasi."],
-        ["02", "Siapkan dokumen", "Gunakan tiga PDF dan dua PNG contoh sebagai dokumen pendukung. Assignment mengikuti sub-divisi. Batas simulasi bukan ketentuan resmi."],
-        ["03", "Isi & periksa kembali", "Lengkapi empat langkah, periksa ringkasan, lalu coba submit simulasi. Tidak ada aplikasi yang dikirim."],
+        ["02", "Siapkan dokumen", backend ? "Siapkan PDF/PNG sesuai ketentuan pada formulir. Assignment mengikuti sub-divisi." : "Gunakan tiga PDF dan dua PNG contoh sebagai dokumen pendukung. Assignment mengikuti sub-divisi. Batas simulasi bukan ketentuan resmi."],
+        ["03", "Isi & periksa kembali", backend ? "Periksa seluruh isian sebelum mengirim. Koreksi setelah pengiriman dilakukan melalui panitia." : "Lengkapi empat langkah, periksa ringkasan, lalu coba submit simulasi. Tidak ada aplikasi yang dikirim."],
       ].map(([number, title, text]) => <li key={number} className="rounded-2xl border border-[#e4e5ef] bg-white p-6"><span className="text-sm font-semibold text-iris">{number}</span><h3 className="mt-4 font-display text-lg font-semibold">{title}</h3><p className="mt-2 text-sm leading-6 text-ink-soft">{text}</p></li>)}</ol>
     </section>
 

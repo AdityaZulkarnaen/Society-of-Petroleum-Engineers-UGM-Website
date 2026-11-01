@@ -39,7 +39,7 @@ export function validateStep(step: number, values: ApplicationValues, files: App
   if (step === 0) {
     for (const key of ["fullName", "nim", "birthPlace", "major"] as const) {
       if (!values[key].trim()) errors[key] = "Field ini wajib diisi.";
-      else if (values[key].trim().length > 150) errors[key] = "Maksimum 150 karakter untuk simulasi.";
+      else if (values[key].trim().length > 150) errors[key] = "Maksimum 150 karakter.";
     }
     const birth = new Date(`${values.birthDate}T00:00:00Z`);
     const today = new Date();
@@ -48,7 +48,7 @@ export function validateStep(step: number, values: ApplicationValues, files: App
       errors.birthDate = "Masukkan tanggal lahir yang valid, bukan tanggal mendatang.";
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.ugmEmail.trim()) || values.ugmEmail.length > 254) errors.ugmEmail = "Masukkan alamat email yang valid.";
-    if (!/^\+?[\d ()-]{8,25}$/.test(values.phoneNumber.trim()) || values.phoneNumber.replace(/\D/g, "").length < 8) errors.phoneNumber = "Masukkan nomor telepon dengan 8–25 karakter.";
+    if (!/^\+?[\d ()-]{8,25}$/.test(values.phoneNumber.trim()) || values.phoneNumber.replace(/\D/g, "").length < 8) errors.phoneNumber = "Masukkan nomor telepon dengan 8â€“25 karakter.";
     if (!period.batches.includes(values.batch)) errors.batch = `Pilih angkatan ${period.batches.join(" atau ")}.`;
   }
   if (step === 1 || step === 2) {
@@ -60,7 +60,7 @@ export function validateStep(step: number, values: ApplicationValues, files: App
       errors[fields.subDivision] = "Pilih dua sub-divisi yang berbeda. Keduanya boleh berada dalam divisi utama yang sama.";
     }
     if (!values[fields.motivation].trim()) errors[fields.motivation] = "Tuliskan alasan memilih sub-divisi.";
-    else if (values[fields.motivation].length > 3000) errors[fields.motivation] = "Maksimum 3.000 karakter untuk simulasi.";
+    else if (values[fields.motivation].length > 3000) errors[fields.motivation] = "Maksimum 3.000 karakter.";
     if (subDivision) {
       const error = validateAssignment(subDivision.assignment, files[fields.assignment], forSubmission);
       if (error) {
@@ -70,7 +70,8 @@ export function validateStep(step: number, values: ApplicationValues, files: App
     }
   }
   for (const slot of documentSlots.filter((item) => item.step === step)) {
-    const error = validateFile(slot.key, files[slot.key]);
+    const rule = period.documents?.[slot.key];
+    const error = rule ? validateUpload(files[slot.key], rule, rule.required) : validateFile(slot.key, files[slot.key]);
     if (error) errors[slot.key] = error;
   }
   return errors;

@@ -1,0 +1,88 @@
+{
+  "date": "2026-11-02",
+  "project_reference": "lavxddhrrwsjcshmnwvu",
+  "organization_name_owner_supplied": "el-kocan's Org",
+  "organization_id": "abnfnzzearslinsxnjcb",
+  "target_host": "aws-0-ap-south-1.pooler.supabase.com",
+  "port": 5432,
+  "routing_username": "postgres.lavxddhrrwsjcshmnwvu",
+  "client_verify_full": "PASS",
+  "client_tls_protocol": "TLSv1.3",
+  "client_tls_cipher": "TLS_AES_256_GCM_SHA384",
+  "backend_pg_stat_ssl": false,
+  "identity": {
+    "database": "postgres",
+    "current_user": "postgres",
+    "session_user": "postgres",
+    "server_version": "17.11",
+    "transaction_read_only": "on",
+    "default_transaction_read_only": "off",
+    "backend_address": "2406:da1a:314:7100:8d14:a5ae:c01e:57d6",
+    "backend_port": 5432
+  },
+  "guard_pass": true,
+  "single_transaction": true,
+  "rollback_and_completion": "PASS; completion marker only after successful ROLLBACK with ON_ERROR_STOP",
+  "native_psql_exit": 0,
+  "host_exit": 0,
+  "stderr_empty": true,
+  "retry_attempts_authorized_and_used": 1,
+  "automatic_retries": 0,
+  "public_relations_returned": 0,
+  "public_functions_returned": 0,
+  "public_storage_policies_returned": 0,
+  "repository_history": "relation absent; no ledger created",
+  "presence": {
+    "has_auth_users": false,
+    "has_storage_objects": false,
+    "buckets": []
+  },
+  "extensions": [
+    {
+      "name": "pg_stat_statements",
+      "version": "1.11",
+      "schema": "extensions"
+    },
+    {
+      "name": "pgcrypto",
+      "version": "1.3",
+      "schema": "extensions"
+    },
+    {
+      "name": "plpgsql",
+      "version": "1.0",
+      "schema": "pg_catalog"
+    },
+    {
+      "name": "supabase_vault",
+      "version": "0.3.1",
+      "schema": "vault"
+    },
+    {
+      "name": "uuid-ossp",
+      "version": "1.1",
+      "schema": "extensions"
+    }
+  ],
+  "required_objects_present": [
+    "auth.users",
+    "auth.uid()",
+    "auth.jwt()",
+    "auth.role()",
+    "gen_random_uuid()",
+    "storage.buckets",
+    "storage.objects"
+  ],
+  "publication": {
+    "name": "supabase_realtime",
+    "owner": "postgres",
+    "all_tables": false,
+    "members_returned": 0
+  },
+  "supautils_storage_policy_grants": "postgres whitelist includes storage.buckets and storage.objects",
+  "migration_hashes_matched": 17,
+  "sql_sha256": "fb1e82bd1a39258aea4cead1a7e708388eb8723b752247ea732924d4be8cf85d",
+  "database_objects_or_rows_modified": false,
+  "default_transaction_settings_modified": false,
+  "readiness": "Inspected fresh application surface; migration execution remains gated on transport/executor/runner review and separate approval"
+}

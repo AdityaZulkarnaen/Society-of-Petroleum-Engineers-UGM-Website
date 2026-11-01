@@ -1,0 +1,116 @@
+{
+  "phase": "B2C.1",
+  "status": "planning-only-not-authorized-for-execution",
+  "reviewed_commit": "895e715c2cd561004762e2bcb2d68362d9b0a164",
+  "branch": "feat/oprec-backend-staging",
+  "migration_count": 17,
+  "migrations": [
+    {
+      "order": 1,
+      "file": "supabase/migrations/20260917000000_admin_profiles.sql",
+      "sha256": "9215103d7c95934e0ca36031132a04ee4c0c8ca18997721ff70f76b2ed244f02",
+      "transaction": "runner-transaction-required"
+    },
+    {
+      "order": 2,
+      "file": "supabase/migrations/20260917010000_divisions.sql",
+      "sha256": "5010ced0b60bbebe4e90caca6616df32905979fba0625cc47858231229f324d5",
+      "transaction": "runner-transaction-required"
+    },
+    {
+      "order": 3,
+      "file": "supabase/migrations/20260917020000_profile_details.sql",
+      "sha256": "7a023a83cf3e05c7ff4d07792b9520c40b75aa170babfaaa9bf0e733d850c29c",
+      "transaction": "runner-transaction-required"
+    },
+    {
+      "order": 4,
+      "file": "supabase/migrations/20260918000000_elections.sql",
+      "sha256": "fc6a86a09012984b857f0cc17afe0a33bb07464bd46427e8c05b39501f95f267",
+      "transaction": "runner-transaction-required"
+    },
+    {
+      "order": 5,
+      "file": "supabase/migrations/20260919000000_super_admin_dashboard.sql",
+      "sha256": "ad07f38d7a6c1a0026cb4f4c0bb457cfabf9c776be945801c09620812508e002",
+      "transaction": "runner-transaction-required"
+    },
+    {
+      "order": 6,
+      "file": "supabase/migrations/20260919010000_account_period.sql",
+      "sha256": "0b0e89cbf7b8a620dfd8fb3ff6e93600fe0eac2d00e33b066f26983992f9f69f",
+      "transaction": "runner-transaction-required"
+    },
+    {
+      "order": 7,
+      "file": "supabase/migrations/20260919020000_rekap.sql",
+      "sha256": "1dc20a3db61b8fe0ce39452c7b2891d1363137d767f4364844fa608384c43dd7",
+      "transaction": "runner-transaction-required"
+    },
+    {
+      "order": 8,
+      "file": "supabase/migrations/20260919030000_proker.sql",
+      "sha256": "c270893aed3f25dd62cf99a5d600f9830e29fea565b60f968e4200fce20ef4bd",
+      "transaction": "runner-transaction-required"
+    },
+    {
+      "order": 9,
+      "file": "supabase/migrations/20260919040000_division_overview.sql",
+      "sha256": "16273a484d708b12bcad1976bfc6c4b9cf7815968bd0e54ea5205db7a59e2278",
+      "transaction": "runner-transaction-required"
+    },
+    {
+      "order": 10,
+      "file": "supabase/migrations/20260919050000_election_admin.sql",
+      "sha256": "6c42bbbd49e8f2a6615948b8e0f2d2e0f44023a3a34988101d9e78bfe54693cd",
+      "transaction": "runner-transaction-required"
+    },
+    {
+      "order": 11,
+      "file": "supabase/migrations/20260919060000_voting_controls.sql",
+      "sha256": "d24673afe9bd956cd3b235cf290522ff976c6ffc29fbbcad2817b11834b23c3f",
+      "transaction": "runner-transaction-required"
+    },
+    {
+      "order": 12,
+      "file": "supabase/migrations/20260919070000_candidate_photos.sql",
+      "sha256": "8c6d37c9b5238fa20d98952d57e9c78f20aa3f972698636ea280b58df472e623",
+      "transaction": "runner-transaction-required"
+    },
+    {
+      "order": 13,
+      "file": "supabase/migrations/20260922000000_meetings.sql",
+      "sha256": "f3692f3d71749110078ef0d018d6d55ccc8815942c9f27c94cddc716b220af49",
+      "transaction": "runner-transaction-required"
+    },
+    {
+      "order": 14,
+      "file": "supabase/migrations/20260922010000_division_overview_service_role.sql",
+      "sha256": "7a61ed34380c3dd79a2747734cfb14a75a3fabfcaec3433ee08b274f41772eff",
+      "transaction": "runner-transaction-required"
+    },
+    {
+      "order": 15,
+      "file": "supabase/migrations/20260930000000_update_competencies.sql",
+      "sha256": "c204470e0c8d5b3e68d9b13185b1ae30f864f8455d053c5a4edd162814696e84",
+      "transaction": "file-BEGIN-COMMIT"
+    },
+    {
+      "order": 16,
+      "file": "supabase/migrations/20261101000000_recruitment_schema.sql",
+      "sha256": "132063eae3b54e196753092404ede8bfc6d0f2538956c2c5ca631b949bca287d",
+      "transaction": "file-BEGIN-COMMIT"
+    },
+    {
+      "order": 17,
+      "file": "supabase/migrations/20261101010000_recruitment_security.sql",
+      "sha256": "f4ac72d19c1e8de12a6c7382f57ee0b35a77f43cb2056e0b8c060c0cbe503765",
+      "transaction": "file-BEGIN-COMMIT"
+    }
+  ],
+  "local_test": {
+    "file": "supabase/tests/recruitment_design.sql",
+    "sha256": "c1e1939a0d6243588242ad124ae53e5a524e21423089376538756da524144f67",
+    "execution_scope": "fresh-disposable-local-only; forbidden on cloud or populated DB"
+  }
+}

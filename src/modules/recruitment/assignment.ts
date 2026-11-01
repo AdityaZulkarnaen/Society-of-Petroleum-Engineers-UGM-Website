@@ -14,7 +14,7 @@ export function resolvePreference(period: RecruitmentPeriod, divisionId: string,
 }
 
 export function uploadHint(upload: UploadSpecification) {
-  return `${upload.formats.map((format) => uploadFormats[format].label).join(" / ")} · maksimum ${upload.maxBytes / (1024 * 1024)} MiB untuk simulasi. Panduan nama: ${upload.filename}.`;
+  return `${upload.formats.map((format) => uploadFormats[format].label).join(" / ")} · maksimum ${upload.maxBytes / (1024 * 1024)} MiB. Panduan nama: ${upload.filename}.`;
 }
 
 export function uploadAccept(upload: UploadSpecification) {
@@ -24,7 +24,7 @@ export function uploadAccept(upload: UploadSpecification) {
 export function validateUpload(file: File | undefined, upload: UploadSpecification, required: boolean): string | undefined {
   if (!file) return required ? "Pilih dokumen untuk melanjutkan." : undefined;
   if (file.size === 0) return "File kosong. Pilih file lain.";
-  if (file.size > upload.maxBytes) return `File melebihi batas simulasi ${upload.maxBytes / (1024 * 1024)} MiB.`;
+  if (file.size > upload.maxBytes) return `File melebihi batas ${upload.maxBytes / (1024 * 1024)} MiB.`;
   if (!upload.formats.some((format) => file.name.toLowerCase().endsWith(uploadFormats[format].extension) && file.type === uploadFormats[format].mime)) {
     return `Gunakan file ${upload.formats.map((format) => uploadFormats[format].label).join(" / ")} dengan tipe yang sesuai.`;
   }
@@ -40,7 +40,7 @@ export function assignmentView(rule: AssignmentRule | undefined, file?: File) {
     case "none":
       return { upload: undefined, required: false, blocked: false, label: "Tidak diperlukan", message: rule.message, summary: "Assignment tidak diperlukan" };
     case "unconfirmed":
-      return { upload: undefined, required: false, blocked: true, label: "Belum dikonfirmasi", message: rule.message, summary: "Belum dikonfirmasi — submit simulasi diblokir" };
+      return { upload: undefined, required: false, blocked: true, label: "Belum dikonfirmasi", message: rule.message, summary: "Belum dikonfirmasi — pengiriman diblokir" };
   }
 }
 

@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function JoinPage() {
-  return <RecruitmentLanding />;
+  return <RecruitmentLanding backend={process.env.RECRUITMENT_STAGING_ENABLED === "true"} />;
 }

@@ -1,0 +1,33 @@
+{
+  "inspection_success": true,
+  "native_exit_code": 0,
+  "stderr_present": false,
+  "automatic_retry": false,
+  "metadata": {
+    "database": "postgres",
+    "current_user": "postgres",
+    "session_user": "postgres",
+    "transaction_read_only": "on",
+    "database_owner": "postgres",
+    "database_create": true,
+    "public_usage": true,
+    "public_create": true,
+    "auth_usage": true,
+    "storage_usage": true,
+    "plpgsql_usage": true,
+    "auth_references": true,
+    "auth_uid_execute": true,
+    "storage_bucket_insert": true,
+    "storage_objects_select": true,
+    "api_roles_present": true,
+    "publication_owned": true,
+    "storage_objects_policy_grant": true,
+    "storage_buckets_policy_grant": true,
+    "admin_role_type": null,
+    "public_types": [],
+    "public_relations": 0,
+    "migration_history": null,
+    "backend_ssl": false
+  },
+  "client_tls": "SSL connection (protocol: TLSv1.3, cipher: TLS_AES_256_GCM_SHA384, compression: off, ALPN: none)"
+}

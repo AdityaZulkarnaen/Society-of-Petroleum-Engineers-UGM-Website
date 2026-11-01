@@ -54,6 +54,9 @@ export async function checkBrowser({ origin, artifacts, env }) {
     const external = [];
     const requests = [];
     const exceptions = [];
+    let liveMode = false;
+    let livePosts = 0;
+    const livePeriod = { id:"synthetic-period", label:"Synthetic staging test", contentState:"approved", notice:"Synthetic browser fixture", batches:["2026"], divisions:[{id:"example-a",label:"Synthetic main",subDivisions:[{id:"a-none",label:"Synthetic first",assignment:{status:"none",message:"No assignment"}},{id:"a-optional",label:"Synthetic second",assignment:{status:"optional",instructions:"Optional",upload:{formats:["pdf"],maxBytes:3145728,filename:"assignment.pdf"}}}]}] };
     function send(method, params = {}) {
       return new Promise((resolve, reject) => {
         const requestId = ++id;
@@ -79,7 +82,12 @@ export async function checkBrowser({ origin, artifacts, env }) {
           void send("Fetch.failRequest", { requestId, errorReason: "BlockedByClient" }).catch(() => {});
         } else {
           requests.push({ path: url.pathname, method: request.method });
-          void send("Fetch.continueRequest", { requestId }).catch(() => {});
+          if (liveMode && url.pathname === "/api/recruitment") {
+            let responseCode=200, payload;
+            if (request.method === "GET") payload={period:livePeriod,token:"synthetic-browser-session"};
+            else { livePosts++; responseCode=livePosts===1?503:200; payload=livePosts===1?{error:"Synthetic temporary failure. Retry unchanged."}:{applicationId:"synthetic-receipt-001"}; }
+            void send("Fetch.fulfillRequest", {requestId,responseCode,responseHeaders:[{name:"Content-Type",value:"application/json"}],body:Buffer.from(JSON.stringify(payload)).toString("base64")}).catch(() => {});
+          } else void send("Fetch.continueRequest", { requestId }).catch(() => {});
         }
       } else if (message.method === "Runtime.exceptionThrown") exceptions.push(message.params.exceptionDetails.text);
     });
@@ -360,14 +368,36 @@ export async function checkBrowser({ origin, artifacts, env }) {
     assert.equal(external.length, 0, "Recruitment attempted external communication");
     assert(requests.every((request) => request.method === "GET" && !request.path.startsWith("/api/")), "Unexpected submission/API request");
     assert.equal(exceptions.length, 0, "Browser runtime exception");
+    liveMode = true;
+    await navigate("/backend-wizard-test");
+    await waitFor("!!document.getElementById('recruit-fullName')", "Live configuration did not load");
+    assert(await evaluate("document.getElementById('recruit-catalog') === null"), "Live mode exposed draft selector");
+    for (const [key,value] of Object.entries({fullName:"Synthetic Applicant",nim:"SYNTHETIC-001",birthPlace:"Synthetic",birthDate:"2005-02-01",ugmEmail:"synthetic@example.invalid",phoneNumber:"+620000000001",major:"Synthetic",batch:"2026"})) await fill(key,value);
+    await click("Selanjutnya");
+    await fill("division1","example-a"); await fill("subDivision1","a-none"); await fill("motivation1","Synthetic first preference");
+    await click("Selanjutnya");
+    await fill("division2","example-a"); await fill("subDivision2","a-optional"); await fill("motivation2","Synthetic second preference");
+    await click("Selanjutnya");
+    for (const slot of ["cv","idCard","commitment"]) await upload(slot,"sample.pdf");
+    for (const slot of ["followProof","storyProof"]) await upload(slot,"sample.png");
+    await click("Review isian"); await click("Kirim pendaftaran");
+    await waitFor("document.body.textContent.includes('Synthetic temporary failure')", "Live failure not shown");
+    assert((await evaluate("document.body.textContent")).includes("Synthetic Applicant"), "Failure cleared retry payload");
+    await click("Kirim pendaftaran");
+    await waitFor("document.body.textContent.includes('synthetic-receipt-001')", "Live receipt missing");
+    assert.equal(livePosts,2);
+    assert.equal(external.length,0);
+    assert.equal(exceptions.length,0,"Backend-mode browser runtime exception");
+    await screenshot("wizard-backend-mocked-success.png");
+    console.log("PASS: backend-mode wizard loads approved config, allows same-parent preferences, retains failed payload and confirms retried submission (mock HTTP only)");
     await writeFile(path.join(artifacts, "browser-results.json"), JSON.stringify({
-      passed: true, viewports: viewportResults,
+      passed: true, viewports: viewportResults, backendMock: { passed:true, submissions:livePosts, cloudRequests:0 },
       checks: ["external HTTP/HTTPS blocked", "required fields and focus", "invalid email/date/phone", "keyboard navigation", "file type/size/empty validation", "previous preserves values/files", "required and optional assignments", "no-assignment explanation", "unconfirmed blocks final submission", "division and sub-division clear obsolete files", "preferences remain independent", "review status and names", "draft/demo catalogue switching", "five supporting documents", "memory-only success", "reset and reload", "no cookies/localStorage/sessionStorage", "public navigation", "no horizontal overflow"],
       externalRequestsDuringFlow: external.length,
       submissionOrApiRequests: requests.filter((request) => request.method !== "GET" || request.path.startsWith("/api/")).length,
       runtimeExceptions: exceptions.length,
     }, null, 2));
-    console.log("PASS: desktop/mobile wizard, synthetic files, review, success, reset, reload, storage and zero backend requests");
+    console.log("PASS: desktop/mobile mock and backend-mode mocked HTTP wizard; zero external backend requests");
     console.log("Screenshots and browser results:", artifacts);
   } finally {
     if (socket?.readyState === WebSocket.OPEN) socket.close();

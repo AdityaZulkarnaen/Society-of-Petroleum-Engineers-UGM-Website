@@ -1,0 +1,319 @@
+{
+  "date": "2026-11-02",
+  "ssl_owner_evidence": {
+    "project_reference": "lavxddhrrwsjcshmnwvu",
+    "project_name": "spe-ugm-staging",
+    "source": "Owner-provided Dashboard observation",
+    "enforce_ssl": false,
+    "observation_date": "2026-11-02",
+    "timezone": "Asia/Jakarta (WIB, UTC+7)",
+    "observation_time": null,
+    "ui_description": "gray toggle positioned left",
+    "settings_changed_or_saved": false,
+    "agent_cloud_contact": false
+  },
+  "cli_version": "2.122.0",
+  "local_project": "spe-ugm-recruitment-b2c3b-rehearsal",
+  "local_workspace": "D:\\SPE UGM SC\\spe-ugm-oprec-staging\\.env.staging.private\\b2c3b-rehearsal",
+  "new_services_final_state": "stopped; volumes/evidence retained",
+  "new_resource_ownership": {
+    "network": "spe-ugm-recruitment-b2c3b-rehearsal_isolated",
+    "driver": "bridge",
+    "internal": false,
+    "ipv6": false,
+    "attached_only_new_project": true,
+    "volumes": [
+      "spe-ugm-recruitment-b2c3b-rehearsal_db-config",
+      "spe-ugm-recruitment-b2c3b-rehearsal_db-data",
+      "spe-ugm-recruitment-b2c3b-rehearsal_storage-data"
+    ],
+    "containers": [
+      {
+        "service": "storage",
+        "id": "a78b4088fd74b24fd45ef7c1e814cec8aed98227175ecfeee6d7f7e75fe815ba",
+        "image_id": "sha256:98ffec5d0678803783c30e404c27f4ec65e97efbe014088f2a86b4b8b54b9f54",
+        "ports": {
+          "5000/tcp": null
+        },
+        "state": "running",
+        "health": "healthy"
+      },
+      {
+        "service": "auth",
+        "id": "f9c7222c02c2330014ff2bdb6308a3cd77086f30a174d7ce282ae8ea4ccb535d",
+        "image_id": "sha256:1736a63078f5922b198c4cbe50f80ab9a2d3b54fe8b7b6cfb2e9dc5dbbc12c6b",
+        "ports": {},
+        "state": "running",
+        "health": "healthy"
+      },
+      {
+        "service": "rest",
+        "id": "3b537db34f85a36961524ebb27601aa05b47e81ec22d8e8334308b48bf728068",
+        "image_id": "sha256:c7cd7e265a85b05248abf53f4473fcec7e327c282d0bd0cf60f1551996d09fcf",
+        "ports": {
+          "3000/tcp": null
+        },
+        "state": "running",
+        "health": "healthy"
+      },
+      {
+        "service": "db",
+        "id": "d9928d959527b4891c900b2f2552d914b645bedcf53e46affa651397aeac7522",
+        "image_id": "sha256:f371b5f3f2ac0a05703f33d6e6134515fb2498cab708fb948a0aeb7481467c00",
+        "ports": {
+          "5432/tcp": [
+            {
+              "HostIp": "127.0.0.1",
+              "HostPort": "55472"
+            }
+          ]
+        },
+        "state": "running",
+        "health": "healthy"
+      }
+    ]
+  },
+  "positive": {
+    "versions": [
+      "20260917000000",
+      "20260917010000",
+      "20260917020000",
+      "20260918000000",
+      "20260919000000",
+      "20260919010000",
+      "20260919020000",
+      "20260919030000",
+      "20260919040000",
+      "20260919050000",
+      "20260919060000",
+      "20260919070000",
+      "20260922000000",
+      "20260922010000",
+      "20260930000000",
+      "20261101000000",
+      "20261101010000"
+    ],
+    "recruitment_tables": 7,
+    "private_bucket": true,
+    "dry_run_left_ledger_absent": true
+  },
+  "detailed_postchecks": {
+    "history": [
+      {
+        "version": "20260917000000",
+        "name": "admin_profiles",
+        "statement_count": 12
+      },
+      {
+        "version": "20260917010000",
+        "name": "divisions",
+        "statement_count": 12
+      },
+      {
+        "version": "20260917020000",
+        "name": "profile_details",
+        "statement_count": 6
+      },
+      {
+        "version": "20260918000000",
+        "name": "elections",
+        "statement_count": 17
+      },
+      {
+        "version": "20260919000000",
+        "name": "super_admin_dashboard",
+        "statement_count": 6
+      },
+      {
+        "version": "20260919010000",
+        "name": "account_period",
+        "statement_count": 1
+      },
+      {
+        "version": "20260919020000",
+        "name": "rekap",
+        "statement_count": 12
+      },
+      {
+        "version": "20260919030000",
+        "name": "proker",
+        "statement_count": 18
+      },
+      {
+        "version": "20260919040000",
+        "name": "division_overview",
+        "statement_count": 4
+      },
+      {
+        "version": "20260919050000",
+        "name": "election_admin",
+        "statement_count": 17
+      },
+      {
+        "version": "20260919060000",
+        "name": "voting_controls",
+        "statement_count": 9
+      },
+      {
+        "version": "20260919070000",
+        "name": "candidate_photos",
+        "statement_count": 4
+      },
+      {
+        "version": "20260922000000",
+        "name": "meetings",
+        "statement_count": 40
+      },
+      {
+        "version": "20260922010000",
+        "name": "division_overview_service_role",
+        "statement_count": 3
+      },
+      {
+        "version": "20260930000000",
+        "name": "update_competencies",
+        "statement_count": 14
+      },
+      {
+        "version": "20261101000000",
+        "name": "recruitment_schema",
+        "statement_count": 28
+      },
+      {
+        "version": "20261101010000",
+        "name": "recruitment_security",
+        "statement_count": 38
+      }
+    ],
+    "rls_tables": 7,
+    "constraints": 65,
+    "functions": 10,
+    "auth_users": 0,
+    "applications": 0,
+    "storage_objects": 0
+  },
+  "fault_cases": {
+    "gap01": {
+      "versions": [],
+      "rating_column_exists": false,
+      "recruitment_table": null,
+      "private_bucket": false,
+      "enum_type": null,
+      "profile_table": null,
+      "injected_failure_version": "20260917000000",
+      "native_cli_exit": 1,
+      "committed_body_missing_history": false,
+      "body_rolled_back": true,
+      "automatic_retry": false
+    },
+    "gap15": {
+      "versions": [
+        "20260917000000",
+        "20260917010000",
+        "20260917020000",
+        "20260918000000",
+        "20260919000000",
+        "20260919010000",
+        "20260919020000",
+        "20260919030000",
+        "20260919040000",
+        "20260919050000",
+        "20260919060000",
+        "20260919070000",
+        "20260922000000",
+        "20260922010000"
+      ],
+      "rating_column_exists": false,
+      "recruitment_table": null,
+      "private_bucket": false,
+      "injected_failure_version": "20260930000000",
+      "native_cli_exit": 1,
+      "committed_body_missing_history": true,
+      "automatic_retry": false
+    },
+    "gap16": {
+      "versions": [
+        "20260917000000",
+        "20260917010000",
+        "20260917020000",
+        "20260918000000",
+        "20260919000000",
+        "20260919010000",
+        "20260919020000",
+        "20260919030000",
+        "20260919040000",
+        "20260919050000",
+        "20260919060000",
+        "20260919070000",
+        "20260922000000",
+        "20260922010000",
+        "20260930000000"
+      ],
+      "rating_column_exists": false,
+      "recruitment_table": "recruitment_applications",
+      "private_bucket": false,
+      "injected_failure_version": "20261101000000",
+      "native_cli_exit": 1,
+      "committed_body_missing_history": true,
+      "automatic_retry": false
+    },
+    "gap17": {
+      "versions": [
+        "20260917000000",
+        "20260917010000",
+        "20260917020000",
+        "20260918000000",
+        "20260919000000",
+        "20260919010000",
+        "20260919020000",
+        "20260919030000",
+        "20260919040000",
+        "20260919050000",
+        "20260919060000",
+        "20260919070000",
+        "20260922000000",
+        "20260922010000",
+        "20260930000000",
+        "20261101000000"
+      ],
+      "rating_column_exists": false,
+      "recruitment_table": "recruitment_applications",
+      "private_bucket": true,
+      "injected_failure_version": "20261101010000",
+      "native_cli_exit": 1,
+      "committed_body_missing_history": true,
+      "automatic_retry": false
+    }
+  },
+  "preservation": {
+    "existing_containers_unchanged": true,
+    "existing_container_count": 10,
+    "C_free_GiB": 12.11,
+    "D_free_GiB": 27.79
+  },
+  "frozen_migration_hashes_matched": 17,
+  "cloud_connections_or_writes": false,
+  "history_repair_performed": false,
+  "final_new_container_states": [
+    {
+      "service": "storage",
+      "state": "exited",
+      "id": "a78b4088fd74b24fd45ef7c1e814cec8aed98227175ecfeee6d7f7e75fe815ba"
+    },
+    {
+      "service": "auth",
+      "state": "exited",
+      "id": "f9c7222c02c2330014ff2bdb6308a3cd77086f30a174d7ce282ae8ea4ccb535d"
+    },
+    {
+      "service": "rest",
+      "state": "exited",
+      "id": "3b537db34f85a36961524ebb27601aa05b47e81ec22d8e8334308b48bf728068"
+    },
+    {
+      "service": "db",
+      "state": "exited",
+      "id": "d9928d959527b4891c900b2f2552d914b645bedcf53e46affa651397aeac7522"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "status": "OWNER-CONFIRMED-IDENTITY-NO-CLOUD-CONNECTION-OR-WRITES-AUTHORIZED",
+  "project_name": "spe-ugm-staging",
+  "organization_id": "abnfnzzearslinsxnjcb",
+  "project_reference": "lavxddhrrwsjcshmnwvu",
+  "expected_api_origin": "https://lavxddhrrwsjcshmnwvu.supabase.co",
+  "region": "South Asia (Mumbai)",
+  "database_transport": "session_pooler",
+  "database_hostname": "aws-0-ap-south-1.pooler.supabase.com",
+  "database_port": 5432,
+  "database_name": "postgres",
+  "database_username": "postgres.lavxddhrrwsjcshmnwvu",
+  "tls_verification": "verify-full with independently obtained trusted CA as required",
+  "independent_owner_verification": "Owner explicitly confirmed all fields from project lavxddhrrwsjcshmnwvu Dashboard/Connect panel in personal organization on 2026-11-02. Agent checked local consistency only; no cloud contact.",
+  "verified_at": null,
+  "credential_provenance": "personal staging organization only; no credential values belong in this file",
+  "derived_api_origin_candidate": "https://lavxddhrrwsjcshmnwvu.supabase.co",
+  "derived_api_origin_candidate_status": "Now independently confirmed by owner Dashboard attestation; not contacted.",
+  "owner_confirmed_at": "2026-11-02",
+  "cloud_connection_verified": false
+}

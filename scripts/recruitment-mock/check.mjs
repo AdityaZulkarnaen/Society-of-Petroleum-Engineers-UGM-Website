@@ -110,6 +110,11 @@ await writeFile(path.join(probe, "route.ts"), `export async function GET() {
   return Response.json({guarded, credentialFree, blocked});
 }`);
 
+// Isolated browser-only fixture page: mocked API interception, no credentials.
+const backendProbe = path.join(root, "app/backend-wizard-test");
+await mkdir(backendProbe);
+await writeFile(path.join(backendProbe, "page.tsx"), `import { ApplicationWizard } from "@/modules/recruitment/wizard"; export default function Page() { return <ApplicationWizard backend />; }`);
+
 console.log("Isolated artifacts:", artifacts);
 await copyFile(new URL("assert-source.cjs", import.meta.url), path.join(root, "assert-source.cjs"));
 await run([path.join(root, "assert-source.cjs")]);

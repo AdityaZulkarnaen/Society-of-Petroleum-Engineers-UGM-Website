@@ -118,7 +118,11 @@ assert(renderToStaticMarkup(RecruitmentLanding()).includes('href="/join/apply"')
 for (const name of fs.readdirSync(root)) {
   if (!/\.tsx?$/.test(name)) continue;
   const source = fs.readFileSync(path.join(root, name), "utf8");
-  assert(!/\b(?:fetch|XMLHttpRequest|WebSocket|sendBeacon)\s*\(/.test(source), `Network call in ${name}`);
+  if (name === "wizard.tsx") {
+    assert(source.includes("if (!backend) return;"), "Mock mode must not load remote configuration");
+    assert(source.includes("backend ? submitApplication : simulateSubmission"), "Mock submission must stay local");
+    assert.deepEqual([...source.matchAll(/fetch\("([^"]+)"/g)].map(match => match[1]), ["/api/recruitment", "/api/recruitment"]);
+  } else assert(!/\b(?:fetch|XMLHttpRequest|WebSocket|sendBeacon)\s*\(/.test(source), `Network call in ${name}`);
   assert(!/\b(?:localStorage|sessionStorage|indexedDB)\b|document\.cookie|["']use server["']|@supabase|lib\/supabase/.test(source), `Persistence/backend import in ${name}`);
 }
-console.log("PASS: distinct ranked preferences including same-parent choices, four assignment states, parent-child validation, draft/approved separation, file boundaries and no network/persistence integration");
+console.log("PASS: distinct ranked preferences including same-parent choices, four assignment states, parent-child validation, draft/approved separation, file boundaries and isolated mock mode");
