@@ -49,27 +49,12 @@ create table public.recruitment_document_requirements (
   primary key (period_id, slot)
 );
 
-create table public.recruitment_access (
-  period_id uuid not null references public.recruitment_periods(id) on delete restrict,
-  profile_id uuid not null references public.profiles(id) on delete cascade,
-  can_review boolean not null default false,
-  can_export boolean not null default false,
-  revoked_at timestamptz,
-  granted_at timestamptz not null default now(),
-  grant_reference text not null check (length(btrim(grant_reference)) between 1 and 500),
-  primary key (period_id, profile_id),
-  check (not can_export or can_review)
-);
-create index recruitment_access_profile_idx on public.recruitment_access(profile_id, period_id);
-
--- No auth.users/profile FK: applicants are not staff accounts.
--- The server issues a high-entropy capability cookie and stores only its hash.
+-- Applicants are not staff. No recovery or post-submit editing infrastructure.
 create table public.recruitment_applications (
   id uuid primary key default gen_random_uuid(),
   period_id uuid not null references public.recruitment_periods(id) on delete restrict,
-  capability_hash text not null unique check (capability_hash ~ '^[0-9a-f]{64}$'),
-  capability_expires_at timestamptz not null,
   idempotency_key uuid not null unique,
+  request_hash text not null check (request_hash ~ '^[0-9a-f]{64}$'),
   full_name text not null check (length(btrim(full_name)) between 1 and 150),
   nim text not null check (length(btrim(nim)) between 1 and 150 and nim = lower(btrim(nim))),
   birth_place text not null check (length(btrim(birth_place)) between 1 and 150),
@@ -90,7 +75,7 @@ create table public.recruitment_applications (
   updated_at timestamptz not null default now(),
   unique (id, period_id),
   unique (period_id, nim),
-  unique (period_id, email),
+
   check ((status = 'uploading' and submitted_at is null)
     or (status <> 'uploading' and submitted_at is not null))
 );
@@ -105,6 +90,7 @@ create table public.recruitment_preferences (
   sub_code text not null,
   motivation text not null check (length(btrim(motivation)) between 1 and 3000),
   primary key (application_id, rank),
+  unique (application_id, main_code, sub_code) deferrable initially deferred,
   foreign key (application_id, period_id)
     references public.recruitment_applications(id, period_id) on delete restrict,
   foreign key (period_id, main_code, sub_code)
@@ -132,6 +118,24 @@ create table public.recruitment_documents (
   check (object_name = period_id::text || '/' || application_id::text || '/' || id::text || '.' || format)
 );
 create index recruitment_documents_period_idx on public.recruitment_documents(period_id, application_id);
+
+-- Append-only operational events; never payloads, filenames, tokens or document bytes.
+create table public.recruitment_audit (
+  id uuid primary key default gen_random_uuid(),
+  period_id uuid not null references public.recruitment_periods(id) on delete restrict,
+  application_id uuid references public.recruitment_applications(id) on delete restrict,
+  document_id uuid references public.recruitment_documents(id) on delete restrict,
+  actor_id uuid references public.profiles(id) on delete restrict,
+  event text not null check (event in ('submission','review','document_download_authorized','csv_export')),
+  previous_status text check (previous_status in ('uploading','submitted','under_review','accepted','rejected','withdrawn')),
+  resulting_status text check (resulting_status in ('uploading','submitted','under_review','accepted','rejected','withdrawn')),
+  request_id uuid not null unique,
+  occurred_at timestamptz not null default clock_timestamp(),
+  check ((event = 'submission' and actor_id is null and application_id is not null)
+    or (event <> 'submission' and actor_id is not null)),
+  check (event <> 'document_download_authorized' or document_id is not null)
+);
+create index recruitment_audit_period_idx on public.recruitment_audit(period_id, occurred_at);
 
 -- Approval locks catalogue and requirement rows; serialize edits with approval.
 create function public.recruitment_config_guard()
@@ -211,7 +215,10 @@ declare p public.recruitment_periods;
 begin
   if tg_op = 'INSERT' and new.status <> 'uploading' then raise exception 'initial_status_invalid'; end if;
   if tg_op = 'UPDATE' then
-    if new.id <> old.id or new.period_id <> old.period_id then raise exception 'application_identity_immutable'; end if;
+    if new.id <> old.id or new.period_id <> old.period_id or new.nim <> old.nim
+      or new.idempotency_key <> old.idempotency_key or new.request_hash <> old.request_hash then
+      raise exception 'application_identity_immutable';
+    end if;
     if old.status <> 'uploading' and
       (to_jsonb(new) - array['status','reviewed_by','reviewed_at','review_note','updated_at'])
         is distinct from
@@ -225,7 +232,6 @@ begin
     ) then raise exception 'status_transition_invalid'; end if;
   end if;
   if tg_op = 'INSERT' or old.status = 'uploading' then
-    if new.capability_expires_at <= clock_timestamp() then raise exception 'application_session_expired'; end if;
     select * into p from public.recruitment_periods where id = new.period_id for share;
     if p.approved_at is null or not p.is_open or clock_timestamp() < p.opens_at or clock_timestamp() >= p.closes_at then
       raise exception 'recruitment_not_open';
@@ -277,8 +283,8 @@ do $$
 declare t text;
 begin
   foreach t in array array['recruitment_periods','recruitment_options',
-    'recruitment_document_requirements','recruitment_access','recruitment_applications',
-    'recruitment_preferences','recruitment_documents'] loop
+    'recruitment_document_requirements','recruitment_applications',
+    'recruitment_preferences','recruitment_documents','recruitment_audit'] loop
     execute format('alter table public.%I enable row level security', t);
     execute format('revoke all on table public.%I from public, anon, authenticated', t);
   end loop;

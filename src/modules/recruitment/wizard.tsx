@@ -57,7 +57,7 @@ export function ApplicationWizard() {
     if (values[field] === value) return;
     setValues((previous) => ({ ...previous, [field]: value, ...(level === "division" ? { [fields.subDivision]: "" } : {}) }));
     clearAssignment(fields.assignment);
-    setErrors((previous) => ({ ...previous, [fields.division]: undefined, [fields.subDivision]: undefined, [fields.assignment]: undefined }));
+    setErrors((previous) => ({ ...previous, subDivision1: undefined, subDivision2: undefined, [fields.division]: undefined, [fields.assignment]: undefined }));
     setSelectionNotice(`Pilihan ${fields.label} diperbarui. File assignment terkait dikosongkan${level === "division" ? " dan sub-divisi perlu dipilih kembali" : ""}.`);
   }
 
@@ -160,7 +160,7 @@ export function ApplicationWizard() {
         <p className="text-xs font-semibold tracking-[0.15em] text-iris uppercase">SPE UGM SC · {period.label}</p>
         <h2 className="mt-3 font-display text-2xl font-semibold tracking-tight">Application<br className="hidden lg:block" /> preview.</h2>
         <ol className="mt-6 grid grid-cols-4 gap-2 lg:grid-cols-1 lg:gap-3">{steps.map((label, index) => <li key={label} aria-current={step === index ? "step" : undefined} className={`flex flex-col items-center gap-2 rounded-xl px-2 py-3 text-center text-xs lg:flex-row lg:gap-3 lg:px-3 lg:text-left lg:text-sm ${step === index ? "bg-[#eeebff] font-semibold text-iris" : "text-ink-soft"}`}><span aria-hidden="true" className={`grid size-8 shrink-0 place-items-center rounded-full ${step >= index ? "bg-iris text-white" : "border border-[#dcddea] bg-white"}`}>{step > index ? "✓" : index + 1}</span><span>{label}</span></li>)}</ol>
-        <p className="mt-5 text-xs leading-6 text-ink-soft">Data pribadi, kedua pilihan sub-divisi, alasan, dan dokumen pendukung wajib diisi. Assignment mengikuti sub-divisi. Tombol Sebelumnya mempertahankan isian dan file; reload menghapus semuanya.</p>
+        <p className="mt-5 text-xs leading-6 text-ink-soft">Pilih dua sub-divisi berbeda; keduanya boleh berada dalam divisi utama yang sama. Data pribadi, alasan, dan dokumen pendukung wajib diisi. Assignment mengikuti sub-divisi. Tombol Sebelumnya mempertahankan isian dan file; reload menghapus semuanya.</p>
       </aside>
       <section className="min-w-0 rounded-3xl border border-[#e4e5ef] bg-white p-5 sm:p-8">
         <p className="text-xs font-semibold tracking-[0.12em] text-iris uppercase">Langkah {step + 1} dari 4{phase === "review" ? " · Review" : ""}</p>

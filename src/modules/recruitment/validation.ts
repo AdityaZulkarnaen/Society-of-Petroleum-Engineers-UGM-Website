@@ -56,11 +56,17 @@ export function validateStep(step: number, values: ApplicationValues, files: App
     const { division, subDivision } = resolvePreference(period, values[fields.division], values[fields.subDivision]);
     if (!division) errors[fields.division] = "Pilih divisi utama dari daftar yang tersedia.";
     if (!subDivision) errors[fields.subDivision] = "Pilih sub-divisi yang termasuk dalam divisi utama ini.";
+    if (subDivision && values.division1 === values.division2 && values.subDivision1 === values.subDivision2) {
+      errors[fields.subDivision] = "Pilih dua sub-divisi yang berbeda. Keduanya boleh berada dalam divisi utama yang sama.";
+    }
     if (!values[fields.motivation].trim()) errors[fields.motivation] = "Tuliskan alasan memilih sub-divisi.";
     else if (values[fields.motivation].length > 3000) errors[fields.motivation] = "Maksimum 3.000 karakter untuk simulasi.";
     if (subDivision) {
       const error = validateAssignment(subDivision.assignment, files[fields.assignment], forSubmission);
-      if (error) errors[subDivision.assignment.status === "unconfirmed" ? fields.subDivision : fields.assignment] = error;
+      if (error) {
+        const key = subDivision.assignment.status === "unconfirmed" ? fields.subDivision : fields.assignment;
+        errors[key] ??= error;
+      }
     }
   }
   for (const slot of documentSlots.filter((item) => item.step === step)) {

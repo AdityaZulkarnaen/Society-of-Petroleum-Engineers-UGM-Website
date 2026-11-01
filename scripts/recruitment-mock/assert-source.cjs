@@ -34,6 +34,11 @@ files.assignment1 = pdf;
 files.assignment2 = pdf;
 for (let step = 0; step < 4; step++) assert.deepEqual(validateStep(step, values, files, demo), {});
 assert.deepEqual(validateSubmission(values, files, demo), {});
+const duplicatePreference = { ...values, division2: values.division1, subDivision2: values.subDivision1 };
+assert(validateStep(1, duplicatePreference, files, demo).subDivision1);
+assert(validateStep(2, duplicatePreference, files, demo).subDivision2);
+assert(validateSubmission(duplicatePreference, files, demo).subDivision2);
+assert.deepEqual(validateSubmission({ ...values, division2: 'example-a', subDivision2: 'a-optional' }, files, demo), {});
 assert.equal(Object.keys(validateStep(0, emptyValues, {})).length, 8);
 assert(validateStep(0, { ...values, birthDate: "2025-02-29" }, files).birthDate);
 assert(validateStep(0, { ...values, birthDate: "2099-01-01" }, files).birthDate);
@@ -116,4 +121,4 @@ for (const name of fs.readdirSync(root)) {
   assert(!/\b(?:fetch|XMLHttpRequest|WebSocket|sendBeacon)\s*\(/.test(source), `Network call in ${name}`);
   assert(!/\b(?:localStorage|sessionStorage|indexedDB)\b|document\.cookie|["']use server["']|@supabase|lib\/supabase/.test(source), `Persistence/backend import in ${name}`);
 }
-console.log("PASS: four assignment states for both preferences, parent-child validation, draft/approved separation, future periods, file boundaries and no network/persistence integration");
+console.log("PASS: distinct ranked preferences including same-parent choices, four assignment states, parent-child validation, draft/approved separation, file boundaries and no network/persistence integration");

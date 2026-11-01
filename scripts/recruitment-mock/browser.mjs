@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
-import { access, readFile, writeFile } from "node:fs/promises";
+import { access, mkdtemp, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -10,7 +10,7 @@ export async function checkBrowser({ origin, artifacts, env }) {
     ? "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
     : "/usr/bin/chromium";
   await access(chrome); // No install or browser download fallback.
-  const profile = path.join(artifacts, "isolated-chrome-profile");
+  const profile = await mkdtemp(path.join(artifacts, "isolated-chrome-profile-"));
   const browser = spawn(chrome, [
     "--headless=new", "--no-first-run", "--no-default-browser-check",
     "--disable-background-networking", "--disable-component-update",
@@ -33,9 +33,17 @@ export async function checkBrowser({ origin, artifacts, env }) {
       } catch { await pause(250); }
     }
     assert(debugPort, "Chrome unavailable; browser checks stopped");
-    const targets = await (await fetch(`http://127.0.0.1:${debugPort}/json/list`)).json();
-    const target = targets.find((entry) => entry.type === "page");
-    assert(target);
+    // DevToolsActivePort can appear before its HTTP endpoint accepts requests.
+    let target;
+    for (let attempt = 0; attempt < 60; attempt++) {
+      try {
+        const targets = await (await fetch(`http://127.0.0.1:${debugPort}/json/list`, { signal: AbortSignal.timeout(1000) })).json();
+        target = targets.find((entry) => entry.type === "page");
+        if (target) break;
+      } catch { /* Retry local Chrome readiness only; no external fallback. */ }
+      await pause(250);
+    }
+    assert(target, 'Chrome debugging endpoint unavailable');
     socket = new WebSocket(target.webSocketDebuggerUrl);
     await new Promise((resolve, reject) => {
       socket.addEventListener("open", resolve, { once: true });
@@ -218,6 +226,23 @@ export async function checkBrowser({ origin, artifacts, env }) {
       assert.equal(await submitDisabled(), false);
       for (const rank of [1, 2]) assert((await summary(rank)).includes(`Wajib · preference-${rank}.pdf`));
       await screenshot(`wizard-required-review-${viewport.name}.png`, summarySelector(1));
+
+      // Same parent is allowed; the exact same sub-division is blocked.
+      await click('Ubah Pilihan kedua');
+      await fill('division2', 'example-a');
+      await fill('subDivision2', 'a-required');
+      await upload('assignment2', 'preference-2.pdf');
+      await click('Selanjutnya');
+      assert((await evaluate("document.getElementById('recruit-subDivision2-error').textContent")).includes('dua sub-divisi yang berbeda'));
+      await fill('subDivision2', 'a-optional');
+      assert(!(await evaluate('document.body.textContent')).includes('preference-2.pdf'));
+      await finishReview(2);
+      assert.equal(await submitDisabled(), false);
+      await click('Ubah Pilihan kedua');
+      await fill('division2', 'example-b');
+      await fill('subDivision2', 'b-required');
+      await upload('assignment2', 'preference-2.pdf');
+      await finishReview(2);
 
       // Drive every conditional state on both preferences at both viewport sizes.
       for (const rank of [1, 2]) {
