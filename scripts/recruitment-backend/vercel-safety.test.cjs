@@ -28,7 +28,7 @@ require.extensions[".ts"] = (module, filename) =>
     filename,
   );
 
-const { settings, client } = require("../../src/modules/recruitment/server/backend.ts");
+const { settings, client, STAGING_SUPABASE_PROJECT_REF } = require("../../src/modules/recruitment/server/backend.ts");
 const { MemoryRateLimiter } = require("../../src/modules/recruitment/server/security.ts");
 
 function cleanEnv() {
@@ -52,6 +52,9 @@ function cleanEnv() {
   delete process.env.VERCEL_URL;
   delete process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
   delete process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  delete process.env.VERCEL_PROJECT_ID;
+  delete process.env.VERCEL_STAGING_PROJECT_ID;
+  delete process.env.RECRUITMENT_STAGING_PROJECT_ID;
 }
 
 function makeJwt(ref, role = "service_role") {
@@ -316,5 +319,120 @@ test("Staging Launcher Compatibility: preserves staging workflow", () => {
   assert.equal(s.projectRef, "lavxddhrrwsjcshmnwvu");
   assert.equal(s.url, "https://lavxddhrrwsjcshmnwvu.supabase.co");
   assert.equal(s.origin, "http://127.0.0.1:3000");
+});
+
+test("Vercel Staging Project Identification Guards (B6F)", async (t) => {
+  cleanEnv();
+
+  const validStagingConfig = () => {
+    process.env.RECRUITMENT_ENABLED = "true";
+    process.env.VERCEL = "1";
+    process.env.VERCEL_ENV = "production"; // Dedicated staging project has VERCEL_ENV=production on its main branch
+    process.env.VERCEL_PROJECT_ID = "prj_staging_adit_12345";
+    process.env.VERCEL_STAGING_PROJECT_ID = "prj_staging_adit_12345";
+    process.env.RECRUITMENT_DISTRIBUTED_LIMITER = "upstash";
+    process.env.UPSTASH_REDIS_REST_URL = "https://mock.upstash.io";
+    process.env.UPSTASH_REDIS_REST_TOKEN = "mock-token";
+    process.env.RECRUITMENT_ORIGIN = "https://spe-recruitment-staging.vercel.app";
+    process.env.RECRUITMENT_SESSION_SECRET = "a-very-long-and-secure-secret-key-32-chars";
+    process.env.RECRUITMENT_PERIOD_ID = "87e7c760-1fb2-4e61-a803-b82a41b7847c";
+    process.env.NEXT_PUBLIC_SUPABASE_URL = `https://${STAGING_SUPABASE_PROJECT_REF}.supabase.co`;
+    process.env.SUPABASE_SECRET_KEY = makeJwt(STAGING_SUPABASE_PROJECT_REF);
+  };
+
+  await t.test("accepts dedicated staging project with VERCEL_ENV=production and matching VERCEL_PROJECT_ID", () => {
+    cleanEnv();
+    validStagingConfig();
+    const s = settings();
+    assert.equal(s.projectRef, STAGING_SUPABASE_PROJECT_REF);
+    assert.equal(s.origin, "https://spe-recruitment-staging.vercel.app");
+  });
+
+  await t.test("accepts RECRUITMENT_STAGING_PROJECT_ID as alternative to VERCEL_STAGING_PROJECT_ID", () => {
+    cleanEnv();
+    validStagingConfig();
+    delete process.env.VERCEL_STAGING_PROJECT_ID;
+    process.env.RECRUITMENT_STAGING_PROJECT_ID = "prj_staging_adit_12345";
+    const s = settings();
+    assert.equal(s.projectRef, STAGING_SUPABASE_PROJECT_REF);
+  });
+
+  await t.test("rejects when VERCEL_PROJECT_ID does not match expected staging project ID", () => {
+    cleanEnv();
+    validStagingConfig();
+    process.env.VERCEL_PROJECT_ID = "prj_prod_live_unauthorized"; // Mismatched!
+
+    assert.throws(
+      () => settings(),
+      (err) => err.status === 503 && err.message.includes("Vercel project identity mismatch"),
+    );
+  });
+
+  await t.test("rejects when VERCEL_PROJECT_ID is missing (System Environment Variables not enabled)", () => {
+    cleanEnv();
+    validStagingConfig();
+    delete process.env.VERCEL_PROJECT_ID;
+
+    assert.throws(
+      () => settings(),
+      (err) => err.status === 503 && err.message.includes("(VERCEL_PROJECT_ID) is missing"),
+    );
+  });
+
+  await t.test("rejects when expected VERCEL_STAGING_PROJECT_ID is missing", () => {
+    cleanEnv();
+    validStagingConfig();
+    delete process.env.VERCEL_STAGING_PROJECT_ID;
+    delete process.env.RECRUITMENT_STAGING_PROJECT_ID;
+
+    assert.throws(
+      () => settings(),
+      (err) => err.status === 503 && err.message.includes("requires VERCEL_STAGING_PROJECT_ID"),
+    );
+  });
+
+  await t.test("rejects staging project attempting to connect to non-staging Supabase database", () => {
+    cleanEnv();
+    validStagingConfig();
+    process.env.NEXT_PUBLIC_SUPABASE_URL = "https://other-database.supabase.co";
+    process.env.SUPABASE_SECRET_KEY = makeJwt("other-database");
+
+    assert.throws(
+      () => settings(),
+      (err) => err.status === 503 && err.message.includes("dilarang menggunakan database non-staging"),
+    );
+  });
+
+  await t.test("rejects staging project using production origin", () => {
+    cleanEnv();
+    validStagingConfig();
+    process.env.RECRUITMENT_ORIGIN = "https://www.speugmsc.org";
+
+    assert.throws(
+      () => settings(),
+      (err) => err.status === 503 && err.message.includes("dilarang menggunakan origin produksi"),
+    );
+
+    process.env.RECRUITMENT_ORIGIN = "https://speugmsc.org";
+    assert.throws(
+      () => settings(),
+      (err) => err.status === 503 && err.message.includes("dilarang menggunakan origin produksi"),
+    );
+  });
+
+  await t.test("rejects user-defined RECRUITMENT_STAGING_ENABLED=true alone without matching project identity", () => {
+    cleanEnv();
+    validStagingConfig();
+    delete process.env.VERCEL_PROJECT_ID;
+    delete process.env.VERCEL_STAGING_PROJECT_ID;
+    delete process.env.RECRUITMENT_STAGING_PROJECT_ID;
+    process.env.RECRUITMENT_STAGING_ENABLED = "true";
+
+    // Fails closed because VERCEL_STAGING_PROJECT_ID is missing
+    assert.throws(
+      () => settings(),
+      (err) => err.status === 503 && err.message.includes("requires VERCEL_STAGING_PROJECT_ID"),
+    );
+  });
 });
 

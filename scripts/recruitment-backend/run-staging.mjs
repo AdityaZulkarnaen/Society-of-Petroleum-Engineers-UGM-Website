@@ -46,6 +46,8 @@ const allowed = new Set([
   "NEXT_PUBLIC_SUPABASE_URL",
   "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
   "SUPABASE_SECRET_KEY",
+  "VERCEL_STAGING_PROJECT_ID",
+  "RECRUITMENT_STAGING_PROJECT_ID",
 ]);
 
 if (Object.keys(values).some((k) => !allowed.has(k))) {

@@ -6,6 +6,8 @@ import { assertOpen } from "./configuration";
 import type { Payload } from "./payload";
 import { SubmissionError } from "./security";
 
+export const STAGING_SUPABASE_PROJECT_REF = "lavxddhrrwsjcshmnwvu";
+
 export type BackendSettings = {
   origin: string;
   secret: string;
@@ -147,7 +149,7 @@ export function settings(): BackendSettings {
   const url =
     rawUrl ||
     (process.env.RECRUITMENT_STAGING_ENABLED === "true"
-      ? "https://lavxddhrrwsjcshmnwvu.supabase.co"
+      ? `https://${STAGING_SUPABASE_PROJECT_REF}.supabase.co`
       : undefined);
   if (!url) {
     throw new SubmissionError(503, "Konfigurasi URL database belum tersedia.");
@@ -169,7 +171,7 @@ export function settings(): BackendSettings {
   if (hostMatch) {
     projectRef = hostMatch[1];
   } else if (["localhost", "127.0.0.1"].includes(parsedUrl.hostname)) {
-    projectRef = process.env.SUPABASE_PROJECT_REF || "lavxddhrrwsjcshmnwvu";
+    projectRef = process.env.SUPABASE_PROJECT_REF || STAGING_SUPABASE_PROJECT_REF;
   } else if (process.env.SUPABASE_PROJECT_REF) {
     projectRef = process.env.SUPABASE_PROJECT_REF;
   }
@@ -221,6 +223,56 @@ export function settings(): BackendSettings {
     }
   }
 
+  // 7. Vercel Staging Project Identification Guard
+  // Distinguishes the dedicated staging Vercel project from the real production project.
+  const isStagingDeployment =
+    projectRef === STAGING_SUPABASE_PROJECT_REF ||
+    process.env.RECRUITMENT_STAGING_ENABLED === "true" ||
+    Boolean(process.env.VERCEL_STAGING_PROJECT_ID || process.env.RECRUITMENT_STAGING_PROJECT_ID);
+
+  if (isVercel && isStagingDeployment) {
+    // A. Must target the authorized staging Supabase project reference
+    if (projectRef !== STAGING_SUPABASE_PROJECT_REF) {
+      throw new SubmissionError(
+        503,
+        "Staging deployment dilarang menggunakan database non-staging.",
+      );
+    }
+
+    // B. Project identity verification using Vercel system-provided VERCEL_PROJECT_ID
+    const expectedProjectId =
+      process.env.VERCEL_STAGING_PROJECT_ID || process.env.RECRUITMENT_STAGING_PROJECT_ID;
+    if (!expectedProjectId || expectedProjectId.trim().length === 0) {
+      throw new SubmissionError(
+        503,
+        "Vercel staging requires VERCEL_STAGING_PROJECT_ID to verify deployment project identity.",
+      );
+    }
+
+    const actualProjectId = process.env.VERCEL_PROJECT_ID;
+    if (!actualProjectId || actualProjectId.trim().length === 0) {
+      throw new SubmissionError(
+        503,
+        "Vercel system project identity (VERCEL_PROJECT_ID) is missing. Enable System Environment Variables in Vercel project settings.",
+      );
+    }
+
+    if (actualProjectId !== expectedProjectId) {
+      throw new SubmissionError(
+        503,
+        "Vercel project identity mismatch: this Vercel project is not authorized for staging deployment.",
+      );
+    }
+
+    // C. Origin protection: staging deployment must never use production origin
+    if (origin === "https://www.speugmsc.org" || origin === "https://speugmsc.org") {
+      throw new SubmissionError(
+        503,
+        "Staging deployment dilarang menggunakan origin produksi.",
+      );
+    }
+  }
+
   return { origin, secret, key, period, url, projectRef: projectRef || "" };
 }
 
@@ -232,7 +284,7 @@ export function client(key: string, customUrl?: string) {
     } catch {
       targetUrl =
         process.env.NEXT_PUBLIC_SUPABASE_URL ||
-        "https://lavxddhrrwsjcshmnwvu.supabase.co";
+        `https://${STAGING_SUPABASE_PROJECT_REF}.supabase.co`;
     }
   }
   const origin = new URL(targetUrl).origin;
