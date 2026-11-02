@@ -49,6 +49,9 @@ function cleanEnv() {
   delete process.env.RECRUITMENT_PREVIEW_SUBMISSIONS_ENABLED;
   delete process.env.UPSTASH_REDIS_REST_URL;
   delete process.env.UPSTASH_REDIS_REST_TOKEN;
+  delete process.env.VERCEL_URL;
+  delete process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  delete process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 }
 
 function makeJwt(ref, role = "service_role") {
@@ -152,6 +155,23 @@ test("Vercel & Safe Configuration: Dynamic project ref and URL matching", async 
     const c = client(process.env.SUPABASE_SECRET_KEY);
     assert.ok(c);
   });
+
+  await t.test("rejects public key with mismatched project ref", () => {
+    process.env.NEXT_PUBLIC_SUPABASE_URL = "https://staging-project.supabase.co";
+    process.env.SUPABASE_SECRET_KEY = makeJwt("staging-project", "service_role");
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = makeJwt("production-project", "anon");
+
+    assert.throws(
+      () => settings(),
+      (err) => err.status === 503 && err.message.includes("Kredensial publik database tidak sesuai"),
+    );
+
+    // Matching public key is accepted
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = makeJwt("staging-project", "anon");
+    const s = settings();
+    assert.equal(s.projectRef, "staging-project");
+    delete process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  });
 });
 
 test("Vercel & Safe Configuration: Vercel multi-instance & Preview deployment guards", async (t) => {
@@ -229,6 +249,25 @@ test("Vercel & Safe Configuration: Vercel multi-instance & Preview deployment gu
       () => settings(),
       (err) => err.status === 503 && err.message.includes("dilarang menggunakan origin produksi"),
     );
+  });
+
+  await t.test("auto-derives preview origin from VERCEL_URL when RECRUITMENT_ORIGIN is unset or auto", () => {
+    process.env.VERCEL_ENV = "preview";
+    process.env.RECRUITMENT_PREVIEW_SUBMISSIONS_ENABLED = "true";
+    process.env.RECRUITMENT_DISTRIBUTED_LIMITER = "upstash";
+    process.env.UPSTASH_REDIS_REST_URL = "https://mock.upstash.io";
+    process.env.UPSTASH_REDIS_REST_TOKEN = "mock-token";
+    process.env.VERCEL_URL = "spe-website-git-feat-preview.vercel.app";
+    delete process.env.RECRUITMENT_ORIGIN;
+
+    const s = settings();
+    assert.equal(s.origin, "https://spe-website-git-feat-preview.vercel.app");
+
+    // Setting RECRUITMENT_ORIGIN explicitly overrides VERCEL_URL
+    process.env.RECRUITMENT_ORIGIN = "https://custom-preview.vercel.app";
+    const s2 = settings();
+    assert.equal(s2.origin, "https://custom-preview.vercel.app");
+    delete process.env.VERCEL_URL;
   });
 });
 

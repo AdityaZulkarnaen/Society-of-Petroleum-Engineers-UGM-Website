@@ -106,7 +106,14 @@ export function settings(): BackendSettings {
   }
 
   // 4. Origin & Session Secret Validation
-  const origin = process.env.RECRUITMENT_ORIGIN;
+  const autoPreviewOrigin =
+    vercelEnv === "preview" && process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : undefined;
+  const origin =
+    process.env.RECRUITMENT_ORIGIN === "auto" || (!process.env.RECRUITMENT_ORIGIN && autoPreviewOrigin)
+      ? autoPreviewOrigin
+      : process.env.RECRUITMENT_ORIGIN;
   const secret = process.env.RECRUITMENT_SESSION_SECRET;
   const period = process.env.RECRUITMENT_PERIOD_ID;
 
@@ -189,6 +196,27 @@ export function settings(): BackendSettings {
       throw new SubmissionError(
         503,
         "Kredensial database tidak sesuai dengan proyek yang dikonfigurasi.",
+      );
+    }
+  }
+
+  // Verify public key project reference match if provided
+  const pubKey =
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (pubKey && !pubKey.startsWith("sb_publishable_")) {
+    try {
+      const parts = pubKey.split(".");
+      if (parts.length === 3) {
+        const claim = JSON.parse(Buffer.from(parts[1], "base64url").toString());
+        if (projectRef && claim.ref && claim.ref !== projectRef) {
+          throw new Error("Public key project ref mismatch");
+        }
+      }
+    } catch {
+      throw new SubmissionError(
+        503,
+        "Kredensial publik database tidak sesuai dengan proyek yang dikonfigurasi.",
       );
     }
   }
