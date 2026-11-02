@@ -7,5 +7,8 @@ export const metadata: Metadata = {
 };
 
 export default function ApplyPage() {
-  return <ApplicationWizard backend={process.env.RECRUITMENT_STAGING_ENABLED === "true"} />;
+  const backend =
+    process.env.RECRUITMENT_ENABLED === "true" ||
+    process.env.RECRUITMENT_STAGING_ENABLED === "true";
+  return <ApplicationWizard backend={backend} />;
 }
