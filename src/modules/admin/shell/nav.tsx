@@ -183,6 +183,28 @@ const icon = {
       <path d="M6 6h6M6 9h6M6 12h3.5" strokeLinecap="round" />
     </svg>
   ),
+  recruitment: (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      aria-hidden="true"
+    >
+      <circle cx="8" cy="5.25" r="2.75" />
+      <path
+        d="M2.5 15.25c.6-2.4 2.6-3.75 5.5-3.75s4.9 1.35 5.5 3.75"
+        strokeLinecap="round"
+      />
+      <path
+        d="m12.5 7.5 1.75 1.75 3-3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
 } satisfies Record<string, ReactNode>;
 
 /* The first item of each menu is its dashboard root. */
@@ -196,6 +218,7 @@ const MENUS = {
   ],
   superAdmin: [
     { href: "/super-admin", label: "Dashboard", icon: icon.home },
+    { href: "/super-admin/recruitment", label: "Recruitment", icon: icon.recruitment },
     { href: "/super-admin/akun", label: "Account Management", icon: icon.users },
     {
       href: "/super-admin/rekap",
