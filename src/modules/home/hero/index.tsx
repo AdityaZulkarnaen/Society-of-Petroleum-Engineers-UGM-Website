@@ -107,7 +107,7 @@ export function Hero() {
           <a href="#about" className={pillSolid}>
             Explore SPE UGM
           </a>
-          <a href="#join" className={pillGhost}>
+          <a href="/join" className={pillGhost}>
             Join Us Now
           </a>
         </div>

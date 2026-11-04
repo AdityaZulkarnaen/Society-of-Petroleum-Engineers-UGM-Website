@@ -110,7 +110,7 @@ export function SiteHeader() {
 
           {/* on phones the CTA lives in the menu */}
           <div className="ml-auto hidden md:block">
-            <Link href="/#join" className={outlineButton}>
+            <Link href="/join" className={outlineButton}>
               Join SPE
             </Link>
           </div>
@@ -172,7 +172,7 @@ export function SiteHeader() {
             ))}
           </ul>
           <Link
-            href="/#join"
+            href="/join"
             onClick={() => setOpen(false)}
             className={`${pillSolid} mt-1 w-full`}
           >
