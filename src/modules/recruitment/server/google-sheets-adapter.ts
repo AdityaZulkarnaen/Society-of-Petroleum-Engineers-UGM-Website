@@ -97,7 +97,7 @@ export function googleSettings(): GoogleBackendSettings {
 }
 
 export function loadGoogleCatalog(): Catalog {
-  const opensAt = process.env.RECRUITMENT_OPENS_AT || "2026-11-04T00:00:00+07:00";
+  const opensAt = process.env.RECRUITMENT_OPENS_AT || "2026-11-05T00:00:00+07:00";
   const closesAt = process.env.RECRUITMENT_CLOSES_AT || "2026-11-14T00:00:00+07:00";
 
   const period: PeriodRow = {
@@ -164,6 +164,10 @@ export function resolveFilename(nim: string, slot: string, format: string): stri
       return `[${safeNim}]_ProofFollowSPE.${format}`;
     case "storyProof":
       return `[${safeNim}]_ProofSG.${format}`;
+    case "mbti":
+      return `[${safeNim}]_MBTI.${format}`;
+    case "ugmGroupProof":
+      return `[${safeNim}]_UGMGroupProof.${format}`;
     case "assignment1":
       return `[${safeNim}]_Assignment_FirstDivision.${format}`;
     default:
@@ -285,8 +289,8 @@ function translateGoogleError(error: string | undefined): string {
   if (error.includes("pernah mendaftar") || (error.includes("NIM") && (error.includes("hubungi") || error.includes("dibuat")))) {
     return "An application has already been submitted with this Student ID (NIM). If you previously applied, please contact the committee.";
   }
-  if (error.includes("belum dibuka")) return "Applications are not yet open.";
-  if (error.includes("sudah ditutup")) return "Applications have closed.";
+  if (error.includes("belum dibuka") || error.includes("open November 5")) return "Applications open November 5, 2026 at 00:00 WIB.";
+  if (error.includes("sudah ditutup") || error.includes("are now closed")) return "Applications are now closed.";
   if (error.includes("sedang sibuk")) return "The system is currently busy processing other submissions. Please try again shortly.";
   if (error.includes("Checksum dokumen") || error.includes("tidak sesuai. Unggah ulang")) {
     return "Document checksum verification failed. Please re-upload the file.";

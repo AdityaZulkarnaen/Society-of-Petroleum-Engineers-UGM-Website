@@ -9,7 +9,12 @@ import { resolvePreference, validateAssignment } from "./assignment";
 import { Field, FileField } from "./form-fields";
 import { PreferenceStep } from "./preference-step";
 import { assignmentPresentation, clientMessage, documentLabel, documentUploadHint, preferenceLabel, PREVIEW_NOTICE, previewText, steps } from "./presentation";
-import { OFFICIAL_GUIDEBOOK_URL, PUBLIC_RECRUITMENT_SCHEDULE } from "./public-information";
+import {
+  COMMITMENT_LETTER_TEMPLATE_URL,
+  OFFICIAL_GUIDEBOOK_URL,
+  PERSONALITY_TEST_URL,
+  PUBLIC_RECRUITMENT_SCHEDULE,
+} from "./public-information";
 import { preferenceFields, type PreferenceRank, type RecruitmentPeriod } from "./recruitment-types";
 import { emptyValues, validateFile, validateStep, validateSubmission, type ApplicationFiles, type ApplicationValues, type DocumentKey, type Errors } from "./validation";
 
@@ -322,8 +327,20 @@ export function ApplicationWizard({ backend = false }: { backend?: boolean }) {
     }
 
     const lower = serverError.toLowerCase();
-    const isNotYetOpen = lower.includes("open on") || lower.includes("not yet");
-    const isClosed = lower.includes("closed");
+    const isScheduleBeforeOpen = PUBLIC_RECRUITMENT_SCHEDULE.isBeforeOpen;
+    const isScheduleClosed = PUBLIC_RECRUITMENT_SCHEDULE.isClosed;
+    const isNotYetOpen =
+      lower.includes("open november 5") ||
+      lower.includes("not yet") ||
+      lower.includes("open on") ||
+      lower.includes("belum dibuka") ||
+      (isScheduleBeforeOpen && (lower.includes("closed") || lower.includes("ditutup") || lower.includes("unavailable") || lower.includes("tidak")));
+    const isClosed =
+      !isNotYetOpen &&
+      (lower.includes("are now closed") ||
+        lower.includes("have closed") ||
+        lower.includes("sudah ditutup") ||
+        isScheduleClosed);
 
     return (
       <RecruitmentFrame>
@@ -332,17 +349,18 @@ export function ApplicationWizard({ backend = false }: { backend?: boolean }) {
             {isNotYetOpen ? "Registration Not Yet Open" : isClosed ? "Registration Closed" : "Temporarily Unavailable"}
           </span>
           <h1 className="mt-4 font-display text-3xl font-semibold tracking-tight text-ink-deep sm:text-4xl">
-            {isNotYetOpen ? "Registration is not yet open" : isClosed ? "Registration has closed" : "Applications are temporarily unavailable"}
+            {isNotYetOpen
+              ? "Applications Open November 5, 2026"
+              : isClosed
+              ? "Applications Are Now Closed"
+              : "Applications are temporarily unavailable"}
           </h1>
           <p role="status" className="mt-4 text-base leading-relaxed text-ink-soft">
-            {serverError}
-          </p>
-          <p className="mt-2 text-sm leading-relaxed text-ink-soft">
             {isNotYetOpen
-              ? "The application period has not yet begun. Please return once registration opens. In the meantime, you can review requirements and prepare your documents."
+              ? "Registration opens on Thursday, November 5, 2026 at 00:00 WIB. In the meantime, you can explore the divisions, read the official guidebook, and prepare your supporting documents."
               : isClosed
-              ? "Thank you for your interest in SPE UGM SC. The application period for this recruitment cycle has concluded."
-              : "Please try again later. If the issue persists, please check your internet connection or contact the recruitment committee."}
+              ? "Thank you for your interest in SPE UGM SC. The application period for the 2026/2027 recruitment cycle has concluded."
+              : clientMessage(serverError) || "Please try again later. If the issue persists, please check your internet connection or contact the recruitment committee."}
           </p>
           <div className="mt-8 flex justify-center">
             <Link href="/join" className={secondaryButton}>
@@ -518,6 +536,11 @@ export function ApplicationWizard({ backend = false }: { backend?: boolean }) {
       <div className="grid gap-6 pt-8 lg:grid-cols-[250px_1fr] lg:gap-12">
         <aside aria-label="Application progress" className="self-start lg:sticky lg:top-28">
           <p className="text-xs font-semibold tracking-[0.15em] text-iris uppercase">SPE UGM SC · {period.label}</p>
+          {PUBLIC_RECRUITMENT_SCHEDULE.badge && (
+            <span className="mt-2 inline-flex items-center rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-semibold text-amber-900">
+              {PUBLIC_RECRUITMENT_SCHEDULE.badge}
+            </span>
+          )}
           <h2 className="mt-3 font-display text-2xl font-semibold tracking-tight">
             Application<br className="hidden lg:block" /> {backend ? "form." : "preview."}
           </h2>
@@ -546,13 +569,9 @@ export function ApplicationWizard({ backend = false }: { backend?: boolean }) {
           </p>
           <p className="mt-3 text-sm text-ink-soft">Official application deadline: {PUBLIC_RECRUITMENT_SCHEDULE.deadline}.</p>
           <p className="mt-3 text-sm text-ink-soft">
-            {OFFICIAL_GUIDEBOOK_URL ? (
-              <a className="underline" href={OFFICIAL_GUIDEBOOK_URL} target="_blank" rel="noopener noreferrer">
-                Read the official guidebook
-              </a>
-            ) : (
-              "Official guidebook publication pending."
-            )}
+            <a className="underline" href={OFFICIAL_GUIDEBOOK_URL} target="_blank" rel="noopener noreferrer">
+              View Recruitment Guidebook
+            </a>
           </p>
         </aside>
         <section className="min-w-0 rounded-3xl border border-[#e4e5ef] bg-white p-5 sm:p-8">
@@ -584,8 +603,8 @@ export function ApplicationWizard({ backend = false }: { backend?: boolean }) {
               ? "Second preference does not require an assignment. Assignments apply only to your first preference."
               : step === 3
               ? backend
-                ? "Attach the five supporting documents using the requirements shown below."
-                : "Choose five sample documents, then review your preview."
+                ? "Attach the seven supporting documents using the requirements shown below."
+                : "Choose seven sample documents, then review your preview."
               : backend
               ? "Assignment requirements depend on your selected first-choice sub-division."
               : "Explore your preference and its assignment requirements. Preview rules are not official."}
@@ -803,24 +822,58 @@ export function ApplicationWizard({ backend = false }: { backend?: boolean }) {
                 )}
                 {step === 3 && (
                   <div className="space-y-6">
-                    {documentSlots.map((slot) => (
-                      <FileField
-                        key={slot.key}
-                        slot={{ ...slot, label: documentLabel(slot.key) }}
-                        required={period.documents?.[slot.key]?.required ?? true}
-                        upload={documentUploadHint(
-                          period.documents?.[slot.key] ?? {
-                            formats: [slot.format === "PDF" ? "pdf" : "png"],
-                            maxBytes: MAX_FILE_BYTES,
-                            filename: slot.filename,
-                          },
-                          slot.filename,
-                        )}
-                        file={files[slot.key]}
-                        error={errors[slot.key]}
-                        onChange={(file) => changeFile(slot.key, file)}
-                      />
-                    ))}
+                    {documentSlots.map((slot) => {
+                      let actionLink: ReactNode = undefined;
+                      let guidance: string | undefined = undefined;
+
+                      if (slot.key === "commitment") {
+                        actionLink = (
+                          <a
+                            href={COMMITMENT_LETTER_TEMPLATE_URL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#5947b5] hover:text-[#43358b] hover:underline focus-visible:outline-2 focus-visible:outline-iris"
+                          >
+                            Download Commitment Letter Template <span aria-hidden="true">↗</span>
+                          </a>
+                        );
+                      } else if (slot.key === "mbti") {
+                        actionLink = (
+                          <a
+                            href={PERSONALITY_TEST_URL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#5947b5] hover:text-[#43358b] hover:underline focus-visible:outline-2 focus-visible:outline-iris"
+                          >
+                            Take 16Personalities Test <span aria-hidden="true">↗</span>
+                          </a>
+                        );
+                        guidance = "Complete the personality test and upload a screenshot of your result.";
+                      } else if (slot.key === "ugmGroupProof") {
+                        guidance = "Share the recruitment information in three UGM group chats. Combine the three screenshots into one clear PNG image before uploading. Hide unrelated personal information.";
+                      }
+
+                      return (
+                        <FileField
+                          key={slot.key}
+                          slot={{ ...slot, label: documentLabel(slot.key) }}
+                          actionLink={actionLink}
+                          guidance={guidance}
+                          required={period.documents?.[slot.key]?.required ?? true}
+                          upload={documentUploadHint(
+                            period.documents?.[slot.key] ?? {
+                              formats: [slot.format === "PDF" ? "pdf" : "png"],
+                              maxBytes: MAX_FILE_BYTES,
+                              filename: slot.filename,
+                            },
+                            slot.filename,
+                          )}
+                          file={files[slot.key]}
+                          error={errors[slot.key]}
+                          onChange={(file) => changeFile(slot.key, file)}
+                        />
+                      );
+                    })}
                   </div>
                 )}
               </fieldset>
