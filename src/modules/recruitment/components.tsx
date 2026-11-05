@@ -28,13 +28,22 @@ export function MockNotice() {
   );
 }
 
-export function RecruitmentFrame({ children, compactTop = false }: { children: ReactNode; compactTop?: boolean }) {
+export function RecruitmentFrame({
+  children,
+  compactTop = false,
+}: {
+  children: ReactNode;
+  compactTop?: boolean;
+}) {
   const topPadding = compactTop
     ? "pt-[calc(var(--nav-h)_+_2rem)] md:pt-[calc(var(--nav-h)_+_2.5rem)] lg:pt-[calc(var(--nav-h)_+_3rem)]"
-    : "pt-32 md:pt-40";
+    : "pt-[calc(var(--nav-h)_+_4rem)]";
 
   return (
-    <main lang="en" className={`min-h-svh bg-[#fbfbfe] px-5 pb-20 text-ink sm:px-8 ${topPadding}`}>
+    <main
+      lang="en"
+      className={`min-h-svh bg-[#fbfbfe] px-5 pb-20 text-ink sm:px-8 ${topPadding}`}
+    >
       <div className="mx-auto max-w-6xl">{children}</div>
     </main>
   );

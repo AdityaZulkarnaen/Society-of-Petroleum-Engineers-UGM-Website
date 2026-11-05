@@ -533,7 +533,7 @@ export function ApplicationWizard({ backend = false }: { backend?: boolean }) {
           {serverError}
         </p>
       )}
-      <div className="grid gap-6 pt-8 lg:grid-cols-[250px_1fr] lg:gap-12">
+      <div className="grid gap-6 lg:grid-cols-[250px_1fr] lg:gap-12">
         <aside aria-label="Application progress" className="self-start lg:sticky lg:top-28">
           <p className="text-xs font-semibold tracking-[0.15em] text-iris uppercase">SPE UGM SC · {period.label}</p>
           {PUBLIC_RECRUITMENT_SCHEDULE.badge && (

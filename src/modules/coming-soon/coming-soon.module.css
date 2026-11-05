@@ -1,0 +1,14 @@
+/* The shared footer is a body sibling, so scope its flex layout to this page. */
+:global(body):has(> .page) {
+  display: flex;
+  min-height: 100dvh;
+  flex-direction: column;
+}
+
+.page {
+  flex: 1 0 auto;
+}
+
+.page ~ :global(footer) {
+  flex-shrink: 0;
+}

@@ -29,7 +29,7 @@ const CONTACT_ITEMS: readonly ContactItem[] = [
     alt: "Phone",
     people: [
       { name: "Andra", number: "+62 819-4435-0253", whatsapp: "https://wa.me/6281944350253" },
-      { name: "Ara", number: "+62 895-6393-14478", whatsapp: "https://wa.me/62895639314478" },
+      { name: "Ana", number: "+62 895-6393-14478", whatsapp: "https://wa.me/62895639314478" },
     ],
   },
   {
