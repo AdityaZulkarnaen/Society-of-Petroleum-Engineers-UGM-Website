@@ -4,7 +4,7 @@ import { ComingSoon } from "@/modules/coming-soon";
 
 const FEATURES = {
   event: { title: "Events", description: "Our event directory is being prepared. Explore the chapter from Home while we put the details together." },
-  apecx: { title: "APECX", description: "Details for the Asia Pacific Energy Conference & Exhibition will be shared here once confirmed." },
+  apecx: { title: "APECX", description: "Details for the Annual Petroleum Competition and Exhibition will be shared here once confirmed." },
   contact: { title: "Contact", description: "Our contact page is being prepared. You can reach Andra, Ana, or the chapter by using the contact links in the footer." },
   cabinet: { title: "Cabinet", description: "Meet the people behind the chapter. Our cabinet directory is being prepared." },
   mentorship: { title: "Mentorship", description: "Our mentorship program details will be shared here once they are ready." },

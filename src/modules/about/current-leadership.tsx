@@ -5,12 +5,12 @@ const CURRENT_LEADERS = [
   {
     name: "Ana Chadizara",
     role: "President",
-    photo: { src: "/About/president-ara.webp", width: 648, height: 1054 },
+    photo: { src: "/About/president-ara-v2.webp", width: 648, height: 1054 },
   },
   {
     name: "Aulia Farizqki",
     role: "Vice President",
-    photo: { src: "/About/vice-president-aul.webp", width: 662, height: 1112 },
+    photo: { src: "/About/vice-president-aul-v2.webp", width: 662, height: 1112 },
   },
 ];
 
