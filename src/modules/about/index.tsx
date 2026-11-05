@@ -6,6 +6,7 @@ import { PageMotion } from "@/components/motion/page-motion";
 import { CoreValues } from "./core-values";
 import { CountUp } from "./count-up";
 import { Leadership } from "./leadership";
+import { CurrentLeadership } from "./current-leadership";
 
 /* The copy below follows the design; the Vision and Mission cards share the
    same placeholder text there, so replace it with the chapter's own. */
@@ -341,6 +342,7 @@ export function AboutPage() {
       </section>
       <CoreValues />
 
+      <CurrentLeadership />
       <Leadership />
       <PageMotion />
     </main>

@@ -199,7 +199,7 @@ export function WhatWeDo() {
           </div>
         </article>
 
-        <article data-motion="rise" data-sheen className="flagship-glass-card relative isolate rounded-[24px] border border-black/[0.08] px-6 pt-10 pb-9 outline outline-2 -outline-offset-1 outline-ink/10 [clip-path:inset(0_round_24px)] overflow-hidden md:px-8 lg:min-h-[434px]">
+        <article id="event" data-motion="rise" data-sheen className="scroll-mt-28 flagship-glass-card relative isolate rounded-[24px] border border-black/[0.08] px-6 pt-10 pb-9 outline outline-2 -outline-offset-1 outline-ink/10 [clip-path:inset(0_round_24px)] overflow-hidden md:px-8 lg:min-h-[434px]">
           {/* Purple gradient ellipse - bottom left */}
           <div data-motion="glow" className="pointer-events-none absolute -bottom-12 -left-12 w-[500px] opacity-70">
             <Image

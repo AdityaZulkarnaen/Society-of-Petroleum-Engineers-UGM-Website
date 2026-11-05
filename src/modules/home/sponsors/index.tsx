@@ -2,12 +2,12 @@ import Image from "next/image";
 
 /**
  * Sponsors section - showcase partner logos
- * Design: light blue background, centered heading, horizontal scrolling logo grid
+ * Design: light blue background, centered heading, mobile grid and desktop logo row
  */
 
 export function Sponsors() {
   return (
-    <section className="bg-[#f2f8fe] px-8 pb-[60px]">
+    <section className="bg-[#f2f8fe] px-4 pb-[60px] md:px-8">
       <div className="mx-auto max-w-[1429px]">
         {/* Header */}
         <div data-motion="heading" className="flex flex-col items-center gap-4">
@@ -25,16 +25,15 @@ export function Sponsors() {
           </h2>
         </div>
 
-        {/* Logo grid - scrollable on mobile, centered grid on desktop. The
-            cards' entrance travel stays inside the row's 32px bottom padding,
-            so the scroller never grows a vertical scrollbar mid-animation. */}
-        <div className="mt-[75px] overflow-x-auto pb-8">
-          <div data-motion="stagger" data-motion-y="20" className="flex min-w-max justify-center gap-4 md:flex-wrap md:min-w-0">
+        {/* One sponsor list: two columns on mobile, original wrapped row on desktop.
+            Bottom padding leaves room for the existing entrance motion and shadows. */}
+        <div className="mt-8 pb-8 md:mt-[75px] md:overflow-x-auto">
+          <div data-motion="stagger" data-motion-y="20" className="grid grid-cols-2 gap-4 md:flex md:min-w-0 md:flex-wrap md:justify-center">
             {/* Logo card template - repeat 8 times */}
             {Array.from({ length: 8 }).map((_, i) => (
               <div
                 key={i}
-                className="flex h-[92px] w-[200px] shrink-0 items-center justify-center overflow-hidden rounded-md bg-white shadow-[0px_38px_15px_0px_rgba(0,0,0,0.01),0px_21px_13px_0px_rgba(0,0,0,0.02),0px_9px_9px_0px_rgba(0,0,0,0.03),0px_2px_5px_0px_rgba(0,0,0,0.04)]"
+                className="flex h-[92px] w-full min-w-0 shrink-0 md:w-[200px] items-center justify-center overflow-hidden rounded-md bg-white shadow-[0px_38px_15px_0px_rgba(0,0,0,0.01),0px_21px_13px_0px_rgba(0,0,0,0.02),0px_9px_9px_0px_rgba(0,0,0,0.03),0px_2px_5px_0px_rgba(0,0,0,0.04)]"
               >
                 {i === 0 ? (
                   <Image
@@ -42,7 +41,7 @@ export function Sponsors() {
                     alt="Phi"
                     width={156}
                     height={42}
-                    className="h-auto max-h-[70px] w-auto max-w-[150px] object-contain"
+                    className="h-auto max-h-[70px] w-auto max-w-[150px] object-contain max-md:max-w-[calc(100%_-_1.5rem)]"
                   />
                 ) : i === 1 ? (
                   <Image
@@ -50,7 +49,7 @@ export function Sponsors() {
                     alt="SKK Migas IOG phi"
                     width={156}
                     height={42}
-                    className="h-auto max-h-[50px] w-auto max-w-[150px] object-contain"
+                    className="h-auto max-h-[50px] w-auto max-w-[150px] object-contain max-md:max-w-[calc(100%_-_1.5rem)]"
                   />
                 ) : i === 2 ? (
                   <Image
@@ -58,7 +57,7 @@ export function Sponsors() {
                     alt="PetroChina"
                     width={156}
                     height={42}
-                    className="h-auto max-h-[60px] w-auto max-w-[170px] object-contain"
+                    className="h-auto max-h-[60px] w-auto max-w-[170px] object-contain max-md:max-w-[calc(100%_-_1.5rem)]"
                   />
                 ) : i === 3 ? (
                   <Image
@@ -66,7 +65,7 @@ export function Sponsors() {
                     alt="SKK Migas petroChina"
                     width={156}
                     height={42}
-                    className="h-auto max-h-[50px] w-auto max-w-[150px] object-contain"
+                    className="h-auto max-h-[50px] w-auto max-w-[150px] object-contain max-md:max-w-[calc(100%_-_1.5rem)]"
                   />
                 ) : i === 4 ? (
                   <Image
@@ -74,7 +73,7 @@ export function Sponsors() {
                     alt="OPT"
                     width={156}
                     height={42}
-                    className="h-auto max-h-[70px] w-auto max-w-[180px] object-contain"
+                    className="h-auto max-h-[70px] w-auto max-w-[180px] object-contain max-md:max-w-[calc(100%_-_1.5rem)]"
                   />
                 ) : i === 5 ? (
                   <Image
@@ -82,7 +81,7 @@ export function Sponsors() {
                     alt="RSUP Sardjito"
                     width={156}
                     height={42}
-                    className="h-auto max-h-[50px] w-auto max-w-[180px] object-contain"
+                    className="h-auto max-h-[50px] w-auto max-w-[180px] object-contain max-md:max-w-[calc(100%_-_1.5rem)]"
                   />
                 ) : i === 6 ? (
                   <Image
@@ -90,7 +89,7 @@ export function Sponsors() {
                     alt="PDSI"
                     width={156}
                     height={42}
-                    className="h-auto max-h-[70px] w-auto max-w-[150px] object-contain"
+                    className="h-auto max-h-[70px] w-auto max-w-[150px] object-contain max-md:max-w-[calc(100%_-_1.5rem)]"
                   />
                 ) : i === 7 ? (
                   <Image
@@ -98,7 +97,7 @@ export function Sponsors() {
                     alt="skkmigasiog pdsi"
                     width={156}
                     height={42}
-                    className="h-auto max-h-[50px] w-auto max-w-[150px] object-contain"
+                    className="h-auto max-h-[50px] w-auto max-w-[150px] object-contain max-md:max-w-[calc(100%_-_1.5rem)]"
                   />
                 ) : (
                   <div className="text-center text-xs text-gray-400">

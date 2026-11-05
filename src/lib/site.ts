@@ -25,7 +25,7 @@ export const site = {
   tagline: "Engineering the future of energy",
   description:
     "The SPE UGM Student Chapter is a community of engineering students from all disciplines at Universitas Gadjah Mada, advancing Indonesia's energy industry through research, training, and global collaboration.",
-  email: "speugmscboards@gmail.com",
+  email: "scspeugm@gmail.com",
   socials: [
     "https://www.instagram.com/speugmsc/",
     "https://www.linkedin.com/company/speugmsc/",

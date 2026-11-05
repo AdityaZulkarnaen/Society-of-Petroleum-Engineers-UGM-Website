@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 
 type Testimonial = {
   name: string;
@@ -10,31 +10,37 @@ type Testimonial = {
   photo: { src: string; width: number; height: number };
 };
 
-/* Placeholder copy from the design — replace with each person's real name,
-   role and words. Photos are cut-outs, bottom-aligned in the frame. */
+/* UNVERIFIED DRAFT testimonials: temporary development copy, not authentic
+   quotations. All three require the named person's approval before PR merge.
+   Original layout and portrait mapping retained. */
 const TESTIMONIALS: Testimonial[] = [
   {
-    name: "Salahuddin Husein",
-    role: "Practitioner Lecturer",
+    name: "John Oliver Home",
+    role: "Former SPE UGM SC President",
+    // UNVERIFIED DRAFT: generated development copy; personal approval required.
     quote:
-      "SPE UGM SC has consistently demonstrated its commitment to developing not only technically capable students, but also future leaders in the energy industry. I am proud to see how the organization continues to create meaningful opportunities for its members to learn, collaborate, and contribute beyond the classroom.",
-    photo: { src: "/landing/testimonial/testi1.webp", width: 659, height: 682 },
-  },
-  {
-    name: "Rafi Pratama",
-    role: "Alumni, Reservoir Engineer",
-    quote:
-      "Quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur adipisci velit.",
+      "Leading a student chapter means creating opportunities for members to grow and contribute. SPE UGM SC brings people together through shared goals, collaboration, and a willingness to keep learning beyond the classroom.",
     photo: { src: "/landing/testimonial/testi2.webp", width: 659, height: 690 },
   },
   {
-    name: "Dimas Aryasatya",
-    role: "Chapter Member",
+    name: "Muhammad Zidan",
+    role: "Former SPE UGM SC Vice President",
+    // UNVERIFIED DRAFT: generated development copy; personal approval required.
     quote:
-      "Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam. Nisi ut aliquid ex ea commodi consequatur, quis autem vel eum iure reprehenderit qui in ea voluptate.",
+      "A strong chapter grows through collaboration and care for its members. Working together across teams helps turn ideas into meaningful activities while giving students space to develop leadership and communication skills.",
     photo: { src: "/landing/testimonial/testi3.webp", width: 659, height: 664 },
   },
+  {
+    name: "Bintang Aryadita",
+    role: "Former Head of SPE UGM SC Finance",
+    // UNVERIFIED DRAFT: generated development copy; personal approval required.
+    quote:
+      "Being part of SPE UGM SC offers room to learn with others, contribute to chapter activities, and build confidence through teamwork. It is a place to explore an interest in energy while developing practical skills alongside fellow students.",
+    photo: { src: "/landing/testimonial/testi1.webp", width: 659, height: 682 },
+  },
 ];
+
+const AUTOPLAY_DELAY = 5000;
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
@@ -58,10 +64,58 @@ function Arrow({ direction }: { direction: "left" | "right" }) {
  */
 export function Testimonials() {
   const [index, setIndex] = useState(0);
+  const sectionRef = useRef<HTMLElement>(null);
+  const restartAutoplay = useRef<(() => void) | null>(null);
   const count = TESTIMONIALS.length;
   const current = TESTIMONIALS[index];
 
-  const go = (step: number) => setIndex((i) => (i + step + count) % count);
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let inView = false;
+    let focused = section.contains(document.activeElement);
+    let timer: ReturnType<typeof setInterval> | undefined;
+
+    function restart() {
+      clearInterval(timer);
+      if (!inView || focused || document.hidden || reducedMotion.matches) return;
+      timer = setInterval(() => setIndex((i) => (i + 1) % count), AUTOPLAY_DELAY);
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      inView = entry.isIntersecting && entry.intersectionRatio >= 0.35;
+      restart();
+    }, { threshold: 0.35 });
+    const onFocusIn = () => { focused = true; restart(); };
+    const onFocusOut = (event: FocusEvent) => {
+      focused = event.relatedTarget instanceof Node && section.contains(event.relatedTarget);
+      restart();
+    };
+
+    restartAutoplay.current = restart;
+    observer.observe(section);
+    section.addEventListener("focusin", onFocusIn);
+    section.addEventListener("focusout", onFocusOut);
+    document.addEventListener("visibilitychange", restart);
+    reducedMotion.addEventListener("change", restart);
+
+    return () => {
+      clearInterval(timer);
+      observer.disconnect();
+      section.removeEventListener("focusin", onFocusIn);
+      section.removeEventListener("focusout", onFocusOut);
+      document.removeEventListener("visibilitychange", restart);
+      reducedMotion.removeEventListener("change", restart);
+      restartAutoplay.current = null;
+    };
+  }, [count]);
+
+  const go = (step: number) => {
+    setIndex((i) => (i + step + count) % count);
+    restartAutoplay.current?.();
+  };
 
   function onKeyDown(event: KeyboardEvent) {
     if (event.key === "ArrowLeft") go(-1);
@@ -70,6 +124,7 @@ export function Testimonials() {
 
   return (
     <section
+      ref={sectionRef}
       id="testimonials"
       aria-labelledby="testimonials-title"
       aria-roledescription="carousel"

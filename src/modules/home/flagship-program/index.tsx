@@ -1,29 +1,19 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const CONFERENCE_HIGHLIGHTS = [
-  {
-    title: "Keynote Speeches",
-    description: "World-class speakers from leading energy companies and research institutions.",
-  },
-  {
-    title: "Technical Paper Sessions",
-    description: "60+ paper presentations covering reservoir, drilling, production, and sustainability.",
-  },
-  {
-    title: "Exhibition Hall",
-    description: "Cutting-edge technology showcased by 30+ energy industry exhibitors.",
-  },
-  {
-    title: "Student Competition",
-    description: "Inter-university paper competition with prizes totaling Rp 50 million.",
-  },
+  { title: "Competitions", description: "Put ideas into practice through technical and business challenges." },
+  { title: "Company Visits", description: "Explore the energy industry beyond the classroom through company visits." },
+  { title: "Talkshow & Grand Seminar", description: "Join conversations on energy with speakers from industry and academia." },
+  { title: "Exhibition", description: "Discover ideas, projects, and innovations from across the energy community." },
 ];
 
-const QUICK_FACTS = [
-  { value: "Sep 18", label: "Conference Start" },
-  { value: "356 Days", label: "Total Duration" },
-  { value: "20+", label: "Countries" },
-  { value: "60+", label: "Technical Papers" },
+const COMPETITIONS = [
+  "Paper and Poster Competition (PPC)",
+  "Business Case Competition (BCC)",
+  "Smart Competition (SC)",
+  "Plan of Development Competition (POD)",
+  "Supply Chain and Management Logistics Competition (SCML)",
 ];
 
 export function FlagshipProgram() {
@@ -63,7 +53,7 @@ export function FlagshipProgram() {
 
             {/* Content */}
             <div className="relative z-10 flex flex-col items-center">
-              <h2 data-motion="chars" className="font-display text-6xl font-bold tracking-[-0.03em] text-[#2c2d3f] sm:text-7xl md:text-8xl lg:text-[116px] leading-[1]">
+              <h2 id="flagship-title" data-motion="chars" className="font-display text-6xl font-bold tracking-[-0.03em] text-[#2c2d3f] sm:text-7xl md:text-8xl lg:text-[116px] leading-[1]">
                 APECX
               </h2>
               <p data-motion="rise" data-motion-y="16" data-motion-delay="0.35" className="mt-3 text-sm text-[#2c2d3f]/70 sm:text-base md:mt-4 md:text-lg">
@@ -72,8 +62,8 @@ export function FlagshipProgram() {
 
               {/* CTAs */}
               <div data-motion="rise" data-motion-y="16" data-motion-delay="0.45" className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:mt-9">
-                <a
-                  href="#register"
+                <Link
+                  href="/coming-soon/apecx-registration"
                   className="inline-flex items-center gap-2 rounded-full bg-[#2c2d3f] px-5 py-3 text-sm font-semibold text-[#f2f8fe] shadow-[0_1px_4px_rgba(0,0,0,0.1)] transition-all duration-200 hover:bg-[#1a1b26] hover:shadow-md active:scale-95"
                 >
                   <span>Register Now</span>
@@ -93,29 +83,29 @@ export function FlagshipProgram() {
                       strokeLinejoin="round"
                     />
                   </svg>
-                </a>
-                <a
-                  href="#learn-more"
+                </Link>
+                <Link
+                  href="/coming-soon/apecx"
                   className="inline-flex items-center rounded-full border border-[#2c2d3f]/15 bg-white/70 px-5 py-3 text-sm font-semibold text-[#2c2d3f] shadow-sm backdrop-blur-sm transition-all duration-200 hover:bg-white hover:shadow active:scale-95"
                 >
                   Learn More
-                </a>
+                </Link>
               </div>
             </div>
           </div>
 
           {/* ── Bottom Cards: 2 Columns ──────────────────────────────── */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-4">
-            {/* Card 1: Conference Program */}
+            {/* Card 1: APECX Activities */}
             <div data-motion="rise" data-sheen className="flagship-glass-card relative flex flex-col justify-between overflow-hidden rounded-[24px] border border-black/[0.08] p-6 sm:p-8 md:p-10">
               {/* Corner ambient glow */}
               <div
                 aria-hidden="true"
                 data-motion="glow"
-                className="-scale-x-100 pointer-events-none absolute -top-12 -right-12 w-[460px] max-w-[130%] select-none"
+                className="pointer-events-none absolute -top-12 -right-12 w-[460px] max-w-[130%] select-none"
               >
                 <Image
-                  src="/landing/flagship-program/glow-conference.svg"
+                  src="/landing/flagship-program/glow-conference-card1.svg"
                   alt=""
                   width={778}
                   height={276}
@@ -126,10 +116,10 @@ export function FlagshipProgram() {
               <div className="relative z-10">
                 <div className="text-center">
                   <h3 className="font-display text-xl font-bold tracking-tight text-[#2c2d3f] sm:text-2xl">
-                    Conference Program
+                    What Happens at APECX?
                   </h3>
                   <p className="mx-auto mt-1.5 max-w-[480px] text-xs text-[#2c2d3f]/70 sm:text-sm">
-                    End-to-end event planning and task coordination across all SPE UGM divisions.
+                    Explore four ways to learn, connect, and exchange ideas at APECX.
                   </p>
                 </div>
 
@@ -152,7 +142,7 @@ export function FlagshipProgram() {
               </div>
             </div>
 
-            {/* Card 2: Quick Facts 2026 */}
+            {/* Card 2: APECX Competitions */}
             <div data-motion="rise" data-sheen className="flagship-glass-card relative flex flex-col justify-between overflow-hidden rounded-[24px] border border-black/[0.08] p-6 sm:p-8 md:p-10">
               {/* Corner ambient glow */}
               <div
@@ -169,34 +159,23 @@ export function FlagshipProgram() {
                 />
               </div>
 
-              <div className="relative z-10 flex flex-col justify-between h-full">
-                <div>
-                  <p className="text-center text-[11px] font-semibold tracking-[1.32px] text-[#2c2d3f] uppercase">
-                    Quick Facts 2026
-                  </p>
-
-                  <div data-motion="stagger" data-motion-y="16" data-motion-delay="0.2" className="mx-auto mt-8 grid max-w-[420px] grid-cols-2 gap-y-7 gap-x-10 sm:gap-y-8 sm:gap-x-16 text-center sm:text-left">
-                    {QUICK_FACTS.map((fact) => (
-                      <div key={fact.label} className="flex flex-col">
-                        <span className="font-display text-2xl font-normal text-[#2c2d3f] sm:text-[28px] leading-none">
-                          {fact.value}
-                        </span>
-                        <span className="mt-1 text-xs text-[#2c2d3f]/70">{fact.label}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Venue Details */}
-                <div className="mt-10 border-t border-[#2c2d3f]/10 pt-5">
-                  <p className="text-xs text-[#2c2d3f]/70">Venue</p>
-                  <p className="mt-1 font-display text-sm font-medium text-[#2c2d3f] sm:text-base">
-                    Sheraton Mustika Yogyakarta Resort &amp; Spa
-                  </p>
-                  <p className="mt-0.5 text-xs text-[#2c2d3f]/70 sm:text-[13px]">
-                    Jl. Laksda Adisucipto, Yogyakarta
+              <div className="relative z-10">
+                <div className="text-center">
+                  <h3 className="font-display text-xl font-bold tracking-tight text-[#2c2d3f] sm:text-2xl">
+                    APECX 2026 Competitions
+                  </h3>
+                  <p className="mx-auto mt-1.5 max-w-[480px] text-xs text-[#2c2d3f]/70 sm:text-sm">
+                    Five categories for technical and business ideas.
                   </p>
                 </div>
+                <ul data-motion="stagger" data-motion-y="16" data-motion-delay="0.2" className="mt-8 flex flex-col gap-4 sm:gap-5">
+                  {COMPETITIONS.map((competition) => (
+                    <li key={competition} className="flex items-start gap-3.5">
+                      <span aria-hidden="true" className="mt-1.5 size-2 shrink-0 rounded-[3px] bg-[#4e4eff]" />
+                      <p className="text-sm font-semibold leading-relaxed text-[#2c2d3f]">{competition}</p>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
           </div>

@@ -11,10 +11,10 @@ import { outlineButton, pillSolid } from "@/components/ui/button-styles";
 const LINKS = [
   { label: "Home", href: "/" },
   { label: "About us", href: "/about" },
-  { label: "Cabinet", href: "/#cabinet" },
-  { label: "Event", href: "/#event" },
-  { label: "APECX", href: "/#apecx" },
-  { label: "Contact", href: "/#contact" },
+  { label: "Cabinet", href: "/coming-soon/cabinet" },
+  { label: "Event", href: "/coming-soon/event" },
+  { label: "APECX", href: "/coming-soon/apecx" },
+  { label: "Contact", href: "/coming-soon/contact" },
 ];
 
 /**
