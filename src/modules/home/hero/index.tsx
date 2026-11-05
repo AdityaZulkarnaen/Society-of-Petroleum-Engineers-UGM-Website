@@ -149,7 +149,7 @@ export function Hero() {
       {/* male — source 1375x1522, visible to x1375, cuts at y1320.5 /
           y1520, step at x990.5 */}
       <Image
-        src="/landing/hero/mascot-male.webp"
+        src="/landing/hero/mascot-male-v2.webp"
         alt=""
         width={1375}
         height={1522}

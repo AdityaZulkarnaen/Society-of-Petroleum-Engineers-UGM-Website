@@ -1,23 +1,23 @@
 import Image from "next/image";
 import Link from "next/link";
 
-/* Placeholder people and photos from the design — swap in the cabinet's own
-   portraits (cut-outs, bottom-aligned in their frame) and names. */
+/* Committee role corrections with existing names and portrait mapping retained.
+   No period dates are assigned until verified records are supplied. */
 const LEADS = [
   {
-    role: "President",
+    role: "Former President",
     name: "John Oliver Home",
     photo: { src: "/landing/testimonial/testi2.webp", width: 659, height: 682 },
   },
   {
-    role: "Vice President",
+    role: "Former Vice President",
     name: "Muhammad Zidan",
     photo: { src: "/landing/testimonial/testi3.webp", width: 659, height: 690 },
   },
 ];
 
 const WELCOME_NOTE =
-  "Welcome to SPE UGM Student Chapter! It is a privilege to welcome you to a community where students from diverse backgrounds come together to connect, learn, gain experience, and innovate in the energy sector. Through technical programs, industry exposure, competitions, collaborations, and organizational experiences, we strive to bridge the gap between academic learning and the realities of the energy industry. As the energy landscape continues to evolve, SPE UGM SC is committed to empowering its members to stay curious, embrace challenges, build meaningful connections, and grow into capable future energy professionals. Together, let us explore new possibilities, learn from one another, and turn our passion into meaningful impact for the future of energy.";
+  "The SPE UGM Student Chapter has been a hub for students to connect, learn, and innovate in the energy sector. As we reflect on our journey, we are proud of the technical programs, industry exposure, competitions, collaborations, and organizational experiences that have bridged the gap between academic learning and the realities of the energy industry. We remain committed to empowering our members to stay curious, embrace challenges, build meaningful connections, and grow into capable future energy professionals. Together, let us continue to explore new possibilities, learn from one another, and turn our passion into meaningful impact for the future of energy.";
 
 /**
  * The chapter's leadership: the president and vice president on their own
@@ -46,7 +46,7 @@ export function Leadership() {
           id="leadership-title"
           className="mt-3 font-display text-[clamp(30px,calc(60*var(--k)),64px)] leading-[1.12] font-bold tracking-[-0.02em] text-ink"
         >
-          Leadership
+          Former Leadership
         </h2>
       </header>
 
@@ -91,7 +91,7 @@ export function Leadership() {
           data-motion="rise"
           data-motion-y="16"
           className="mt-[clamp(1.75rem,calc(44*var(--k)),3rem)] text-center text-2xl font-bold tracking-[-0.01em] text-ink">
-          President&rsquo;s Welcome Note
+          Former President&rsquo;s Welcome Note
         </h3>
         <p
           data-motion="rise"
@@ -100,18 +100,17 @@ export function Leadership() {
         >
           {WELCOME_NOTE}
         </p>
-
-        <div
-          data-motion="rise"
-          data-motion-y="16"
-          className="mt-[clamp(1.5rem,calc(36*var(--k)),2.5rem)] flex justify-center"
-        >
-          <Link
-            href="/#cabinet"
-            className="rounded-full bg-white px-[clamp(1.25rem,calc(28*var(--k)),1.75rem)] py-[clamp(0.55rem,calc(13*var(--k)),0.8rem)] text-lg font-semibold text-ink shadow-[0_10px_24px_-14px_rgba(60,48,160,0.6)] transition-colors hover:bg-[#f2f3ff]"
+          <div
+            data-motion="rise"
+            data-motion-y="16"
+            className="mt-[clamp(1.5rem,calc(36*var(--k)),2.5rem)] flex justify-center"
           >
-            Meet The Cabinet
-          </Link>
+            <Link
+              href="/coming-soon/cabinet"
+              className="rounded-full bg-white px-[clamp(1.25rem,calc(28*var(--k)),1.75rem)] py-[clamp(0.55rem,calc(13*var(--k)),0.8rem)] text-lg font-semibold text-ink shadow-[0_10px_24px_-14px_rgba(60,48,160,0.6)] transition-colors hover:bg-[#f2f3ff]"
+            >
+              Meet The Cabinet
+            </Link>
         </div>
       </div>
     </section>

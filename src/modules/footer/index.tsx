@@ -1,43 +1,54 @@
 import Image from "next/image";
 import Link from "next/link";
+import { site } from "@/lib/site";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
-  { label: "Cabinet", href: "/#cabinet" },
+  { label: "Cabinet", href: "/coming-soon/cabinet" },
   { label: "Events", href: "/#event" },
-  { label: "APECX", href: "/#apecx" },
+  { label: "APECX", href: "/#flagship-program" },
 ];
 
 const PROGRAM_LINKS = [
-  { label: "Membership", href: "#" },
-  { label: "Mentorship", href: "#" },
-  { label: "Workshops", href: "#" },
-  { label: "Research", href: "#" },
-  { label: "Field Trips", href: "#" },
+  { label: "Membership", href: "/join" },
+  { label: "Mentorship", href: "/coming-soon/mentorship" },
+  { label: "Workshops", href: "/coming-soon/workshops" },
+  { label: "Research", href: "/coming-soon/research" },
+  { label: "Company Visits", href: "/coming-soon/company-visits" },
 ];
 
-const CONTACT_ITEMS = [
+type ContactItem = { icon: string; alt: string } & (
+  | { people: readonly { name: string; number: string; whatsapp: string }[] }
+  | { text: string; href: string | null }
+);
+
+const CONTACT_ITEMS: readonly ContactItem[] = [
   {
     icon: "/footer/contact-phone.svg",
-    text: "08123456789",
     alt: "Phone",
+    people: [
+      { name: "Andra", number: "+62 819-4435-0253", whatsapp: "https://wa.me/6281944350253" },
+      { name: "Ara", number: "+62 895-6393-14478", whatsapp: "https://wa.me/62895639314478" },
+    ],
   },
   {
     icon: "/footer/contact-location.svg",
-    text: "Faculty of Engineering\nUGM, Sleman, Yogyakarta 55281",
     alt: "Location",
+    text: "Faculty of Engineering\nUGM, Sleman, Yogyakarta 55281",
+    href: null,
   },
   {
     icon: "/footer/contact-email.svg",
-    text: "speugmscboards@gmail.com",
     alt: "Email",
+    text: site.email,
+    href: `mailto:${site.email}`,
   },
 ];
 
 const SOCIAL_LINKS = [
   {
-    href: "mailto:speugmscboards@gmail.com",
+    href: `mailto:${site.email}`,
     icon: "/footer/icon-email.svg",
     alt: "Email",
   },
@@ -60,7 +71,7 @@ const SOCIAL_LINKS = [
 
 export function SiteFooter() {
   return (
-    <footer className="footer">
+    <footer id="contact" className="footer scroll-mt-28">
       {/* Top Bar: Logo + Social Icons */}
       <div className="footer__topbar">
         <div className="footer__brand">
@@ -133,7 +144,7 @@ export function SiteFooter() {
         </div>
 
         {/* Contact */}
-        <div className="footer__links-group">
+        <div className="footer__links-group max-sm:col-span-2">
           <h4 className="footer__links-title">Contact</h4>
           <ul className="footer__contact-list">
             {CONTACT_ITEMS.map((item) => (
@@ -141,14 +152,32 @@ export function SiteFooter() {
                 <div className="footer__contact-icon">
                   <Image src={item.icon} alt={item.alt} width={36} height={36} />
                 </div>
-                <span className="footer__contact-text">
-                  {item.text.split("\n").map((line, i) => (
+                <div className="footer__contact-text">
+                  {"people" in item ? (
+                    <div className="flex flex-col">
+                      {item.people.map((person) => (
+                        <div key={person.name}>
+                          <a
+                            href={person.whatsapp}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:underline"
+                            aria-label={`Message ${person.name} on WhatsApp at ${person.number} (opens in a new tab)`}
+                          >
+                            {person.name}: {person.number}
+                          </a>
+                        </div>
+                      ))}
+                    </div>
+                  ) : item.href ? (
+                    <a href={item.href} className="hover:underline">{item.text}</a>
+                  ) : item.text.split("\n").map((line, i) => (
                     <span key={i}>
                       {line}
                       {i < item.text.split("\n").length - 1 && <br />}
                     </span>
                   ))}
-                </span>
+                </div>
               </li>
             ))}
           </ul>

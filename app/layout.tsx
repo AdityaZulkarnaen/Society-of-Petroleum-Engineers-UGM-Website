@@ -20,7 +20,7 @@ const jakarta = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   icons: {
-    icon: [{ url: "/favicon.ico", type: "ico" }],
+    icon: [{ url: "/global/logo.webp", type: "image/webp" }],
   },
   applicationName: site.name,
   title: `${site.name} — ${site.tagline}`,

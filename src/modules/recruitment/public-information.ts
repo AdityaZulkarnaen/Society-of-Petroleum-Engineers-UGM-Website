@@ -1,6 +1,6 @@
 /** Centralized committee-confirmed URLs and recruitment schedule. */
 export const OFFICIAL_GUIDEBOOK_URL =
-  "https://drive.google.com/file/d/1NtZkOohHNQdSOFk4tiRA7Y7Ol6QTDkVo/view?usp=sharing";
+  "https://drive.google.com/drive/folders/1_TAgvJI7d6kPyhq799QZMEV27-_bv1wG";
 
 export const COMMITMENT_LETTER_TEMPLATE_URL =
   "https://bit.ly/CommitmentLetterSPEUGMSC";

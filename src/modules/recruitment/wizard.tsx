@@ -492,7 +492,7 @@ export function ApplicationWizard({ backend = false }: { backend?: boolean }) {
   const submissionErrors = validateSubmission(values, files, period);
 
   return (
-    <RecruitmentFrame>
+    <RecruitmentFrame compactTop>
       <Link
         href="/join"
         className="mb-6 inline-flex min-h-10 items-center gap-2 rounded-lg text-sm font-medium text-ink-soft hover:text-iris focus-visible:outline-2 focus-visible:outline-iris"
