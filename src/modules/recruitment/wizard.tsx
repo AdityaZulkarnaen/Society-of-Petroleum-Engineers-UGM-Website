@@ -7,6 +7,8 @@ import { ApplicationEntry, inputStyle, MockNotice, primaryButton, RecruitmentFra
 import { documentSlots, MAX_FILE_BYTES, recruitmentCatalogs, recruitmentConfig, type RecruitmentCatalog } from "./config";
 import { resolvePreference, validateAssignment } from "./assignment";
 import { Field, FileField } from "./form-fields";
+import { applicantError, fieldLabel, fieldStep, isErrorField, logRecruitmentError, recruitmentResponse, RecruitmentRequestError, type ErrorField, type RequestStage } from "./client-feedback";
+import { SubmissionDialog } from "./submission-dialog";
 import { PreferenceStep } from "./preference-step";
 import { assignmentPresentation, clientMessage, documentLabel, documentUploadHint, preferenceLabel, PREVIEW_NOTICE, previewText, steps } from "./presentation";
 import {
@@ -31,6 +33,11 @@ const personalFields = [
 export function ApplicationWizard({ backend = false }: { backend?: boolean }) {
   const [livePeriod, setLivePeriod] = useState<RecruitmentPeriod>();
   const session = useRef("");
+  const submissionLock = useRef(false);
+  const finalizationUncertain = useRef(false);
+  const pendingField = useRef<ErrorField | null>(null);
+  const pendingFeedback = useRef(false);
+  const serverFeedback = useRef<HTMLParagraphElement>(null);
   const [sending, setSending] = useState(false);
   const [submissionStage, setSubmissionStage] = useState("");
   const [serverError, setServerError] = useState("");
@@ -40,19 +47,19 @@ export function ApplicationWizard({ backend = false }: { backend?: boolean }) {
     if (!backend) return;
     let active = true;
     fetch("/api/recruitment", { cache: "no-store", credentials: "same-origin" })
-      .then(async (response) => {
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error);
-        return data;
-      })
+      .then(recruitmentResponse)
       .then((data) => {
         if (active) {
+          if (typeof data.token !== "string" || !data.token || !data.period || typeof data.period !== "object") {
+            throw new RecruitmentRequestError(200, {}, "unreadable");
+          }
           session.current = data.token;
-          setLivePeriod(data.period);
+          setLivePeriod(data.period as RecruitmentPeriod);
         }
       })
       .catch((error) => {
-        if (active) setServerError(error instanceof Error ? error.message : "Applications are currently unavailable.");
+        logRecruitmentError(error, "session");
+        if (active) setServerError(applicantError(error, "session"));
       });
     return () => {
       active = false;
@@ -75,8 +82,33 @@ export function ApplicationWizard({ backend = false }: { backend?: boolean }) {
       firstRender.current = false;
       return;
     }
-    heading.current?.focus();
+    if (!pendingField.current) heading.current?.focus();
   }, [step, phase]);
+
+  useEffect(() => {
+    if (sending) return;
+    const key = pendingField.current;
+    if (key) {
+      const control = document.getElementById(`recruit-${key}`);
+      if (control) {
+        pendingField.current = null;
+        control.focus({ preventScroll: true });
+        control.scrollIntoView({ block: "center", behavior: "instant" });
+      }
+    } else if (pendingFeedback.current && serverError && livePeriod) {
+      pendingFeedback.current = false;
+      serverFeedback.current?.focus({ preventScroll: true });
+      serverFeedback.current?.scrollIntoView({ block: "center", behavior: "instant" });
+    }
+  }, [step, phase, errors, sending, serverError, livePeriod]);
+
+  function locateError(key: ErrorField) {
+    pendingField.current = key;
+    setStep(fieldStep(key));
+    setPhase("editing");
+    // Also handle a summary link to a field already mounted on this step.
+    setErrors((previous) => ({ ...previous }));
+  }
 
   function change(key: keyof ApplicationValues, value: string) {
     setValues((previous) => ({ ...previous, [key]: value }));
@@ -135,11 +167,11 @@ export function ApplicationWizard({ backend = false }: { backend?: boolean }) {
   function check(target: number, forSubmission = false): boolean {
     const nextErrors = validateStep(target, values, files, period, forSubmission);
     setErrors(Object.fromEntries(Object.entries(nextErrors).map(([key, message]) => [key, message ? clientMessage(message, !backend) : message])));
-    const firstKey = Object.keys(nextErrors)[0];
+    const firstKey = Object.keys(nextErrors).find(isErrorField);
     if (!firstKey) return true;
+    pendingField.current = firstKey;
     setPhase("editing");
     setStep(target);
-    requestAnimationFrame(() => document.getElementById(`recruit-${firstKey}`)?.focus());
     return false;
   }
 
@@ -155,7 +187,6 @@ export function ApplicationWizard({ backend = false }: { backend?: boolean }) {
   function edit(target: number) {
     setStep(target);
     setPhase("editing");
-    setErrors({});
   }
 
   function simulateSubmission() {
@@ -171,11 +202,14 @@ export function ApplicationWizard({ backend = false }: { backend?: boolean }) {
   }
 
   async function submitApplication() {
-    if (sending || !livePeriod) return;
+    if (submissionLock.current || !livePeriod) return;
     for (let index = 0; index < 4; index++) if (!check(index, true)) return;
+    submissionLock.current = true;
     setSending(true);
     setServerError("");
     setSubmissionStage("Preparing your application…");
+    let requestStage: RequestStage = "init";
+    let currentDocument: string | undefined;
     try {
       // 1. Initialize submission and validate metadata (JSON payload < 5 KB)
       const initRes = await fetch("/api/recruitment?action=init", {
@@ -187,18 +221,10 @@ export function ApplicationWizard({ backend = false }: { backend?: boolean }) {
         },
         body: JSON.stringify({ values }),
       });
-      const initData = await initRes.json();
-      if (!initRes.ok) {
-        const mappedFields: Errors = {};
-        if (initData.fields) {
-          for (const [k, v] of Object.entries(initData.fields)) {
-            mappedFields[k as keyof Errors] = v ? clientMessage(v as string, !backend) : undefined;
-          }
-        }
-        setErrors(mappedFields);
-        throw new Error(clientMessage(initData.error || "Failed to initialize application.", !backend));
-      }
+      const initData = await recruitmentResponse(initRes);
       if (initData.status === "already_submitted") {
+        if (typeof initData.applicationId !== "string" || !initData.applicationId) throw new RecruitmentRequestError(200, {}, "unreadable");
+        finalizationUncertain.current = false;
         setReceipt(initData.applicationId);
         setValues({ ...emptyValues });
         setFiles({});
@@ -219,6 +245,8 @@ export function ApplicationWizard({ backend = false }: { backend?: boolean }) {
       const uploadedDocs: Array<{ slot: string; fileId: string; fileUrl: string }> = [];
       for (let i = 0; i < totalFiles; i++) {
         const { slot, file } = targetFiles[i];
+        requestStage = "upload";
+        currentDocument = fieldLabel(slot);
         setSubmissionStage(`Uploading document ${i + 1} of ${totalFiles}…`);
 
         const fileForm = new FormData();
@@ -233,28 +261,21 @@ export function ApplicationWizard({ backend = false }: { backend?: boolean }) {
           headers: { "x-recruitment-session": session.current },
           body: fileForm,
         });
-        const uploadData = await uploadRes.json();
-        if (!uploadRes.ok) {
-          const mappedFields: Errors = {};
-          if (uploadData.fields) {
-            for (const [k, v] of Object.entries(uploadData.fields)) {
-              mappedFields[k as keyof Errors] = v ? clientMessage(v as string, !backend) : undefined;
-            }
-          }
-          if (uploadData.fields) setErrors(mappedFields);
-          throw new Error(clientMessage(uploadData.error || `Failed to upload document for ${slot}.`, !backend));
+        const uploadData = await recruitmentResponse(uploadRes);
+        if (typeof uploadData.fileId !== "string" || !uploadData.fileId) {
+          throw new RecruitmentRequestError(200, {}, "unreadable");
         }
-        if (uploadData.fileId) {
-          uploadedDocs.push({
-            slot: uploadData.slot || slot,
-            fileId: uploadData.fileId,
-            fileUrl: uploadData.fileUrl || "",
-          });
-        }
+        uploadedDocs.push({
+          slot: typeof uploadData.slot === "string" ? uploadData.slot : slot,
+          fileId: uploadData.fileId,
+          fileUrl: typeof uploadData.fileUrl === "string" ? uploadData.fileUrl : "",
+        });
       }
 
       // 3. Finalize only after all files succeed
       setSubmissionStage("Finalizing your application…");
+      requestStage = "finalize";
+      finalizationUncertain.current = true;
       const finalRes = await fetch("/api/recruitment?action=finalize", {
         method: "POST",
         credentials: "same-origin",
@@ -264,17 +285,11 @@ export function ApplicationWizard({ backend = false }: { backend?: boolean }) {
         },
         body: JSON.stringify({ values, documents: uploadedDocs }),
       });
-      const finalData = await finalRes.json();
-      if (!finalRes.ok) {
-        const mappedFields: Errors = {};
-        if (finalData.fields) {
-          for (const [k, v] of Object.entries(finalData.fields)) {
-            mappedFields[k as keyof Errors] = v ? clientMessage(v as string, !backend) : undefined;
-          }
-        }
-        if (finalData.fields) setErrors(mappedFields);
-        throw new Error(clientMessage(finalData.error || "Failed to finalize application.", !backend));
+      const finalData = await recruitmentResponse(finalRes);
+      if (typeof finalData.applicationId !== "string" || !finalData.applicationId) {
+        throw new RecruitmentRequestError(200, {}, "unreadable");
       }
+      finalizationUncertain.current = false;
 
       setSubmissionStage("Application submitted successfully.");
       setReceipt(finalData.applicationId);
@@ -283,12 +298,21 @@ export function ApplicationWizard({ backend = false }: { backend?: boolean }) {
       setErrors({});
       setPhase("success");
     } catch (error) {
-      setServerError(
-        error instanceof Error
-          ? clientMessage(error.message, !backend)
-          : "Submission has not been confirmed. Retry with the same information and files.",
-      );
+      logRecruitmentError(error, requestStage);
+      pendingFeedback.current = true;
+      if (error instanceof RecruitmentRequestError) {
+        const firstKey = Object.keys(error.fields).find(isErrorField);
+        if (firstKey) {
+          pendingFeedback.current = false;
+          setErrors(error.fields);
+          pendingField.current = firstKey;
+          setStep(fieldStep(firstKey));
+          setPhase("editing");
+        }
+      }
+      setServerError(applicantError(error, requestStage, finalizationUncertain.current, currentDocument));
     } finally {
+      submissionLock.current = false;
       setSending(false);
       setSubmissionStage("");
     }
@@ -488,11 +512,14 @@ export function ApplicationWizard({ backend = false }: { backend?: boolean }) {
     );
   }
 
-  const errorCount = Object.values(errors).filter(Boolean).length;
   const submissionErrors = validateSubmission(values, files, period);
+  const visibleErrors = phase === "review" ? { ...submissionErrors, ...errors } : errors;
+  const errorEntries = Object.entries(visibleErrors).filter((entry): entry is [ErrorField, string] => isErrorField(entry[0]) && Boolean(entry[1]));
+  const errorCount = errorEntries.length;
 
   return (
     <RecruitmentFrame compactTop>
+      {sending && <SubmissionDialog stage={submissionStage || "Preparing your application..."} />}
       <Link
         href="/join"
         className="mb-6 inline-flex min-h-10 items-center gap-2 rounded-lg text-sm font-medium text-ink-soft hover:text-iris focus-visible:outline-2 focus-visible:outline-iris"
@@ -529,7 +556,7 @@ export function ApplicationWizard({ backend = false }: { backend?: boolean }) {
         </p>
       )}
       {serverError && (
-        <p role="alert" className="mt-6 rounded-xl bg-red-50 p-4 text-red-800">
+        <p ref={serverFeedback} tabIndex={-1} role="alert" className="mt-6 scroll-mt-32 rounded-xl bg-red-50 p-4 text-red-800 outline-none focus-visible:ring-2 focus-visible:ring-red-600">
           {serverError}
         </p>
       )}
@@ -611,40 +638,21 @@ export function ApplicationWizard({ backend = false }: { backend?: boolean }) {
           </p>
           {errorCount > 0 && (
             <div role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
-              Please check {errorCount} highlighted fields and the messages below.
+              <p className="font-semibold">Please check {errorCount === 1 ? "the following field" : `these ${errorCount} fields`}.</p>
+              <ul className="mt-2 list-disc space-y-1 pl-5">
+                {errorEntries.map(([key, message]) => (
+                  <li key={key}>
+                    <button type="button" onClick={() => locateError(key)} className="text-left underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-red-700">
+                      {fieldLabel(key)}: {clientMessage(message, !backend)}
+                    </button>
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
           {phase === "review" ? (
             <fieldset disabled={sending} className="mt-8 space-y-7">
-              {sending && (
-                <div
-                  role="status"
-                  aria-live="assertive"
-                  className="rounded-2xl border border-[#d2cbfa] bg-[#f8f6ff] p-5 sm:p-6 shadow-xs"
-                >
-                  <div className="flex items-center gap-4">
-                    <svg
-                      className="size-6 shrink-0 animate-spin text-iris motion-reduce:animate-none"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
-                    </svg>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-xs font-semibold uppercase tracking-wider text-iris">Submitting Application</p>
-                      <p className="mt-0.5 text-base font-medium text-ink-deep">
-                        {submissionStage || "Preparing your application…"}
-                      </p>
-                    </div>
-                  </div>
-                  <p className="mt-3 text-xs text-ink-soft">
-                    Please keep this window open while your files are uploaded.
-                  </p>
-                </div>
-              )}
-              <SummaryGroup title="Personal information" onEdit={() => edit(0)}>
+              <SummaryGroup title="Personal information" errors={errorEntries.filter(([key]) => fieldStep(key) === 0)} onEdit={() => edit(0)}>
                 <dl className="grid gap-4 sm:grid-cols-2">
                   {[...personalFields.map((field) => [field.label, values[field.key]]), ["Cohort", values.batch]].map(([label, value]) => (
                     <SummaryValue key={label} label={label} value={value} />
@@ -661,7 +669,7 @@ export function ApplicationWizard({ backend = false }: { backend?: boolean }) {
                   ? { summary: "No assignment required" }
                   : assignmentPresentation(subDivision?.assignment, files[fields.assignment], !backend);
                 return (
-                  <SummaryGroup key={rank} title={`${rank === 1 ? "First" : "Second"} preference`} onEdit={() => edit(rank)}>
+                  <SummaryGroup key={rank} title={`${rank === 1 ? "First" : "Second"} preference`} errors={errorEntries.filter(([key]) => fieldStep(key) === rank)} onEdit={() => edit(rank)}>
                     <dl className="space-y-4">
                       <SummaryValue label="Main division" value={(!backend ? previewText(division?.label) : division?.label) ?? "—"} />
                       <SummaryValue label="Sub-division" value={(!backend ? previewText(subDivision?.label) : subDivision?.label) ?? "—"} />
@@ -671,7 +679,7 @@ export function ApplicationWizard({ backend = false }: { backend?: boolean }) {
                   </SummaryGroup>
                 );
               })}
-              <SummaryGroup title="Supporting documents" onEdit={() => edit(3)}>
+              <SummaryGroup title="Supporting documents" errors={errorEntries.filter(([key]) => fieldStep(key) === 3)} onEdit={() => edit(3)}>
                 <dl className="space-y-4">
                   {documentSlots.map((slot) => (
                     <SummaryValue
@@ -912,9 +920,10 @@ function SummaryValue({ label, value }: { label: string; value: string }) {
   );
 }
 
-function SummaryGroup({ title, onEdit, children }: { title: string; onEdit: () => void; children: ReactNode }) {
+function SummaryGroup({ title, errors, onEdit, children }: { title: string; errors: [ErrorField, string][]; onEdit: () => void; children: ReactNode }) {
   return (
-    <section className="border-b border-[#e4e5ef] pb-6">
+    <section className={`border-b pb-6 ${errors.length ? "rounded-xl border-red-300 bg-red-50 p-4" : "border-[#e4e5ef]"}`}>
+      {errors.length > 0 && <p className="mb-3 text-sm font-medium text-red-800">Please edit this section: {errors.map(([key]) => fieldLabel(key)).join(", ")}.</p>}
       <div className="mb-4 flex items-center justify-between gap-3">
         <h2 className="font-display text-lg font-semibold">{title}</h2>
         <button
