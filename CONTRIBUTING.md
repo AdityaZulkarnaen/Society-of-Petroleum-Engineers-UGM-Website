@@ -101,6 +101,7 @@ Dilarang push langsung ke `main`. Semua perubahan harus lewat branch dan Pull Re
 4. **Jalankan pengecekan wajib sebelum commit:**
    ```bash
    pnpm lint
+   pnpm exec next typegen
    pnpm exec tsc --noEmit
    pnpm build
    ```

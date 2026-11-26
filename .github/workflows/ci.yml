@@ -38,7 +38,9 @@ jobs:
         run: pnpm lint
 
       - name: Run TypeScript typecheck
-        run: pnpm exec tsc --noEmit
+        run: |
+          pnpm exec next typegen
+          pnpm exec tsc --noEmit
 
       - name: Build Next.js app
         env:
