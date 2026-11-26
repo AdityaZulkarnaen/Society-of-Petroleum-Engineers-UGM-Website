@@ -74,7 +74,7 @@ function OpenMeetingCard({ meeting }: { meeting: MyMeeting }) {
       {!done && (
         <p className="mt-5 text-[13px] leading-relaxed text-[#6f7286]">
           Scan the QR code displayed on the meeting screen — using the button above
-          or directly from your phone's camera app. The QR refreshes every half minute,
+          or directly from your phone&apos;s camera app. The QR refreshes every half minute,
           so ensure your camera is pointed at an active screen.
         </p>
       )}
